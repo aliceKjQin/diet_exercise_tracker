@@ -99,7 +99,7 @@ export default function Calendar(props) {
           className="ml-auto text-purple-400 text-lg sm:text-xl duration-200 hover:opacity-60"
           onClick={() => handleIncrementAndDecrementMonth(1)}
         >
-          <i class="fa-solid fa-circle-chevron-right"></i>
+          <i className="fa-solid fa-circle-chevron-right"></i>
         </button>
       </div>
       {/* display day of week row (Sun-Sat) */}

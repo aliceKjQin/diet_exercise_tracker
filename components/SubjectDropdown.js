@@ -5,7 +5,7 @@ import Button from "./Button";
 import { useAuth } from "@/context/AuthContext";
 import { doc, setDoc, updateDoc, deleteField } from "firebase/firestore";
 import { db } from "@/firebase";
-import { useSubjects } from "@/app/hooks/useSubjects";
+import { useSubjects } from "@/hooks/useSubjects";
 import { usePathname } from "next/navigation";
 
 export default function SubjectDropdown() {

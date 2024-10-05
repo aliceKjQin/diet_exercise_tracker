@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import Loading from "./Loading";
 import Login from "./Login";
 import ProgressBar from "./ProgressBar";
-import { calculateSubjectProgress } from "@/utils";
 import { Roboto } from "next/font/google";
-import { useSubjects } from "@/app/hooks/useSubjects";
+import { useSubjects } from "@/hooks/useSubjects";
 import Button from "./Button";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
