@@ -45,7 +45,7 @@ export default function SubjectsView() {
           </div>
         </div>
       ))}
-    </div>) : (<p className="text-center text-lg">No subjects found. Add one from the menu to start tracking! ✨</p>)
+    </div>) : (<p className="text-center text-lg mt-6">No subjects found. Add one from the menu to start tracking! ✨</p>)
   )
 }
 
