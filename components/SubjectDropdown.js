@@ -3,8 +3,6 @@ import { useRouter } from "next/navigation";
 import React, { useRef, useState, useEffect } from "react";
 import Button from "./Button";
 import { useAuth } from "@/context/AuthContext";
-import { doc, setDoc, updateDoc, deleteField } from "firebase/firestore";
-import { db } from "@/firebase";
 import { useSubjects } from "@/hooks/useSubjects";
 import { usePathname } from "next/navigation";
 
@@ -73,9 +71,9 @@ export default function SubjectDropdown() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <Button text="Subjects" clickHandler={handleShowDropdown} />
+      <Button text="Add Subjects" clickHandler={handleShowDropdown} />
       {showDropdown && (
-        <div className="absolute bg-purple-50 border mt-2 rounded-2xl shadow-lg z-10">
+        <div className="absolute bg-purple-50 border mt-2 rounded-2xl shadow-lg z-10 p-1">
           {subjects.map((subject, subjectIndex) => (
             <div
               key={subjectIndex}
@@ -119,9 +117,9 @@ export default function SubjectDropdown() {
           )}
 
           {/* view all subjects button */}
-          <div className="flex justify-center py-2">
+          {subjects && subjects.length > 0 ? <div className="flex justify-center py-2">
             <Button text="View All" dark clickHandler={handleViewAll} />
-          </div>
+          </div> : ""}
         </div>
       )}
     </div>
