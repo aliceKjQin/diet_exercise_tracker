@@ -22,7 +22,7 @@ export default function SubjectsView() {
     return <Login />;
   }
   return (
-    <div className="flex flex-col gap-6 sm:gap-8">
+    subjects && subjects.length > 0 ? (<div className="flex flex-col gap-6 sm:gap-8">
       {subjects.map((subjectName) => (
         <div key={subjectName} className="flex flex-col gap-2 sm:gap-4">
           <h4
@@ -45,6 +45,7 @@ export default function SubjectsView() {
           </div>
         </div>
       ))}
-    </div>
-  );
+    </div>) : (<p className="text-center text-lg">No subjects found. Add one from the menu to start tracking! ✨</p>)
+  )
 }
+
