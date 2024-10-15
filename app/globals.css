@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 .textGradient {
-  background: -webkit-linear-gradient(#b27fec, #cd9bbe);
+  background: -webkit-linear-gradient(#812fde, #e877c6);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 .purpleShadow {

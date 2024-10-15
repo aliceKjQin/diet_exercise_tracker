@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { demoData } from "@/utils";
 import { Roboto } from "next/font/google";
+import { useActiveDiet } from "@/hooks/useActiveDiet";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -24,7 +25,7 @@ const months = {
 const dayList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Calendar(props) {
-  const { demo, completeData, handleSetMoodAndNote } = props;
+  const { completeData, handleSetMoodAndNote } = props;
 
   const now = new Date();
   const currentMonth = now.getMonth(); // numerical number for the month from 0 - 11
@@ -33,7 +34,10 @@ export default function Calendar(props) {
   const numericMonth = monthsArr.indexOf(selectedMonth);
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
-  const data = completeData?.[selectedYear]?.[numericMonth] || (demo ? demoData : {});
+  const data = completeData?.[selectedYear]?.[numericMonth];
+  console.log("completedData: ", completeData);
+
+
 
   function handleIncrementAndDecrementMonth(val) {
     // val +1 -1
@@ -45,7 +49,7 @@ export default function Calendar(props) {
     } else if (numericMonth + val > 11) {
       // set month numeric value = 0 which is Jan and increment the year
       setSelectedMonth(monthsArr[0]);
-      setSelectedYear((curr) => curr + 1); 
+      setSelectedYear((curr) => curr + 1);
     } else {
       setSelectedMonth(monthsArr[numericMonth + val]);
     }
@@ -148,17 +152,37 @@ export default function Calendar(props) {
                 return (
                   <div
                     key={dayOfWeekIndex}
-                    className={`text-xs sm:text-sm border border-solid p-2 flex items-center gap-2 justify-between rounded-lg ${
-                      isToday && isCurrentMonth && isCurrentYear && !demo
+                    className={`text-xs sm:text-sm border border-solid p-2 flex items-center gap-1 justify-between rounded-lg ${
+                      isToday && isCurrentMonth && isCurrentYear
                         ? "border-yellow-400 border-dashed border-2"
                         : "border-purple-100"
                     } ${
-                      data[dayIndex]
+                      data?.[dayIndex]
                         ? "text-white bg-purple-400"
                         : "text-purple-400 dark:text-white bg-white dark:bg-zinc-700"
                     } `}
                   >
                     <p>{dayIndex}</p>
+                    {/* display a smiley face if both diet and exercise are true */}
+                    {data?.[dayIndex]?.diet && data?.[dayIndex]?.exercise ? (
+                      <p className="text-base sm:text-3xl">😀</p>
+                    ) : (
+                      ""
+                    )}
+                    {/* display a sad face if both diet and exercise are false */}
+                    {data?.[dayIndex]?.diet === false &&
+                    data[dayIndex]?.exercise === false ? (
+                      <p className="text-base sm:text-3xl">☹️</p>
+                    ) : (
+                      ""
+                    )}
+                    {/* display a meh face when only one of the two (diet or exercise) is true */}
+                    {(data?.[dayIndex]?.diet && !data?.[dayIndex]?.exercise) ||
+                    (!data?.[dayIndex]?.diet && data?.[dayIndex]?.exercise) ? (
+                      <p className="text-base sm:text-3xl">😐</p>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 );
               })}

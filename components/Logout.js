@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import React from "react";
 import Button from "./Button";
 import { usePathname } from "next/navigation";

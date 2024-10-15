@@ -3,7 +3,8 @@
 import { Roboto } from "next/font/google";
 import Button from "./Button";
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -16,6 +17,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { signup, login } = useAuth();
+  const router = useRouter();
 
   async function handleSubmit() {
     if (!email || !password || password.length < 6) {
@@ -30,9 +32,12 @@ export default function Login() {
       if (isRegister) {
         console.log("Signing up a new user");
         await signup(email, password);
+        router.push("/");
+
       } else {
         console.log("Logging in existing user");
         await login(email, password);
+        router.push("/");
       }
     } catch (err) {
       console.log("Error Message: " + err.message, "Error Code: " + err.code);
