@@ -26,15 +26,6 @@ export default function Dashboard() {
   const month = now.getMonth();
   const year = now.getFullYear();
 
-  // fetch the latest data and set the initial state of exercise and diet log based on this data, on reload 
-  // useEffect(() => {
-  //   if (activeDiet) {
-  //     const currentDayData = activeDiet.details.dietData?.[year]?.[month]?.[day] || {};
-  //     setIsExerciseLogged(currentDayData.exercise || false); // Sets to false if undefined
-  //     setIsDietLogged(currentDayData.diet || false); // Sets to false if undefined
-  //   }
-  // }, [activeDiet, year, month, day]);
-
   // fetch updated dietData when page reload or redirect to dashboard, so calendar can show the updated diet data in the cells; fetch the latest data and set the initial state of exercise and diet log based on this data, on reload 
   useEffect(() => {
     if (!user || !userDataObj) {

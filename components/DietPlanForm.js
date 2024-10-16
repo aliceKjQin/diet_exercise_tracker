@@ -54,6 +54,7 @@ export default function DietPlanForm() {
 
         // If valid, update state
         setDietPlan((prev) => ({ ...prev, initialBodyImage: file }));
+        setError("");
       }
     } else if (["targetDays", "targetWeight", "initialWeight"].includes(name)) {
       // Convert input value to number
@@ -152,7 +153,7 @@ export default function DietPlanForm() {
   }
 
   return (
-    <div className="max-w-lg mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-lg mx-auto mt-8 p-6 shadow-md rounded-lg">
       <h1 className="text-xl font-bold mb-4 text-center">Create Diet Plan</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -165,8 +166,8 @@ export default function DietPlanForm() {
             name="dietName"
             value={dietPlan.dietName}
             onChange={handleInputChange}
-            placeholder="Enter diet name (e.g., Keto)"
-            className="w-full border border-gray-300 p-2 rounded-md"
+            placeholder="Enter diet name (e.g., Vegan)"
+            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
             required
           />
         </div>
@@ -184,7 +185,7 @@ export default function DietPlanForm() {
             value={dietPlan.targetDays}
             onChange={handleInputChange}
             placeholder="Number of target days"
-            className="w-full border border-gray-300 p-2 rounded-md"
+            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
             required
           />
         </div>
@@ -202,7 +203,7 @@ export default function DietPlanForm() {
             value={dietPlan.targetWeight}
             onChange={handleInputChange}
             placeholder="Target weight in kg"
-            className="w-full border border-gray-300 p-2 rounded-md"
+            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
             required
           />
         </div>
@@ -220,15 +221,16 @@ export default function DietPlanForm() {
             value={dietPlan.initialWeight}
             onChange={handleInputChange}
             placeholder="Initial weight in kg"
-            className="w-full border border-gray-300 p-2 rounded-md"
+            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
             required
           />
         </div>
         <div>
-          <label htmlFor="initialBodyImage">Upload Initial Body Shape</label>
+          <label htmlFor="initialBodyImage" className="block text-sm font-medium mb-1">Upload Initial Body Shape</label>
           <input
             type="file"
             name="initialBodyImage"
+            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
             onChange={handleInputChange}
             accept="image/*"
           />
