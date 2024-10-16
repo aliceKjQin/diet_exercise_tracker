@@ -9,6 +9,7 @@ import { useState } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
 import Loading from "@/components/Loading";
 import { db } from "@/firebase";
+import Link from "next/link";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -50,12 +51,25 @@ export default function HomePage() {
     return (
       <Main>
         <div className="max-w-lg mx-auto mt-4 p-2 sm:text-xl flex flex-col gap-4">
-          <h1>Current Active Diet: <span className="uppercase textGradient font-bold">{activeDiet.name}</span></h1>
-          <p>You started on <span className="textGradient">{activeDiet.details.startDate}</span> and haven't completed it yet.</p>
+          <h1>
+            Current Active Diet:{" "}
+            <span className="uppercase textGradient font-bold">
+              {activeDiet.name}
+            </span>
+          </h1>
           <p>
-            Before starting a new diet, please remove the current one.
+            You started on{" "}
+            <span className="textGradient">{activeDiet.details.startDate}</span>{" "}
+            and still in progress.
           </p>
-
+          <button className="bg-teal-400 text-white font-bold py-2 px-4 rounded ">
+            <Link href={`/dashboard/${activeDiet.name}`}>
+              View Active Diet Dashboard
+            </Link>
+          </button>
+         
+          <p className="mt-8 sm:mt-12">To start a new diet, please remove the current active one.</p>
+          
           <button
             onClick={() => setShowConfirmation(true)}
             className="bg-red-400 text-white font-bold py-2 px-4 rounded "

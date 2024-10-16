@@ -25,7 +25,7 @@ const months = {
 const dayList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Calendar(props) {
-  const { completeData, handleSetMoodAndNote } = props;
+  const { completeData, onNoteClick } = props;
 
   const now = new Date();
   const currentMonth = now.getMonth(); // numerical number for the month from 0 - 11
@@ -186,9 +186,9 @@ export default function Calendar(props) {
                       ) : (
                         ""
                       )}
-                      {/* display a note emoji if note is true */}
+                      {/* display a note emoji if note is true, when clicks the note emoji, it sends the selected day note back to parent, Dashboard */}
                       {data?.[dayIndex]?.note ? (
-                        <p>📝</p>
+                        <p onClick={() => onNoteClick(data[dayIndex].note)} className="cursor-pointer" >📝</p>
                       ) : (
                         ""
                       )}

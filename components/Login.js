@@ -5,6 +5,8 @@ import Button from "./Button";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import { useActiveDiet } from "@/hooks/useActiveDiet";
+import { userAgent } from "next/server";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -17,6 +19,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { signup, login } = useAuth();
+
   const router = useRouter();
 
   async function handleSubmit() {
