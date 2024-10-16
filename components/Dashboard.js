@@ -20,20 +20,33 @@ export default function Dashboard() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false);
+  const [ activeDietData, setActiveDietData ] = useState({}); // local state for  active diet data 
   const now = new Date();
   const day = now.getDate();
   const month = now.getMonth();
   const year = now.getFullYear();
 
   // fetch the latest data and set the initial state of exercise and diet log based on this data, on reload 
+  // useEffect(() => {
+  //   if (activeDiet) {
+  //     const currentDayData = activeDiet.details.dietData?.[year]?.[month]?.[day] || {};
+  //     setIsExerciseLogged(currentDayData.exercise || false); // Sets to false if undefined
+  //     setIsDietLogged(currentDayData.diet || false); // Sets to false if undefined
+  //   }
+  // }, [activeDiet, year, month, day]);
+
+  // fetch updated dietData when page reload or redirect to dashboard, so calendar can show the updated diet data in the cells; fetch the latest data and set the initial state of exercise and diet log based on this data, on reload 
   useEffect(() => {
-    if (activeDiet) {
+    if (!user || !userDataObj) {
+      return
+    }
+    if(activeDiet) {
       const currentDayData = activeDiet.details.dietData?.[year]?.[month]?.[day] || {};
-      const completeDate = activeDiet.details.dietData
       setIsExerciseLogged(currentDayData.exercise || false); // Sets to false if undefined
       setIsDietLogged(currentDayData.diet || false); // Sets to false if undefined
+      setActiveDietData(activeDiet.details.dietData);
     }
-  }, [activeDiet, year, month, day]);
+  }, [user, activeDiet, year, month, day])
 
   const hasExercise =
     activeDiet?.details?.dietData?.[year]?.[month]?.[day]?.exercise === true;
@@ -46,8 +59,7 @@ export default function Dashboard() {
 
   const handleSetData = async (updatedValues) => {
     try {
-      // Create a copy of the active diet for updates
-      const newDietData = { ...activeDiet.details.dietData };
+      const newDietData = { ...activeDietData };
 
       // Initialize the nested structure if it doesn't exist
       if (!newDietData[year]) {
@@ -62,18 +74,20 @@ export default function Dashboard() {
         ...existingDayData,
         ...updatedValues,
       };
+      // Update local state
+      setActiveDietData(newDietData);
 
       // Update userDataObj with the new diet data
-      const updatedDiet = {
+      const updatedDietPlan = {
         ...userDataObj.diets[activeDiet.name], // Use activeDiet.name here
         dietData: newDietData,
       };
-
+      // update global state
       setUserDataObj({
         ...userDataObj,
         diets: {
           ...userDataObj.diets,
-          [activeDiet.name]: updatedDiet,
+          [activeDiet.name]: updatedDietPlan,
         },
       });
 
@@ -201,7 +215,7 @@ export default function Dashboard() {
       )}
 
       <Calendar
-        completeData={activeDiet.details.dietData}
+        completeData={activeDietData}
         onNoteClick={handleNoteClick}
       />
     </div>

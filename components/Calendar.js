@@ -37,8 +37,6 @@ export default function Calendar(props) {
   const data = completeData?.[selectedYear]?.[numericMonth];
   console.log("completedData: ", completeData);
 
-
-
   function handleIncrementAndDecrementMonth(val) {
     // val +1 -1
     // if we hit the bounds of the months, then we can just adjust the year that is displayed instead
@@ -152,7 +150,8 @@ export default function Calendar(props) {
                 return (
                   <div
                     key={dayOfWeekIndex}
-                    className={`text-xs sm:text-sm border border-solid p-2 flex items-center gap-1 justify-between rounded-lg ${
+                    style={{minHeight: "60px"}}
+                    className={`text-xs sm:text-sm border border-solid p-1 sm:p-2 flex items-center gap-1 justify-between rounded-lg ${
                       isToday && isCurrentMonth && isCurrentYear
                         ? "border-yellow-400 border-dashed border-2"
                         : "border-purple-100"
@@ -163,26 +162,37 @@ export default function Calendar(props) {
                     } `}
                   >
                     <p>{dayIndex}</p>
-                    {/* display a smiley face if both diet and exercise are true */}
-                    {data?.[dayIndex]?.diet && data?.[dayIndex]?.exercise ? (
-                      <p className="text-base sm:text-3xl">😀</p>
-                    ) : (
-                      ""
-                    )}
-                    {/* display a sad face if both diet and exercise are false */}
-                    {data?.[dayIndex]?.diet === false &&
-                    data[dayIndex]?.exercise === false ? (
-                      <p className="text-base sm:text-3xl">☹️</p>
-                    ) : (
-                      ""
-                    )}
-                    {/* display a meh face when only one of the two (diet or exercise) is true */}
-                    {(data?.[dayIndex]?.diet && !data?.[dayIndex]?.exercise) ||
-                    (!data?.[dayIndex]?.diet && data?.[dayIndex]?.exercise) ? (
-                      <p className="text-base sm:text-3xl">😐</p>
-                    ) : (
-                      ""
-                    )}
+                    {/* Div for emojis */}
+                    <div className="flex flex-col sm:flex-row items-center text-xl sm:text-2xl md:text-4xl">
+                      {/* display a smiley face if both diet and exercise are true */}
+                      {data?.[dayIndex]?.diet && data?.[dayIndex]?.exercise ? (
+                        <p>😀</p>
+                      ) : (
+                        ""
+                      )}
+                      {/* display a sad face if both diet and exercise are false */}
+                      {data?.[dayIndex]?.diet === false &&
+                      data[dayIndex]?.exercise === false ? (
+                        <p>☹️</p>
+                      ) : (
+                        ""
+                      )}
+                      {/* display a meh face when only one of the two (diet or exercise) is true */}
+                      {(data?.[dayIndex]?.diet &&
+                        !data?.[dayIndex]?.exercise) ||
+                      (!data?.[dayIndex]?.diet &&
+                        data?.[dayIndex]?.exercise) ? (
+                        <p>😐</p>
+                      ) : (
+                        ""
+                      )}
+                      {/* display a note emoji if note is true */}
+                      {data?.[dayIndex]?.note ? (
+                        <p>📝</p>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
                 );
               })}
