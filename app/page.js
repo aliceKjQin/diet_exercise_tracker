@@ -10,6 +10,8 @@ import ConfirmModal from "@/components/ConfirmModal";
 import Loading from "@/components/Loading";
 import { db } from "@/firebase";
 import Link from "next/link";
+import Login from "@/components/Login";
+import LoginPage from "./login/page";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -24,14 +26,25 @@ export default function HomePage() {
 
     try {
       const userRef = doc(db, "users", user.uid);
+      // Remove the diet data from Firestore
       await updateDoc(userRef, {
         [`diets.${activeDiet.name}`]: deleteField(), // Remove the diet
       });
+      //*** got error removing images from storage, need to fix later 
+      // Delete the initialBodyImage from Firebase Storage
+      // if (activeDiet.details.initialBodyImage) {
+      //   const imageRef = ref(storage, activeDiet.details.initialBodyImage);
+      //   await deleteObject(imageRef);
+      // }
+
+      // Delete the currentBodyImage from Firebase Storage
+      // if (activeDiet.details.currentBodyImage) {
+      //   const imageRef = ref(storage, activeDiet.details.currentBodyImage);
+      //   await deleteObject(imageRef);
+      // }
 
       setShowConfirmation(false);
-      setSuccessMessage(
-        "The diet was removed successfully! Redirecting to Diet Plan Form ..."
-      ); // Show success message
+      setSuccessMessage("The diet was removed successfully!"); // Show success message
 
       // *** forcing a full page reload will ensure that the component rerenders properly and reflects the removal of the active diet. As router.push('/')doesn’t trigger a full rerender for the same route.
       setTimeout(() => {
@@ -67,9 +80,11 @@ export default function HomePage() {
               View Active Diet Dashboard
             </Link>
           </button>
-         
-          <p className="mt-8 sm:mt-12">To start a new diet, please remove the current active one.</p>
-          
+
+          <p className="mt-8 sm:mt-12">
+            To start a new diet, please remove the current active one.
+          </p>
+
           <button
             onClick={() => setShowConfirmation(true)}
             className="bg-red-400 text-white font-bold py-2 px-4 rounded "
@@ -91,12 +106,12 @@ export default function HomePage() {
           )}
           {/* section to display success and error message if exits */}
           {successMessage && (
-            <p className="bg-green-100 text-green-800 rounded-md">
+            <p className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-green-100 text-green-800 rounded-md">
               {successMessage}
             </p>
           )}
           {errorMessage && (
-            <p className="bg-red-100 text-red-800 p-2 rounded-md">
+            <p className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-red-100 text-red-800 rounded-md">
               {errorMessage}
             </p>
           )}

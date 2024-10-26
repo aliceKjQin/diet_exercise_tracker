@@ -11,6 +11,8 @@ import NoteModal from "./NoteModal";
 import Button from "./Button";
 import { doc, setDoc } from "firebase/firestore";
 import { useActiveDiet } from "@/hooks/useActiveDiet"; // Import the hook
+import Link from "next/link";
+import ReasonModal from "./ReasonModal";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -20,18 +22,20 @@ export default function Dashboard() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedDayNote, setSelectedDayNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false);
-  const [ activeDietData, setActiveDietData ] = useState({}); // manage local state for  active diet data 
+  const [activeDietData, setActiveDietData] = useState({}); // manage local state for  active diet data
+  const [showReasonModal, setShowReasonModal] = useState(false);
+  const [reasonType, setReasonType] = useState("");
   const now = new Date();
   const day = now.getDate();
   const month = now.getMonth();
   const year = now.getFullYear();
 
-  // fetch updated dietData from the activeDiet when page reload or redirect to dashboard, so calendar can show the updated diet data in the cells;  
+  // fetch updated dietData from the activeDiet when page reload or redirect to dashboard, so calendar can show the updated diet data in the cells;
   useEffect(() => {
-    if(user && activeDiet) {
+    if (user && activeDiet) {
       setActiveDietData(activeDiet.details.dietData || {});
     }
-  }, [user, activeDiet, year, month, day])
+  }, [user, activeDiet, year, month, day]);
 
   const currentDayData = activeDietData?.[year]?.[month]?.[day];
 
@@ -81,16 +85,49 @@ export default function Dashboard() {
         },
         { merge: true }
       );
-
     } catch (err) {
       console.error(`Failed to update data: ${err.message}`);
     }
   };
   // handle toggle and handle set exercise and diet
   const handleToggle = (type) => {
-    const isLogged = type === "exercise" ? !!currentDayData?.exercise : !!currentDayData?.diet;
-    handleSetData({ [type]: !isLogged });
-  }; // Double Negation (!!): This converts a value into a boolean. If the value exists (i.e., there's already an exercise or diet entry for the day), it will return true; otherwise, it will return false.
+    const currentValue = currentDayData?.[type];
+    const missedReasonExists = currentDayData?.[`${type}MissedReason`];
+
+    if (currentValue === undefined) {
+      handleSetData({ [type]: true }); // Log as completed without a modal
+    }
+    // Case 2: If it's already logged as completed (true), toggle it off directly
+    else if (currentValue === true) {
+      handleSetData({ [type]: false }); // Toggle it off (i.e., marking as missed)
+      setReasonType(type);
+      setShowReasonModal(true);
+    }
+    // Case 3: If it's logged as missed (false), open the modal for a reason OR toggle it back to true
+    else if (currentValue === false) {
+      // handle toggling back to true directly if clicked again
+      if (missedReasonExists) {
+        // Toggle back to true when clicking on a missed entry
+        handleSetData({ [type]: true, [`${type}MissedReason`]: null }); // Remove the missed reason
+      } else {
+        // If there's no missed reason, open the modal
+        setReasonType(type);
+        setShowReasonModal(true);
+      }
+    }
+  };
+
+  const handleReasonSave = (reason) => {
+    const type = reasonType; // The type stored in the state when user logged as false
+    handleSetData({ [type]: false, [`${type}MissedReason`]: reason }); // Save the reason to db
+    setShowReasonModal(false); // close the modal
+  };
+
+  const handleReasonCancel = () => {
+    // Reset to true since the user canceled
+    handleSetData({ [reasonType]: true }); // Reset the activity to true
+    setShowReasonModal(false); // Close the modal
+  };
 
   const handleSetNote = (note) => {
     handleSetData({ note });
@@ -99,32 +136,50 @@ export default function Dashboard() {
   const hasNote = currentDayData?.note;
 
   // Render button for note
-const renderNoteButton = (emoji, hasNote, onClick) => (
-  <button
-    onClick={onClick}
-    className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-yellow-400 hover:bg-purple-100 text-center flex flex-col gap-2 flex-1`}
-  >
-    <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
-    <p className={`text-stone-600 text-xs sm:text-sm md:text-base ${roboto.className}`}>
-      {hasNote ? "Update Note" : "Add Note"}
-    </p>
-  </button>
-);
-
-
-  // renderButton for Exercise and Diet
-  const renderButton = (emoji, label, isLogged, onClick, color) => (
+  const renderNoteButton = (emoji, hasNote, onClick) => (
     <button
       onClick={onClick}
-      className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-${color} hover:bg-purple-100 text-center flex flex-col gap-2 flex-1`}
+      className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-yellow-400 hover:bg-purple-100 text-center flex flex-col gap-2 flex-1 items-center`}
     >
       <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
-      <p className={`text-stone-600 text-xs sm:text-sm md:text-base ${roboto.className}`}>
-        {isLogged ? `${label} Logged` : `Log ${label}`}
+      <p
+        className={`text-stone-600 text-xs sm:text-sm md:text-base ${roboto.className}`}
+      >
+        {hasNote ? "Update Note" : "Add Note"}
       </p>
     </button>
   );
 
+  // renderButton for Exercise and Diet
+  const renderButton = (emoji, label, currentValue, onClick, color) => {
+    return (
+      <button
+        onClick={onClick}
+        className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-${color} hover:bg-purple-100 text-center flex flex-col gap-2 flex-1 items-center`}
+      >
+        {currentValue === undefined ? (
+          <>
+            {/* Render only the label if currentValue is undefined */}
+            <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
+            <p
+              className={`text-stone-600 text-xs sm:text-sm md:text-base ${roboto.className}`}
+            >
+              {label}
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
+            <p
+              className={`text-stone-600 text-xs sm:text-sm md:text-base ${roboto.className}`}
+            >
+              {currentValue ? `${label} ✅` : `${label} ❌`}
+            </p>
+          </>
+        )}
+      </button>
+    );
+  };
 
   // the note here is the selected day's note passed from calendar
   const onNoteClick = (note) => {
@@ -145,47 +200,73 @@ const renderNoteButton = (emoji, hasNote, onClick) => (
   }
 
   return (
-    <div className="flex flex-col flex-1 gap-8 sm:gap-12 md:gap-16">
-      <h4
-        className={
-          "text-5xl sm:text-6xl md:text-7xl text-center " + roboto.className
-        }
-      >
-        Today's Activities
-      </h4>
-      <div className="flex items-stretch flex-wrap gap-4">
-        {/* Exercise Button */}
-        {renderButton("🏋️", "Exercise", !!currentDayData?.exercise, () => handleToggle("exercise"), "teal-400")}
-        {renderButton("🍽️", "Diet", !!currentDayData?.diet, () => handleToggle("diet"), "red-400")}
-        {renderNoteButton("📝", hasNote, () => setShowNoteModal(true))}
+    <>
+      <div className="flex mb-2">
+        <Link href={`/progress/${activeDiet.name}`} className="ml-auto">
+          View Progress <span className="text-lg sm:text-xl">➡️</span> 
+        </Link>
       </div>
+      <div className="flex flex-col flex-1 gap-8 sm:gap-12">
+        <h4
+          className={
+            "text-3xl sm:text-5xl text-center " + roboto.className
+          }
+        >
+          Today's Activities
+        </h4>
 
-      {/* Note modal to add optional note */}
-      {showNoteModal && (
-        <NoteModal
-          onSave={(note) => {
-            handleSetNote(note);
-            setShowNoteModal(false);
-          }}
-          onClose={() => setShowNoteModal(false)}
-          initialNote={currentDayData?.note || ""}
-        />
-      )}
-
-      {/* display the note when user clicks the note emoji from calendar */}
-      {selectedDayNote && isNoteVisible && (
-        <div className="relative flex flex-col bg-purple-50 text-purple-500 p-4 gap-4 rounded-lg">
-          <p>{selectedDayNote}</p>
-          <div className="flex justify-end mt-auto">
-            <Button clickHandler={toggleNoteVisibility} text="Close" dark />
-          </div>
+        <div className="flex items-stretch flex-wrap gap-4">
+          {/* Exercise Button */}
+          {renderButton(
+            "🏋️",
+            "Exercise",
+            currentDayData?.exercise,
+            () => handleToggle("exercise"),
+            "teal-400"
+          )}
+          {renderButton(
+            "🍽️",
+            "Diet",
+            currentDayData?.diet,
+            () => handleToggle("diet"),
+            "red-400"
+          )}
+          {renderNoteButton("📝", hasNote, () => setShowNoteModal(true))}
         </div>
-      )}
 
-      <Calendar
-        completeData={activeDietData}
-        onNoteClick={onNoteClick}
-      />
-    </div>
+        {/* Note modal to add optional note */}
+        {showNoteModal && (
+          <NoteModal
+            onSave={(note) => {
+              handleSetNote(note);
+              setShowNoteModal(false);
+            }}
+            onClose={() => setShowNoteModal(false)}
+            initialNote={currentDayData?.note || ""}
+          />
+        )}
+
+        {/* display the note when user clicks the note emoji from calendar */}
+        {selectedDayNote && isNoteVisible && (
+          <div className="relative flex flex-col bg-purple-50 text-purple-500 p-4 gap-4 rounded-lg">
+            <p>{selectedDayNote}</p>
+            <div className="flex justify-end mt-auto">
+              <Button clickHandler={toggleNoteVisibility} text="Close" dark />
+            </div>
+          </div>
+        )}
+
+        {/* display reasonModal when user logged exercise or diet as false */}
+        {showReasonModal && (
+          <ReasonModal
+            type={reasonType}
+            onSave={handleReasonSave}
+            onClose={handleReasonCancel}
+          />
+        )}
+
+        <Calendar completeData={activeDietData} onNoteClick={onNoteClick} />
+      </div>
+    </>
   );
 }

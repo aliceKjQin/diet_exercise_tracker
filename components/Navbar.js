@@ -22,21 +22,21 @@ export default function Navbar() {
           <div className="flex">
             <Link
               href="/"
-              className={`flex-shrink-0 flex items-center textGradient ${roboto.className}`}
+              className={`flex-shrink-0 flex items-center textGradient font-bold ${roboto.className}`}
             >
               Diet & Exercise Tracker
             </Link>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-0.5">
             {user ? (
               <>
                 <ThemeToggle />
-                <Link
+                {activeDiet && <Link
                   href={`/dashboard/${activeDiet?.name}`}
                   className="textGradient font-bold mx-4"
                 >
                   Dashboard
-                </Link>
+                </Link>}
                 <button
                   onClick={() => {
                     logout();

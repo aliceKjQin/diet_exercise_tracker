@@ -120,11 +120,12 @@ export default function DietPlanForm() {
         });
         localStorage.removeItem("dietPlan");
 
-        // Show success message and direct to dashboard after two seconds
+        // Show success message
         setIsSaved(true);
 
+        // *** forcing a full page reload will ensure that the component rerenders properly and reflects the userDataObj once user submit the diet plan form. router.push('/')doesn’t trigger a full rerender.
         setTimeout(() => {
-          router.push(`/dashboard/${dietPlan.dietName}`);
+          window.location.reload();
         }, 2000);
       } catch (error) {
         console.error("Error saving diet plan:", error);
@@ -147,7 +148,7 @@ export default function DietPlanForm() {
   if (isSaved) {
     return (
       <div className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-green-100 text-green-800 rounded-md">
-        Your diet plan has been saved successfully! Redirecting to dashboard...
+        Your diet plan has been saved successfully!
       </div>
     );
   }

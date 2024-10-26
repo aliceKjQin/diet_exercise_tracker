@@ -35,7 +35,6 @@ export default function Calendar(props) {
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
   const data = completeData?.[selectedYear]?.[numericMonth];
-  console.log("completedData: ", completeData);
 
   function handleIncrementAndDecrementMonth(val) {
     // val +1 -1

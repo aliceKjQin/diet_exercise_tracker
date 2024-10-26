@@ -9,14 +9,25 @@ DEMO DATA
             "initialWeight": 120,
             ["currentWeight"]: 118,
             isActive: true // update the value to false once the targetDays is reached
-            "initialBodyImage": null
+            "initialBodyImage": null,
+            "insights": {
+              "lastGenerated": "2024-01-15",  // date of the last generate insight
+              "data": "Insight details from GPT" // Cached GPT insight
+            },
             "dietData": {
               ["2024"]: {
                 ["1"]: {
-                  ["15"]: { "diet": true, "exercise": true }
-                  ["16"]: { 
+                  ["15"]: { 
+                    "diet": false,
+                     "exercise": false,
+                     "dietMissedReason": "Other: Friends in town", // "Other" option with custom reason
+                     "exerciseMissedReason": "Other: Friends in town", // "Other" option with custom reason
+                      }
+                  ["17"]: {
+                    "exercise": false,
                     "diet": true,
-                    "note": "got an event today, wasn't able to get exercise done"
+                    "note": "got an event today, wasn't able to get exercise done",
+                    "exerciseMissedReason": "Conflict with schedule"  // Predefined reason
                    },
                   // ... * dietData: {} Initially empty, filled in as user progresses
                 },
@@ -28,6 +39,13 @@ DEMO DATA
             "idealGoalWeight": 100,
             "initialWeight": 120,
             ["currentWeight"]: 118,
+            "initialBodyImage": initialImageUrl,
+            "currentBodyImage": currentImageUrl,
+            isActive: false,
+            "insights": {
+              "lastGenerated": "2024-09-16",
+              "data": "Archived insight from last GPT analysis"
+            },
             "dietData": {
               ["2024"]: {
                 ["9"]: {
