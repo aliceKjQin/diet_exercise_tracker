@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import UploadCurrentImage from "@/components/UploadImage";
 import { useAuth } from "@/contexts/AuthContext";
 import { useActiveDiet } from "@/hooks/useActiveDiet";
 import ProgressBar from "@/components/ProgressBar";
@@ -13,6 +12,7 @@ import UploadImage from "@/components/UploadImage";
 import MissedDaysChart from "@/components/MissedDaysChart";
 import Button from "@/components/Button";
 import Link from "next/link";
+import WeightProgressBar from "@/components/WeightProgressBar";
 
 export default function ProgressPage() {
   const [showImages, setShowImages] = useState(false);
@@ -37,12 +37,19 @@ export default function ProgressPage() {
 
   return (
     <Main>
-      <Link href={`/dashboard/${dietName}`}> <span className="text-lg sm:text-xl">⬅️</span> Go back</Link>
-      <div className="flex flex-col gap-8 justify-center items-center">
+      {/* Go back button */}
+      <div className=" textGradient dark:text-blue-500 font-bold mb-4">
+      <Link href={`/dashboard/${dietName}`}> <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back</Link>
+      </div>
+      
+      <div className="flex flex-col gap-8 items-center">
         <h3 className="font-bold text-lg sm:text-xl">Progress Overview</h3>
 
         {/* Pass dietData and targetDays to ProgressBar */}
         <ProgressBar dietData={dietData} targetDays={targetDays} />
+
+        {/* Weight Progress Bar */}
+        <WeightProgressBar startingWeight={activeDiet.details.initialWeight} targetWeight={activeDiet.details.targetWeight} userId={user.uid} dietName={activeDiet.name} />
 
         {/* Missed reasons percentage pie chart */}
         <MissedReasonsChart
@@ -61,9 +68,9 @@ export default function ProgressPage() {
 
         {/* initial vs. current image display section */}
         {showImages && (
-          <div className="sm:flex gap-8 text-center uppercase">
+          <div className="sm:flex gap-8 text-center">
             <div>
-              <h3 className="mb-4 textGradient">Before</h3>
+              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">Before</h3>
               {initialImageUrl ? (
                 <>
                   <img
@@ -86,7 +93,7 @@ export default function ProgressPage() {
               )}
             </div>
             <div>
-              <h3 className="mb-4 textGradient">After</h3>
+              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">After</h3>
               {currentImageUrl ? (
                 <>
                   <img

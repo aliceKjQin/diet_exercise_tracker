@@ -201,19 +201,17 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="flex mb-2">
+      <div className="flex mb-4 font-bold textGradient dark:text-blue-500">
         <Link href={`/progress/${activeDiet.name}`} className="ml-auto">
-          View Progress <span className="text-lg sm:text-xl">➡️</span> 
+          View Progress <i className="fa-solid fa-circle-arrow-right fa-lg "></i> 
         </Link>
       </div>
       <div className="flex flex-col flex-1 gap-8 sm:gap-12">
-        <h4
-          className={
-            "text-3xl sm:text-5xl text-center " + roboto.className
-          }
+        <h3
+          className="text-lg sm:text-xl text-center font-bold"
         >
           Today's Activities
-        </h4>
+        </h3>
 
         <div className="flex items-stretch flex-wrap gap-4">
           {/* Exercise Button */}

@@ -76,7 +76,7 @@ export default function Calendar(props) {
     <div className="flex flex-col gap-2">
       <div className="grid grid-cols-5 gap-4">
         <button
-          className="mr-auto text-purple-400 text-lg sm:text-xl duration-200 hover:opacity-60"
+          className="mr-auto text-purple-400 dark:text-blue-400 text-lg sm:text-xl duration-200 hover:opacity-60"
           onClick={() => handleIncrementAndDecrementMonth(-1)}
         >
           <i className="fa-solid fa-circle-chevron-left"></i>
@@ -84,12 +84,12 @@ export default function Calendar(props) {
         {/* div containing the month, year, and "Today" button */}
         <div className="col-span-3 flex justify-center items-center">
           <p
-            className={`text-center textGradient whitespace-nowrap ${roboto.className}`}
+            className={`text-center text-purple-400 dark:text-blue-400 whitespace-nowrap ${roboto.className}`}
           >
             {selectedMonth}, {selectedYear}
           </p>
           <button
-            className={`ml-4 bg-purple-400 text-white px-3  rounded-lg duration-200 hover:opacity-60 ${roboto.className}`}
+            className={`ml-4 bg-purple-400 dark:bg-blue-400 text-white px-3  rounded-lg duration-200 hover:opacity-60 ${roboto.className}`}
             onClick={handleToday}
           >
             Today
@@ -97,7 +97,7 @@ export default function Calendar(props) {
         </div>
 
         <button
-          className="ml-auto text-purple-400 text-lg sm:text-xl duration-200 hover:opacity-60"
+          className="ml-auto text-purple-400 dark:text-blue-400 text-lg sm:text-xl duration-200 hover:opacity-60"
           onClick={() => handleIncrementAndDecrementMonth(1)}
         >
           <i className="fa-solid fa-circle-chevron-right"></i>
@@ -108,7 +108,7 @@ export default function Calendar(props) {
         {dayList.map((dayOfWeek, dayOfWeekIndex) => (
           <span
             key={dayOfWeekIndex}
-            className={`text-center textGradient ${roboto.className}`}
+            className={`text-center textGradient dark:text-blue-400  ${roboto.className}`}
           >
             {dayOfWeek}
           </span>
@@ -140,7 +140,7 @@ export default function Calendar(props) {
                 if (!dayDisplay) {
                   return (
                     <div
-                      className="bg-white dark:bg-zinc-700"
+                      className="bg-purple-50 dark:bg-sky-50"
                       key={dayOfWeekIndex}
                     ></div>
                   );
@@ -153,11 +153,11 @@ export default function Calendar(props) {
                     className={`text-xs sm:text-sm border border-solid p-1 sm:p-2 flex items-center gap-1 justify-between rounded-lg ${
                       isToday && isCurrentMonth && isCurrentYear
                         ? "border-yellow-400 border-dashed border-2"
-                        : "border-purple-100"
+                        : "border-purple-100 dark:border-blue-100"
                     } ${
                       data?.[dayIndex]
-                        ? "text-white bg-purple-400"
-                        : "text-purple-400 dark:text-white bg-white dark:bg-zinc-700"
+                        ? "text-white bg-purple-400 dark:bg-blue-400"
+                        : "text-purple-400 dark:text-blue-400 bg-white"
                     } `}
                   >
                     <p>{dayIndex}</p>

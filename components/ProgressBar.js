@@ -57,30 +57,40 @@ export default function ProgressBar({ targetDays, dietData }) {
   const neutralPercentage = (facesCount.neutral / totalLoggedDays) * progress;
   const sadPercentage = (facesCount.sad / totalLoggedDays) * progress;
 
+  // Other useful stats
+  const daysLeft = targetDays - totalLoggedDays;
+
   return (
-    <div className="w-full bg-gray-200 h-10 sm:h-12 dark:bg-gray-700 mb-4 sm:mb-6">
-      <div className="relative w-full h-full flex">
-        <div
-          className="bg-green-400 h-full"
-          style={{ width: `${happyPercentage}%` }}
-        ></div>
-        <div
-          className="bg-yellow-400 h-full"
-          style={{ width: `${neutralPercentage}%` }}
-        ></div>
-        <div
-          className="bg-red-400 h-full"
-          style={{ width: `${sadPercentage}%` }}
-        ></div>
-      </div>
-      {/* Position emojis based on percentage */}
+    <>
+      <p className="textGradient dark:text-blue-500 font-bold uppercase">
+      <i className="fa-regular fa-calendar"></i> {daysLeft} days left
+      </p>
+      {/* progress bar */}
+      <div className="w-full h-10 sm:h-12 bg-gray-300 mb-4 sm:mb-6">
+        <div className="relative w-full h-full flex">
+          <div
+            className="bg-green-400 h-full"
+            style={{ width: `${happyPercentage}%` }}
+          ></div>
+          <div
+            className="bg-yellow-400 h-full"
+            style={{ width: `${neutralPercentage}%` }}
+          ></div>
+          <div
+            className="bg-red-400 h-full"
+            style={{ width: `${sadPercentage}%` }}
+          ></div>
+        </div>
+        {/* Position emojis based on percentage */}
         <div className="relative w-full h-0 text-lg sm:text-2xl">
-          {happyPercentage > 0 && <span
-            className="absolute"
-            style={{ left: `0%` }} // Start of happy section
-          >
-            😀
-          </span>}
+          {happyPercentage > 0 && (
+            <span
+              className="absolute"
+              style={{ left: `0%` }} // Start of happy section
+            >
+              😀
+            </span>
+          )}
           {neutralPercentage > 0 && (
             <span
               className="absolute"
@@ -98,6 +108,7 @@ export default function ProgressBar({ targetDays, dietData }) {
             </span>
           )}
         </div>
-    </div>
+      </div>
+    </>
   );
 }

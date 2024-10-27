@@ -38,8 +38,6 @@ export default function useProgressData(activeDiet) {
         // Step 1: Get the past week's date range
         const pastWeekDates = getPastWeekDates();
         const dietData = activeDiet.details.dietData;
-        console.log("ActiveDiet' dietData in useProgressData hook:", dietData);
-        console.log("PastWeekDates: ", pastWeekDates);
 
         // Step 2: Initialize counters for missed reasons and days
         const dietMissedReasons = {};
@@ -111,9 +109,8 @@ export default function useProgressData(activeDiet) {
           dietMissedPercentages,
           exerciseMissedPercentages,
         });
-        console.log("Data for charts:", data);
       } catch (error) {
-        console.log("Error processing progress data: ", error);
+        console.error("Error processing progress data: ", error);
       } finally {
         setLoading(false);
       }

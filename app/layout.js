@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
       <ThemeProvider>
         <AuthProvider>
           <body
-            className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col  ${opensans.className} bg-white dark:bg-zinc-900 text-slate-800 dark:text-white`}
+            className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col  ${opensans.className} bg-purple-50 dark:bg-sky-50 text-stone-700`}
           >
             <Navbar />
             {children}

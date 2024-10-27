@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { storage, db } from "../firebase"; // Import your firebase config
+import { storage, db } from "../firebase"; 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
@@ -72,11 +72,11 @@ export default function UploadImage({ dietName, type = "current", existingImageU
         <input
           type="file"
           onChange={handleImageUpload}
-          className="w-[220px] sm:w-[300px] block border border-stone-300 p-2 rounded-md text-stone-800 dark:text-white"
+          className="w-[220px] sm:w-[300px] block border border-stone-300 p-2 rounded-md text-stone-800"
         />
         <button
           type="submit"
-          className="w-[220px] sm:w-[300px] bg-purple-400 hover:bg-purple-200 hover:text-stone-600 font-bold py-2 px-6 rounded-3xl text-white"
+          className="w-[220px] sm:w-[300px] bg-purple-400 dark:bg-blue-400 hover:bg-purple-200 hover:text-stone-600 font-bold py-2 px-6 rounded-3xl text-white"
         >
           {existingImageUrl ? "Update Image" : "Upload Image"}
         </button>

@@ -16,13 +16,13 @@ export default function Navbar() {
   const router = useRouter()
 
   return (
-    <nav className="bg-white dark:bg-zinc-700 shadow-sm">
+    <nav className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link
               href="/"
-              className={`flex-shrink-0 flex items-center textGradient font-bold ${roboto.className}`}
+              className={`flex-shrink-0 flex items-center textGradient dark:text-blue-500 font-bold ${roboto.className}`}
             >
               Diet & Exercise Tracker
             </Link>
@@ -33,7 +33,7 @@ export default function Navbar() {
                 <ThemeToggle />
                 {activeDiet && <Link
                   href={`/dashboard/${activeDiet?.name}`}
-                  className="textGradient font-bold mx-4"
+                  className="textGradient dark:text-blue-500 font-bold mx-4"
                 >
                   Dashboard
                 </Link>}
@@ -42,7 +42,7 @@ export default function Navbar() {
                     logout();
                     router.push("/login");
                   }}
-                  className="textGradient font-bold"
+                  className="textGradient dark:text-blue-500 font-bold"
                 >
                   Logout
                 </button>
@@ -50,7 +50,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="textGradient font-bold"
+                className="textGradient dark:text-blue-500 font-bold"
               >
                 Login
               </Link>
