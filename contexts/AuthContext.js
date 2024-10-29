@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { db, auth } from "@/firebase";
 import {
@@ -20,6 +20,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [userDataObj, setUserDataObj] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeDiet, setActiveDiet] = useState(null);
 
   // Auth handlers
   function signup(email, password) {
@@ -36,13 +37,13 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
-  // When the component mounts: The useEffect runs, and it sets up the listener (onAuthStateChanged). This listener checks if a user is logged in or not, and based on that, it fetches user data if the user is logged in. 
+  // When the component mounts: The useEffect runs, and it sets up the listener (onAuthStateChanged). This listener checks if a user is logged in or not, and based on that, it fetches user data if the user is logged in.
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async user => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         // Set the user to local context state
         setLoading(true);
-        setUser(user); 
+        setUser(user);
         if (!user) {
           console.log("No User Found");
           return;
@@ -59,6 +60,17 @@ export function AuthProvider({ children }) {
           console.log(firebaseData);
         }
         setUserDataObj(firebaseData);
+
+        // Fetch active diet
+        const diets = firebaseData.diets || {};
+        const activeDiet = Object.entries(diets).find(
+          ([, dietDetails]) => dietDetails.isActive
+        );
+        if (activeDiet) {
+          setActiveDiet({ name: activeDiet[0], details: activeDiet[1] });
+        } else {
+          setActiveDiet(null); // Reset if no active diet
+        }
       } catch (error) {
         console.log(error.message);
       } finally {
@@ -72,6 +84,8 @@ export function AuthProvider({ children }) {
     user,
     userDataObj,
     setUserDataObj,
+    activeDiet,
+    setActiveDiet,
     loading,
     signup,
     login,

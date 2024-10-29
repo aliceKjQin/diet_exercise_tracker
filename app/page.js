@@ -4,7 +4,6 @@ import DietPlanForm from "@/components/DietPlanForm";
 import Main from "@/components/Main";
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
-import { useActiveDiet } from "@/hooks/useActiveDiet"; 
 import { useState } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
 import Loading from "@/components/Loading";
@@ -13,8 +12,7 @@ import Link from "next/link";
 import { deleteObject, ref } from "firebase/storage";
 
 export default function HomePage() {
-  const { user } = useAuth();
-  const { activeDiet, loading } = useActiveDiet(user);
+  const { user, activeDiet, setActiveDiet, loading } = useAuth();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -49,26 +47,21 @@ export default function HomePage() {
       }
 
       setShowConfirmation(false);
-      setSuccessMessage("The diet was removed successfully!"); // Show success message
 
-      // *** forcing a full page reload will ensure that the component rerenders properly and reflects the removal of the active diet. As router.push('/')doesn’t trigger a full rerender for the same route.
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      setActiveDiet(null)
+
     } catch (error) {
       console.error("Error removing diet:", error);
       setErrorMessage("Failed to remove the diet. Please try again.");
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />
 
-  if (activeDiet) {
     return (
       <Main>
-        <div className="max-w-lg mx-auto mt-4 p-2 sm:text-xl flex flex-col gap-4">
+        {/* conditionally render diet plan form */}
+        {activeDiet ? (<div className="max-w-lg mx-auto mt-4 p-2 sm:text-xl flex flex-col gap-4">
           <h1>
             Current Active Diet:{" "}
             <span className="uppercase textGradient font-bold">
@@ -110,24 +103,13 @@ export default function HomePage() {
             />
           )}
           {/* section to display success and error message if exits */}
-          {successMessage && (
-            <p className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-green-100 text-green-800 rounded-md">
-              {successMessage}
-            </p>
-          )}
           {errorMessage && (
             <p className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-red-100 text-red-800 rounded-md">
               {errorMessage}
             </p>
           )}
-        </div>
+        </div>) : (<DietPlanForm />)}
       </Main>
     );
-  }
-  // Return diet plan form if no active diet exists.
-  return (
-    <Main>
-      <DietPlanForm />
-    </Main>
-  );
+
 }

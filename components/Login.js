@@ -5,6 +5,7 @@ import Button from "./Button";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import Loading from "./Loading";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 

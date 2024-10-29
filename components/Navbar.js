@@ -5,14 +5,12 @@ import { Roboto } from "next/font/google";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import {useRouter} from "next/navigation";
-import { useActiveDiet } from "@/hooks/useActiveDiet";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
-  const { activeDiet } = useActiveDiet(user)
+  const { user, logout, activeDiet } = useAuth();
   const router = useRouter()
 
   return (

@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { demoData } from "@/utils";
 import { Roboto } from "next/font/google";
-import { useActiveDiet } from "@/hooks/useActiveDiet";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 

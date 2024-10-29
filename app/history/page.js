@@ -17,7 +17,7 @@ export default function HistoryPage() {
   return (
     <Main>
       {inactiveDiets.length > 0 ? (
-        <div>
+        <div className=" flex flex-col gap-4">
           <p>Archived List</p>
           {inactiveDiets.map((diet) => {
             const dietName = diet.name;
@@ -36,6 +36,10 @@ export default function HistoryPage() {
               </div>
             );
           })}
+          {/* Create diet plan button */}
+          <Link href={"/"} className="text-center mt-4">
+            <Button text="Create New Diet Plan" />
+          </Link>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4">

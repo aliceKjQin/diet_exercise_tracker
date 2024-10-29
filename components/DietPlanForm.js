@@ -17,9 +17,8 @@ export default function DietPlanForm() {
     initialBodyImage: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
   const [error, setError] = useState(null);
-  const { user } = useAuth();
+  const { user, setActiveDiet } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -101,14 +100,16 @@ export default function DietPlanForm() {
         };
 
         await setDoc(
-          userRef,
-          {
-            diets: {
-              [formattedDietName]: updatedDietPlan,
-            },
-          },
+          doc(db, "users", user.uid),
+          { diets: { [formattedDietName]: updatedDietPlan } },
           { merge: true }
         );
+
+        // Set active diet in AuthContext after saving successfully, so homepage can render the newly added activeDiet
+        setActiveDiet({
+          name: formattedDietName,
+          details: updatedDietPlan,
+        });
 
         // Success: Clear the form and localStorage
         setDietPlan({
@@ -120,13 +121,6 @@ export default function DietPlanForm() {
         });
         localStorage.removeItem("dietPlan");
 
-        // Show success message
-        setIsSaved(true);
-
-        // *** forcing a full page reload will ensure that the component rerenders properly and reflects the userDataObj once user submit the diet plan form. router.push('/')doesn’t trigger a full rerender.
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
       } catch (error) {
         console.error("Error saving diet plan:", error);
         setError("Error saving diet plan. Please try again."); // indicate err to user
@@ -143,14 +137,6 @@ export default function DietPlanForm() {
 
   if (isSubmitting) {
     return <Loading />;
-  }
-
-  if (isSaved) {
-    return (
-      <div className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-green-100 text-green-800 rounded-md">
-        Your diet plan has been saved successfully!
-      </div>
-    );
   }
 
   return (
@@ -227,7 +213,12 @@ export default function DietPlanForm() {
           />
         </div>
         <div>
-          <label htmlFor="initialBodyImage" className="block text-sm font-medium mb-1">Upload Initial Body Shape</label>
+          <label
+            htmlFor="initialBodyImage"
+            className="block text-sm font-medium mb-1"
+          >
+            Upload Initial Body Shape
+          </label>
           <input
             type="file"
             name="initialBodyImage"

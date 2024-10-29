@@ -7,15 +7,18 @@ const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
+
     if (savedTheme) {
       setTheme(savedTheme);
       document.documentElement.classList.add(savedTheme);
-    }
-  }, []); // will the callback here run again when reload the page?
+    } 
+    setIsLoading(false)
+  }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -24,10 +27,10 @@ export const ThemeProvider = ({ children }) => {
     document.documentElement.classList.add(newTheme);
     localStorage.setItem("theme", newTheme);
   };
-
+  // Only render children once the theme has been determined
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
+      {!isLoading ? children : null} {/* Render children only when loading is false */}
     </ThemeContext.Provider>
   );
 };

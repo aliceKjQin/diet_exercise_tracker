@@ -59,10 +59,7 @@ export default function useProgressData(activeDiet) {
 
           const dayData =
             dietData?.[numericYear]?.[numericMonth]?.[numericDay];
-          console.log("DayData: ", dayData);
-          console.log("DietData[numericYear]: ", dietData[numericYear])
-          console.log("DietData for Year and Month: ", dietData[numericYear][numericMonth]);
-          console.log("dietData: ", dietData)
+          
           if (dayData) {
             // Diet missed reason processing
             if (dayData.diet === false && dayData.dietMissedReason) {
