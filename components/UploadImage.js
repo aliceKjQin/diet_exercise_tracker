@@ -7,9 +7,8 @@ import { doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import Loading from "./Loading";
 
-export default function UploadImage({ dietName, type = "current", existingImageUrl }) {
+export default function UploadImage({ dietName, type = "current", existingImageUrl, onImageUpdate }) {
   const [image, setImage] = useState(null);
-  const [isSaved, setIsSaved] = useState(null);
   const [loading, setLoading] = useState(null)
   const { user } = useAuth(); 
 
@@ -32,22 +31,17 @@ export default function UploadImage({ dietName, type = "current", existingImageU
         `users/${user.uid}/diets/${dietName}/${imageType}.jpg`
       );
 
-      // Upload image to Firebase Storage
+      // Upload image to Firebase Storage 
       await uploadBytes(storageRef, image);
 
       // Get download URL
       const downloadUrl = await getDownloadURL(storageRef);
 
-      // Update the specific diet with the currentBodyImage URL
+      // Update db and call the onImageUpdate prop
       await updateDoc(userRef, {
         [`diets.${dietName}.${imageType}`]: downloadUrl,
       });
-
-      // Todo: use success message instead of alert, when page reload(), display a spinner
-      setIsSaved(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      onImageUpdate(downloadUrl); // Pass the new URL to ProgressPage
       
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -57,14 +51,6 @@ export default function UploadImage({ dietName, type = "current", existingImageU
   };
 
   if (loading) return <Loading />
-
-  if (isSaved) {
-    return (
-      <div className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-green-100 text-green-800 rounded-md">
-        {type === "current" ? "Current" : "Initial"} body image {existingImageUrl ? "updated" : "uploaded" } successfully!
-      </div>
-    );
-  }
 
   return (
     <div className="mb-4">

@@ -5,6 +5,26 @@ import { Chart, ArcElement, Tooltip, Legend, Colors, Title } from "chart.js";
 // Register necessary components
 Chart.register(ArcElement, Tooltip, Legend, Colors, Title);
 
+// Register custom plugin for displaying "No data available" message
+Chart.register({
+    id: 'noDataMessage',
+    afterDraw: (chart) => {
+      const { datasets } = chart.data;
+      const hasData = datasets.some((dataset) => dataset.data.length > 0);
+  
+      if (!hasData) {
+        const { ctx, width, height } = chart;
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '16px sans-serif';
+        ctx.fillStyle = 'gray';
+        ctx.fillText('No data available yet', width / 2, height / 2);
+        ctx.restore();
+      }
+    },
+  });
+
 export default function MissedReasonsChart({
   dietMissedData = {}, // Default to an empty object if undefined
   exerciseMissedData = {},
@@ -42,7 +62,7 @@ export default function MissedReasonsChart({
     plugins: {
       title: {
         display: true,
-        text: "Diet Missed Reasons",
+        text: "Diet Missed Reasons Past Week",
       },
       legend: {
         position: "bottom",
@@ -55,7 +75,7 @@ export default function MissedReasonsChart({
     plugins: {
       title: {
         display: true,
-        text: "Exercise Missed Reasons",
+        text: "Exercise Missed Reasons Past Week",
       },
       legend: {
         position: "bottom",

@@ -80,7 +80,7 @@ export default function Login() {
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-3 duration-200 hover:border-purple-400 dark:hover:border-blue-400 focus:border-purple-400 dark:focus:border-blue-400 py-2 sm:py-3 border border-solid border-purple-300 rounded-full outline-none text-black"
+          className="w-full px-3 duration-200 hover:border-purple-400 dark:hover:border-blue-400 focus:border-purple-400 dark:focus:border-blue-400 py-2 sm:py-3 border border-solid border-purple-300 dark:border-blue-300 rounded-full outline-none text-black"
           placeholder="Password"
           type={showPassword ? "text" : "password"}
         />
@@ -99,7 +99,7 @@ export default function Login() {
       <div className="max-w-[400px] w-full mx-auto">
         <Button
           clickHandler={handleSubmit}
-          text={authenticating ? "submitting" : "submit"}
+          text={authenticating ? "Submitting" : "Submit"}
           full
           dark
         />

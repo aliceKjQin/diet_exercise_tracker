@@ -246,7 +246,7 @@ export default function Dashboard() {
 
         {/* display the note when user clicks the note emoji from calendar */}
         {selectedDayNote && isNoteVisible && (
-          <div className="relative flex flex-col bg-purple-50 text-purple-500 p-4 gap-4 rounded-lg">
+          <div className="relative flex flex-col bg-purple-200 dark:bg-sky-200 text-stone-600 p-4 gap-4 rounded-lg">
             <p>{selectedDayNote}</p>
             <div className="flex justify-end mt-auto">
               <Button clickHandler={toggleNoteVisibility} text="Close" dark />

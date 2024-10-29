@@ -19,15 +19,16 @@ export default function Navbar() {
     <nav className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
+          <div className="flex gap-4">
             <Link
               href="/"
               className={`flex-shrink-0 flex items-center textGradient dark:text-blue-500 font-bold ${roboto.className}`}
             >
-              Diet & Exercise Tracker
+              D & E
             </Link>
+            <Link href={'/history'} className={`flex-shrink-0 flex items-center textGradient dark:text-blue-500 font-bold ${roboto.className}`}>History</Link>
           </div>
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-2">
             {user ? (
               <>
                 <ThemeToggle />

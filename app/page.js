@@ -4,14 +4,13 @@ import DietPlanForm from "@/components/DietPlanForm";
 import Main from "@/components/Main";
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
-import { useActiveDiet } from "@/hooks/useActiveDiet"; // Custom Hook
+import { useActiveDiet } from "@/hooks/useActiveDiet"; 
 import { useState } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
 import Loading from "@/components/Loading";
-import { db } from "@/firebase";
+import { db, storage } from "@/firebase";
 import Link from "next/link";
-import Login from "@/components/Login";
-import LoginPage from "./login/page";
+import { deleteObject, ref } from "firebase/storage";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -30,18 +29,24 @@ export default function HomePage() {
       await updateDoc(userRef, {
         [`diets.${activeDiet.name}`]: deleteField(), // Remove the diet
       });
-      //*** got error removing images from storage, need to fix later 
+
       // Delete the initialBodyImage from Firebase Storage
-      // if (activeDiet.details.initialBodyImage) {
-      //   const imageRef = ref(storage, activeDiet.details.initialBodyImage);
-      //   await deleteObject(imageRef);
-      // }
+      if (activeDiet.details.initialBodyImage) {
+        const storageRef = ref(
+          storage,
+          `users/${user.uid}/diets/${activeDiet.name}/initialBodyImage.jpg`
+        );
+        await deleteObject(storageRef)
+      }
 
       // Delete the currentBodyImage from Firebase Storage
-      // if (activeDiet.details.currentBodyImage) {
-      //   const imageRef = ref(storage, activeDiet.details.currentBodyImage);
-      //   await deleteObject(imageRef);
-      // }
+      if (activeDiet.details.currentBodyImage) {
+        const storageRef = ref(
+          storage,
+          `users/${user.uid}/diets/${activeDiet.name}/currentBodyImage.jpg`
+        );
+        await deleteObject(storageRef)
+      }
 
       setShowConfirmation(false);
       setSuccessMessage("The diet was removed successfully!"); // Show success message
@@ -75,7 +80,7 @@ export default function HomePage() {
             <span className="textGradient">{activeDiet.details.startDate}</span>{" "}
             and still in progress.
           </p>
-          <button className="bg-teal-400 text-white font-bold py-2 px-4 rounded ">
+          <button className="bg-emerald-400 text-white font-bold py-2 px-4 rounded ">
             <Link href={`/dashboard/${activeDiet.name}`}>
               View Active Diet Dashboard
             </Link>

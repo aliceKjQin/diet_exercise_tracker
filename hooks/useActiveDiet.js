@@ -19,7 +19,7 @@ export const useActiveDiet = (user) => {
         if (docSnapshot.exists()) {
           const diets = docSnapshot.data()?.diets || {};
           const activeDiet = Object.entries(diets).find(
-            ([, diet]) => diet.isActive
+            ([, dietDetails]) => dietDetails.isActive
           );
           if (activeDiet) {
             setActiveDiet({ name: activeDiet[0], details: activeDiet[1] });

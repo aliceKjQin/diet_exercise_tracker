@@ -1,6 +1,7 @@
+import Link from "next/link";
 import React, { useMemo } from "react";
 
-export default function ProgressBar({ targetDays, dietData }) {
+export default function ProgressBar({ targetDays, dietData, dietName }) {
   // Helper to determine face type
   const getFaceType = (dayData) => {
     if (dayData?.diet && dayData?.exercise) {
@@ -62,9 +63,10 @@ export default function ProgressBar({ targetDays, dietData }) {
 
   return (
     <>
-      <p className="textGradient dark:text-blue-500 font-bold uppercase">
+      {daysLeft === 0 || daysLeft < 0 ? (<Link href={`/complete/${dietName}`} className="text-emerald-600 bg-green-100 font-bold sm:text-xl" ><i className="fa-solid fa-bell"></i> Diet Complete! Go enter your final result <i className="fa-regular fa-flag"></i></Link>) : (<p className="textGradient dark:text-blue-500 font-bold uppercase">
       <i className="fa-regular fa-calendar"></i> {daysLeft} days left
-      </p>
+      </p>)}
+      
       {/* progress bar */}
       <div className="w-full h-10 sm:h-12 bg-gray-300 mb-4 sm:mb-6">
         <div className="relative w-full h-full flex">

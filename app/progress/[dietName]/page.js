@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useActiveDiet } from "@/hooks/useActiveDiet";
 import ProgressBar from "@/components/ProgressBar";
@@ -13,44 +13,70 @@ import MissedDaysChart from "@/components/MissedDaysChart";
 import Button from "@/components/Button";
 import Link from "next/link";
 import WeightProgressBar from "@/components/WeightProgressBar";
+import { useRouter } from "next/navigation";
 
 export default function ProgressPage() {
   const [showImages, setShowImages] = useState(false);
   const { user } = useAuth();
   const { activeDiet, loading: loadingActiveDiet } = useActiveDiet(user);
   const { data, loading: loadingProgressData } = useProgressData(activeDiet);
+  const router = useRouter();
+
+  const [initialImageUrl, setInitialImageUrl] = useState(null);
+  const [currentImageUrl, setCurrentImageUrl] = useState(null);
+
+  // Update image URLs when activeDiet data loads or changes
+  useEffect(() => {
+    if (activeDiet) {
+      setInitialImageUrl(activeDiet.details?.initialBodyImage || null);
+      setCurrentImageUrl(activeDiet.details?.currentBodyImage || null);
+    }
+  }, [activeDiet]);
 
   const dietName = activeDiet?.name;
   const dietData = activeDiet?.details.dietData;
   const targetDays = activeDiet?.details.targetDays;
-  const initialImageUrl = activeDiet?.details?.initialBodyImage;
-  const currentImageUrl = activeDiet?.details?.currentBodyImage;
-  console.log("Data for chart in progress page: ", data);
 
   const handleToggle = () => {
     setShowImages(!showImages);
   };
 
+  // Callback functions to update images on client without reloading
+  const updateInitialImageUrl = (url) => setInitialImageUrl(url);
+  const updateCurrentImageUrl = (url) => setCurrentImageUrl(url);
+
   if (loadingActiveDiet || loadingProgressData) {
     return <Loading />;
+  }
+
+  if (!user) {
+    return null; // Prevents further rendering of ProgressPage i.e. when user log out
   }
 
   return (
     <Main>
       {/* Go back button */}
       <div className=" textGradient dark:text-blue-500 font-bold mb-4">
-      <Link href={`/dashboard/${dietName}`}> <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back</Link>
+        <Link href={`/dashboard/${dietName}`}>
+          {" "}
+          <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back
+        </Link>
       </div>
-      
-      <div className="flex flex-col gap-8 items-center">
+
+      <div className="flex flex-col gap-4 sm:gap-8 items-center">
         <h3 className="font-bold text-lg sm:text-xl">Progress Overview</h3>
 
         {/* Pass dietData and targetDays to ProgressBar */}
-        <ProgressBar dietData={dietData} targetDays={targetDays} />
+        <ProgressBar dietData={dietData} targetDays={targetDays} dietName={dietName} />
 
         {/* Weight Progress Bar */}
-        <WeightProgressBar startingWeight={activeDiet.details.initialWeight} targetWeight={activeDiet.details.targetWeight} userId={user.uid} dietName={activeDiet.name} />
-
+        <WeightProgressBar
+          startingWeight={activeDiet.details.initialWeight}
+          targetWeight={activeDiet.details.targetWeight}
+          userId={user.uid}
+          dietName={activeDiet.name}
+        />
+       
         {/* Missed reasons percentage pie chart */}
         <MissedReasonsChart
           dietMissedData={data.dietMissedPercentages}
@@ -64,13 +90,19 @@ export default function ProgressPage() {
         />
 
         {/* Button to toggle image display */}
-        <Button text={showImages ? "Hide Visual Progress" : "See Progress Visually"} clickHandler={handleToggle} full />
+        <Button
+          text={showImages ? "Hide Visual Progress" : "See Progress Visually"}
+          clickHandler={handleToggle}
+          full
+        />
 
         {/* initial vs. current image display section */}
         {showImages && (
           <div className="sm:flex gap-8 text-center">
             <div>
-              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">Before</h3>
+              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
+                Before
+              </h3>
               {initialImageUrl ? (
                 <>
                   <img
@@ -82,18 +114,25 @@ export default function ProgressPage() {
                     dietName={dietName}
                     type="initial"
                     existingImageUrl={initialImageUrl}
+                    onImageUpdate={updateInitialImageUrl}
                   />
                 </>
               ) : (
                 <div className="flex flex-col gap-6">
                   <p>No initial image uploaded.</p>
                   {/* Upload initial body image */}
-                  <UploadImage dietName={dietName} type="initial" />
+                  <UploadImage
+                    dietName={dietName}
+                    type="initial"
+                    onImageUpdate={updateInitialImageUrl}
+                  />
                 </div>
               )}
             </div>
             <div>
-              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">After</h3>
+              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
+                After
+              </h3>
               {currentImageUrl ? (
                 <>
                   <img
@@ -105,13 +144,18 @@ export default function ProgressPage() {
                     dietName={dietName}
                     type="current"
                     existingImageUrl={currentImageUrl}
+                    onImageUpdate={updateCurrentImageUrl}
                   />
                 </>
               ) : (
                 <div className="flex flex-col gap-6">
                   <p>No current image uploaded.</p>
                   {/* Upload current body image */}
-                  <UploadImage dietName={dietName} type="current" />
+                  <UploadImage
+                    dietName={dietName}
+                    type="current"
+                    onImageUpdate={updateCurrentImageUrl}
+                  />
                 </div>
               )}
             </div>
