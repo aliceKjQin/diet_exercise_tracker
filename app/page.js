@@ -4,6 +4,7 @@ import DietPlanForm from "@/components/DietPlanForm";
 import Main from "@/components/Main";
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDeleteDiet } from "@/hooks/useDeleteDiet";
 import { useState } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
 import Loading from "@/components/Loading";
@@ -12,48 +13,19 @@ import Link from "next/link";
 import { deleteObject, ref } from "firebase/storage";
 
 export default function HomePage() {
-  const { user, activeDiet, setActiveDiet, loading } = useAuth();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const { user, activeDiet, setActiveDiet, loading } = useAuth();
+  const { deleteDiet } = useDeleteDiet()
 
   // Function to handle diet removal
   const handleRemoveDiet = async () => {
-    if (!user || !activeDiet) return;
-
-    try {
-      const userRef = doc(db, "users", user.uid);
-      // Remove the diet data from Firestore
-      await updateDoc(userRef, {
-        [`diets.${activeDiet.name}`]: deleteField(), // Remove the diet
-      });
-
-      // Delete the initialBodyImage from Firebase Storage
-      if (activeDiet.details.initialBodyImage) {
-        const storageRef = ref(
-          storage,
-          `users/${user.uid}/diets/${activeDiet.name}/initialBodyImage.jpg`
-        );
-        await deleteObject(storageRef)
-      }
-
-      // Delete the currentBodyImage from Firebase Storage
-      if (activeDiet.details.currentBodyImage) {
-        const storageRef = ref(
-          storage,
-          `users/${user.uid}/diets/${activeDiet.name}/currentBodyImage.jpg`
-        );
-        await deleteObject(storageRef)
-      }
-
+    const success = deleteDiet(user.uid, activeDiet.name)
+    if (success) {
       setShowConfirmation(false);
-
       setActiveDiet(null)
-
-    } catch (error) {
-      console.error("Error removing diet:", error);
-      setErrorMessage("Failed to remove the diet. Please try again.");
     }
-  };
+  }
 
   if (loading) return <Loading />
 

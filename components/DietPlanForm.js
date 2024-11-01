@@ -75,6 +75,8 @@ export default function DietPlanForm() {
       .toLowerCase()
       .replace(/\s+/g, " "); // Trims and replaces multiple spaces with a single space
 
+    console.log("Formatted dietName: ", formattedDietName)
+
     if (user) {
       try {
         // Save diet data
@@ -84,7 +86,7 @@ export default function DietPlanForm() {
         if (dietPlan.initialBodyImage) {
           const imageRef = ref(
             storage,
-            `users/${user.uid}/diets/${dietPlan.dietName}/initialBodyImage.jpg`
+            `users/${user.uid}/diets/${formattedDietName}/initialBodyImage.jpg`
           );
           await uploadBytes(imageRef, dietPlan.initialBodyImage);
           downloadUrl = await getDownloadURL(imageRef);
