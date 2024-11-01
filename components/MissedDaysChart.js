@@ -12,7 +12,7 @@ import {
 // Register necessary components
 Chart.register(ArcElement, CategoryScale, LinearScale, BarElement, Title);
 
-const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays }) => {
+const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays, isActive }) => {
   const chartData = {
     labels: ["Diet", "Exercise"],
     datasets: [
@@ -28,7 +28,9 @@ const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays }) => {
     plugins: {
       title: {
         display: true,
-        text: "Missed Days Over the Past Week",
+        text: isActive 
+              ? "Missed Days Over the Past Week"
+              : "Total Missed Days Per Diet and Exercise"
       },
     },
     scales: {

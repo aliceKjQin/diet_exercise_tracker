@@ -1,7 +1,6 @@
 "use client";
 
 import FinalResultForm from "@/components/FinalResultForm";
-import Loading from "@/components/Loading";
 import Main from "@/components/Main";
 import { useAuth } from "@/contexts/AuthContext";
 import { useParams } from "next/navigation";

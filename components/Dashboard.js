@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedDayNote, setSelectedDayNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false);
-  const [activeDietData, setActiveDietData] = useState({}); // manage local state for  active diet data
+  const [activeDietData, setActiveDietData] = useState({});
   const [showReasonModal, setShowReasonModal] = useState(false);
   const [reasonType, setReasonType] = useState("");
   const now = new Date();
@@ -32,10 +32,10 @@ export default function Dashboard() {
 
   // fetch updated dietData from the activeDiet when page reload or redirect to dashboard, so calendar can show the updated diet data in the cells;
   useEffect(() => {
-    if (user && activeDiet) {
-      setActiveDietData(activeDiet.details.dietData || {});
+    if (activeDiet) {
+      setActiveDietData(activeDiet.details.dietData);
     }
-  }, [user, activeDiet, year, month, day]);
+  }, [activeDiet]);
 
   const currentDayData = activeDietData?.[year]?.[month]?.[day];
 
@@ -116,6 +116,8 @@ export default function Dashboard() {
       }
     }
   };
+
+  console.log("ActiveDietData on Dashboard page: ", activeDietData)
 
   const handleReasonSave = (reason) => {
     const type = reasonType; // The type stored in the state when user logged as false

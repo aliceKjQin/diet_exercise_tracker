@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { db } from "@/firebase"
 import { doc, getDoc, updateDoc } from "firebase/firestore"
 
-export default function WeightProgressBar({ startingWeight, targetWeight, userId, dietName }) {
+export default function WeightProgressBar({ startingWeight, targetWeight, userId, dietName, isActive, finalWeight }) {
   // Initialize current weight with the starting weight
-  const [currentWeight, setCurrentWeight] = useState("");
+  const [currentWeight, setCurrentWeight] = useState(isActive ? "" : finalWeight);
   const [inputWeight, setInputWeight] = useState("")
 
   // Calculate the progress percentage
@@ -59,18 +59,18 @@ export default function WeightProgressBar({ startingWeight, targetWeight, userId
 
   return (
     <div className="flex flex-col w-full gap-4 items-center">
-      <h3 className=" textGradient dark:text-blue-500 font-bold"><i className="fa-solid fa-weight-scale"></i> {progressPercentage.toFixed(0)}% to Target Weight</h3>
+      <h3 className=" textGradient dark:text-blue-500 font-bold"><i className="fa-solid fa-weight-scale"></i> {progressPercentage.toFixed(0)}% to Target Weight {targetWeight} (kg)</h3>
       {/* Progress Bar */}
-      <div className="w-full bg-gray-300 rounded-full h-10 sm:h-12">
+      <div className="w-full bg-gray-300 rounded-full h-8 sm:h-12">
         <div
-          className="bg-emerald-400 h-10 sm:h-12 rounded-full"
+          className="bg-emerald-400 h-8 sm:h-12 rounded-full"
           style={{ width: `${progressPercentage}%` }}
         />
       </div>
       
 
-      {/* Current Weight Input */}
-      <label htmlFor="current-weight">Update Current Weight (kg):</label>
+      {/* Display Current Weight Input only for active diets */}
+      { isActive ? (<><label htmlFor="current-weight">Update Current Weight (kg):</label>
       <div className="flex">
       <input
         type="number"
@@ -82,7 +82,7 @@ export default function WeightProgressBar({ startingWeight, targetWeight, userId
       <button onClick={handleSaveWeight} className="bg-purple-400 dark:bg-blue-400 text-white px-3 py-1 rounded font-bold">
         Update
       </button>
-      </div>
+      </div></>) : (<p className="textGradient dark:text-blue-500 font-semibold"> Final Weight: {finalWeight} (kg)</p>)}
       
     </div>
   );

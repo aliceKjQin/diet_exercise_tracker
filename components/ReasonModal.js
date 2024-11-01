@@ -15,11 +15,24 @@ const reasons = [
 export default function ReasonModal({ type, onSave, onClose }) {
   const [selectedReason, setSelectedReason] = useState("");
   const [customReason, setCustomReason] = useState("");
+  const [wordLimitReached, setWordLimitReached] = useState(false);
 
   const handleSave = () => {
-    const reason =
-      selectedReason === "Other" ? customReason : selectedReason;
+    const reason = selectedReason === "Other" ? customReason : selectedReason;
     onSave(reason); // Pass the selected or custom reason back to parent, which is the handleReasonSave function
+  };
+
+  const handleCustomReasonChange = (e) => {
+    const input = e.target.value;
+    const wordCount = input.trim().split(/\s+/).length;
+
+    // Check if word count exceeds the limit
+    if (wordCount <= 3) {
+      setCustomReason(input);
+      setWordLimitReached(false);
+    } else {
+      setWordLimitReached(true);
+    }
   };
 
   return (
@@ -39,13 +52,18 @@ export default function ReasonModal({ type, onSave, onClose }) {
             </label>
           ))}
           {selectedReason === "Other" && (
-            <input
-              type="text"
-              value={customReason}
-              onChange={(e) => setCustomReason(e.target.value)}
-              placeholder="Enter custom reason"
-              className="w-full border p-2 rounded-lg"
-            />
+            <>
+              <input
+                type="text"
+                value={customReason}
+                onChange={handleCustomReasonChange}
+                placeholder="Enter custom reason"
+                className="w-full border p-2 rounded-lg"
+              />
+              {wordLimitReached && (
+                <p className="text-red-500 text-sm">Limit: 3 words</p>
+              )}
+            </>
           )}
         </div>
         {/* div for cancel and save buttons */}

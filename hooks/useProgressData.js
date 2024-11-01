@@ -17,7 +17,7 @@ const getPastWeekDates = () => {
   return dates;
 };
 
-export default function useProgressData(activeDiet) {
+export default function useProgressData(diet) {
   const [data, setData] = useState({
     dietReasons: {},
     exerciseReasons: {},
@@ -31,13 +31,13 @@ export default function useProgressData(activeDiet) {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!activeDiet || !activeDiet.details?.dietData) return;
+      if (!diet || !diet.details?.dietData) return;
 
       setLoading(true);
       try {
         // Step 1: Get the past week's date range
         const pastWeekDates = getPastWeekDates();
-        const dietData = activeDiet.details.dietData;
+        const dietData = diet.details.dietData;
 
         // Step 2: Initialize counters for missed reasons and days
         const dietMissedReasons = {};
@@ -48,18 +48,15 @@ export default function useProgressData(activeDiet) {
 
         // Step 3: Loop through each date in the past week and aggregate data
         pastWeekDates.forEach(({ year, month, day }) => {
-          console.log("Year, Month, Day: ", { year, month, day }); // destructure obj { year, month, day } to extract the values associated with those keys 
+         // destructure obj { year, month, day } to extract the values associated with those keys
 
           // Convert year, month, and day to numbers
           const numericYear = Number(year); // "2024" -> 2024
-          const numericMonth = Number(month)-1; // "10" -> 10
+          const numericMonth = Number(month) - 1; // "10" -> 10
           const numericDay = Number(day);
 
-          console.log("Numeric values for Y, M, D: ", numericYear, numericMonth, numericDay)
+          const dayData = dietData?.[numericYear]?.[numericMonth]?.[numericDay];
 
-          const dayData =
-            dietData?.[numericYear]?.[numericMonth]?.[numericDay];
-          
           if (dayData) {
             // Diet missed reason processing
             if (dayData.diet === false && dayData.dietMissedReason) {
@@ -96,15 +93,62 @@ export default function useProgressData(activeDiet) {
             ((count / exerciseMissedDays) * 100).toFixed(2) || 0;
         });
 
-        // Step 5: Set the processed data
+        // Step 5: Calculate top 3 missed reasons and respective percentage for the entire diet period, will be used for review page
+        const totalDietMissedReasons = {};
+        const totalExerciseMissedReasons = {};
+        let totalDietMissedDays = 0;
+        let totalExerciseMissedDays = 0;
+
+        // Traverse entire diet data
+        for (const year in dietData) {
+          for (const month in dietData[year]) {
+            for (const day in dietData[year][month]) {
+              const dayData = dietData[year][month][day];
+
+              if (dayData.diet === false && dayData.dietMissedReason) {
+                totalDietMissedReasons[dayData.dietMissedReason] =
+                  (totalDietMissedReasons[dayData.dietMissedReason] || 0) + 1;
+                totalDietMissedDays++;
+              }
+
+              if (dayData.exercise === false && dayData.exerciseMissedReason) {
+                totalExerciseMissedReasons[dayData.exerciseMissedReason] =
+                  (totalExerciseMissedReasons[dayData.exerciseMissedReason] ||
+                    0) + 1;
+                totalExerciseMissedDays++;
+              }
+            }
+          }
+        }
+
+        // Sort reasons and get top 3 for diet and exercise with respective percentages
+        const topDietMissedPercentages = Object.entries(totalDietMissedReasons)
+          .sort((a, b) => b[1] - a[1]) // Sort by count
+          .slice(0, 3) // Keep top 3 
+          .reduce((acc, [reason, count]) => {
+            acc[reason] = ((count / totalDietMissedDays) * 100).toFixed(2);
+            return acc;
+          }, {})
+
+        const topExerciseMissedPercentages = Object.entries(totalExerciseMissedReasons)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
+          .reduce((acc, [reason, count]) => {
+            acc[reason] = ((count / totalExerciseMissedDays) * 100).toFixed(2);
+            return acc;
+          }, {});
+
+        // Step 6: Set the processed data
         setData({
-          dietReasons: dietMissedReasons,
-          exerciseReasons: exerciseMissedReasons,
           missedDays,
           dietMissedDays,
           exerciseMissedDays,
           dietMissedPercentages,
           exerciseMissedPercentages,
+          topDietMissedPercentages,
+          topExerciseMissedPercentages,
+          totalDietMissedDays,
+          totalExerciseMissedDays
         });
       } catch (error) {
         console.error("Error processing progress data: ", error);
@@ -114,7 +158,7 @@ export default function useProgressData(activeDiet) {
     };
 
     fetchData();
-  }, [activeDiet]);
+  }, [diet]);
 
   return { data, loading };
 }

@@ -176,9 +176,9 @@ export default function Calendar(props) {
                       )}
                       {/* display a meh face when only one of the two (diet or exercise) is true */}
                       {(data?.[dayIndex]?.diet &&
-                        !data?.[dayIndex]?.exercise) ||
+                        !data?.[dayIndex]?.exercise) || 
                       (!data?.[dayIndex]?.diet &&
-                        data?.[dayIndex]?.exercise) ? (
+                        data?.[dayIndex]?.exercise)  ? (
                         <p>😐</p>
                       ) : (
                         ""

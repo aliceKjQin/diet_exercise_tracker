@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import Button from "./Button";
@@ -16,10 +16,14 @@ export default function FinalResultForm({
   const [selectedCons, setSelectedCons] = useState([]);
   const [customPro, setCustomPro] = useState("");
   const [customCon, setCustomCon] = useState("");
+  const [conMessage, setConMessage] = useState("");
+  const [proMessage, setProMessage] = useState("");
   const [summaryInputValue, setSummaryInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { setActiveDiet } = useAuth()
+  const [rating, setRating] = useState("");
+  const { setActiveDiet, activeDiet } = useAuth();
+  const maxWords = 6;
 
   const prosOptions = [
     "Increased energy",
@@ -36,6 +40,23 @@ export default function FinalResultForm({
     "Limited food choices",
     "Other",
   ];
+
+  // Set finalWeight to currentWeight in db so if user didn't enter a value it will be default to the existing currentWeight instead of overwriting it with 0.
+  useEffect(() => {
+    if (activeDiet) {
+      setFinalWeight(activeDiet.details.currentWeight || "");
+    }
+  }, [activeDiet]);
+
+  const handleCustomInputChange = (input, setInput, setMessage) => (e) => {
+    const words = e.target.value.trim().split(/\s+/);
+    if (words.length <= maxWords) {
+      setInput(e.target.value);
+      setMessage(""); // Clear the message if within limit
+    } else {
+      setMessage(`Limit of ${maxWords} words exceeded.`);
+    }
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -60,6 +81,7 @@ export default function FinalResultForm({
       currentWeight: Number(finalWeight),
       prosNcons,
       summary: summaryInputValue,
+      rating,
       completeDate: new Date().toLocaleDateString("en-CA"), // 'en-CA' gives the date format YYYY-MM-DD
     };
 
@@ -139,10 +161,15 @@ export default function FinalResultForm({
               type="text"
               placeholder="Enter your own pro"
               value={customPro}
-              onChange={(e) => setCustomPro(e.target.value)}
+              onChange={handleCustomInputChange(
+                customPro,
+                setCustomPro,
+                setProMessage
+              )}
               className="border border-gray-300 p-2 w-full rounded mt-2"
             />
           )}
+          {proMessage && <p className="text-red-500">{proMessage}</p>}
         </fieldset>
 
         {/* Cons Selection */}
@@ -173,10 +200,15 @@ export default function FinalResultForm({
               type="text"
               placeholder="Enter your own con"
               value={customCon}
-              onChange={(e) => setCustomCon(e.target.value)}
+              onChange={handleCustomInputChange(
+                customCon,
+                setCustomCon,
+                setConMessage
+              )}
               className="border border-gray-300 p-2 w-full rounded mt-2"
             />
           )}
+          {conMessage && <p className="text-red-500">{conMessage}</p>}
         </fieldset>
       </div>
       {/* Option to add additional summary */}
@@ -192,6 +224,22 @@ export default function FinalResultForm({
           rows={3}
           autoFocus
         />
+      </div>
+
+      {/* Star Rating Section */}
+      <h2 className="text-base sm:text-lg text-center font-bold textGradient dark:text-blue-500">
+        Rate this experience?
+      </h2>
+      <div className="flex gap-2 mb-6">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <i
+            key={star}
+            className={`fa-star fa-solid fa-xl ${
+              rating >= star ? "text-yellow-400" : "text-stone-300"
+            } cursor-pointer`}
+            onClick={() => setRating(star)}
+          ></i>
+        ))}
       </div>
 
       {/* Submit Button */}

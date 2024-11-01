@@ -14,7 +14,6 @@ import { deleteObject, ref } from "firebase/storage";
 export default function HomePage() {
   const { user, activeDiet, setActiveDiet, loading } = useAuth();
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
   // Function to handle diet removal

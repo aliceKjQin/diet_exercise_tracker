@@ -13,14 +13,12 @@ import MissedDaysChart from "@/components/MissedDaysChart";
 import Button from "@/components/Button";
 import Link from "next/link";
 import WeightProgressBar from "@/components/WeightProgressBar";
-import { useRouter } from "next/navigation";
 
 export default function ProgressPage() {
   const [showImages, setShowImages] = useState(false);
   const { user } = useAuth();
   const { activeDiet, loading: loadingActiveDiet } = useActiveDiet(user);
   const { data, loading: loadingProgressData } = useProgressData(activeDiet);
-  const router = useRouter();
 
   const [initialImageUrl, setInitialImageUrl] = useState(null);
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
@@ -58,7 +56,6 @@ export default function ProgressPage() {
       {/* Go back button */}
       <div className=" textGradient dark:text-blue-500 font-bold mb-4">
         <Link href={`/dashboard/${dietName}`}>
-          {" "}
           <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back
         </Link>
       </div>
@@ -66,8 +63,8 @@ export default function ProgressPage() {
       <div className="flex flex-col gap-4 sm:gap-8 items-center">
         <h3 className="font-bold text-lg sm:text-xl">Progress Overview</h3>
 
-        {/* Pass dietData and targetDays to ProgressBar */}
-        <ProgressBar dietData={dietData} targetDays={targetDays} dietName={dietName} />
+        {/* Days Progress Bar */}
+        <ProgressBar dietData={dietData} targetDays={targetDays} dietName={dietName} isActive />
 
         {/* Weight Progress Bar */}
         <WeightProgressBar
@@ -75,23 +72,26 @@ export default function ProgressPage() {
           targetWeight={activeDiet.details.targetWeight}
           userId={user.uid}
           dietName={activeDiet.name}
+          isActive
         />
        
         {/* Missed reasons percentage pie chart */}
         <MissedReasonsChart
           dietMissedData={data.dietMissedPercentages}
           exerciseMissedData={data.exerciseMissedPercentages}
+          isActive
         />
 
         {/* Missed days bar chart */}
         <MissedDaysChart
           dietMissedDays={data.dietMissedDays}
           exerciseMissedDays={data.exerciseMissedDays}
+          isActive
         />
 
         {/* Button to toggle image display */}
         <Button
-          text={showImages ? "Hide Visual Progress" : "See Progress Visually"}
+          text={showImages ? "Hide Visual Progress" : "Show Visual Progress"}
           clickHandler={handleToggle}
           full
         />
@@ -107,7 +107,7 @@ export default function ProgressPage() {
                 <>
                   <img
                     src={initialImageUrl}
-                    alt="Initial Body Shape"
+                    alt="Before Image"
                     className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4  object-cover rounded-lg"
                   />
                   <UploadImage
@@ -137,7 +137,7 @@ export default function ProgressPage() {
                 <>
                   <img
                     src={currentImageUrl}
-                    alt="Current Body Shape"
+                    alt="After Image"
                     className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4 object-cover rounded-lg"
                   />
                   <UploadImage

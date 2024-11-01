@@ -1,7 +1,8 @@
 import Link from "next/link";
 import React, { useMemo } from "react";
 
-export default function ProgressBar({ targetDays, dietData, dietName }) {
+export default function ProgressBar({ targetDays, dietData, dietName, isActive }) {
+
   // Helper to determine face type
   const getFaceType = (dayData) => {
     if (dayData?.diet && dayData?.exercise) {
@@ -63,12 +64,23 @@ export default function ProgressBar({ targetDays, dietData, dietName }) {
 
   return (
     <>
-      {daysLeft === 0 || daysLeft < 0 ? (<Link href={`/complete/${dietName}`} className="text-emerald-600 bg-green-100 font-bold sm:text-xl" ><i className="fa-solid fa-bell"></i> Diet Complete! Go enter your final result <i className="fa-regular fa-flag"></i></Link>) : (<p className="textGradient dark:text-blue-500 font-bold uppercase">
-      <i className="fa-regular fa-calendar"></i> {daysLeft} days left
-      </p>)}
+      {/* Conditionally render only for active diets */}
+      {isActive && (
+        daysLeft <= 0 ? (
+          <Link href={`/complete/${dietName}`} className="text-emerald-600 bg-green-100 font-bold sm:text-xl">
+            <i className="fa-solid fa-bell"></i> Diet Complete! Go enter your final result <i className="fa-regular fa-flag"></i>
+          </Link>
+        ) : (
+          <p className="textGradient dark:text-blue-500 font-bold uppercase">
+            <i className="fa-regular fa-calendar"></i> {daysLeft} days left
+          </p>
+        )
+      )}
+      {/* Display targetDays and extended days (if available) for inactive diets only */}
+      {!isActive && (<p className="textGradient dark:text-blue-500 font-bold">Duration: {targetDays} {daysLeft < 0 && ` + ${Math.abs(daysLeft)} (extended)`} Days</p>)}
       
       {/* progress bar */}
-      <div className="w-full h-10 sm:h-12 bg-gray-300 mb-4 sm:mb-6">
+      <div className="w-full h-8 sm:h-12 bg-gray-300 mb-4 sm:mb-6">
         <div className="relative w-full h-full flex">
           <div
             className="bg-green-400 h-full"
@@ -90,7 +102,7 @@ export default function ProgressBar({ targetDays, dietData, dietName }) {
               className="absolute"
               style={{ left: `0%` }} // Start of happy section
             >
-              😀
+              😀 <span className="text-sm">{facesCount.happy} D</span>
             </span>
           )}
           {neutralPercentage > 0 && (
@@ -98,7 +110,7 @@ export default function ProgressBar({ targetDays, dietData, dietName }) {
               className="absolute"
               style={{ left: `${happyPercentage}%` }} // start of the neutral section which is the end of happyPercentage
             >
-              😐
+              😐 <span className="text-sm">{facesCount.neutral} D</span>
             </span>
           )}
           {sadPercentage > 0 && (
@@ -106,7 +118,7 @@ export default function ProgressBar({ targetDays, dietData, dietName }) {
               className="absolute"
               style={{ left: `${happyPercentage + neutralPercentage}%` }} // start of the sad section
             >
-              ☹️
+              ☹️ <span className="text-sm">{facesCount.sad} D</span>
             </span>
           )}
         </div>

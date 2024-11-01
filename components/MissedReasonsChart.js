@@ -19,7 +19,7 @@ Chart.register({
         ctx.textBaseline = 'middle';
         ctx.font = '16px sans-serif';
         ctx.fillStyle = 'gray';
-        ctx.fillText('No data available yet', width / 2, height / 2);
+        ctx.fillText('Pie Chart: No data available', width / 2, height / 2);
         ctx.restore();
       }
     },
@@ -28,14 +28,13 @@ Chart.register({
 export default function MissedReasonsChart({
   dietMissedData = {}, // Default to an empty object if undefined
   exerciseMissedData = {},
+  isActive
 }) {
   const dietLabels = Object.keys(dietMissedData);
   const dietPercentages = Object.values(dietMissedData);
-  console.log("DietMissedData:", dietMissedData);
 
   const exerciseLabels = Object.keys(exerciseMissedData);
   const exercisePercentages = Object.values(exerciseMissedData);
-  console.log("ExerciseMissedData:", exerciseMissedData);
 
   const dietChartData = {
     labels: dietLabels,
@@ -62,7 +61,9 @@ export default function MissedReasonsChart({
     plugins: {
       title: {
         display: true,
-        text: "Diet Missed Reasons Past Week",
+        text: isActive
+          ? "Diet Missed Reasons Past Week"
+          : "Top 3 Diet Missed Reasons",
       },
       legend: {
         position: "bottom",
@@ -75,7 +76,9 @@ export default function MissedReasonsChart({
     plugins: {
       title: {
         display: true,
-        text: "Exercise Missed Reasons Past Week",
+        text: isActive
+        ? "Exercise Missed Reasons Past Week" 
+        : "Top 3 Exercise Missed Reasons ",
       },
       legend: {
         position: "bottom",

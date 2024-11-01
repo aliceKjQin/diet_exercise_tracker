@@ -20,7 +20,8 @@ export const useInactiveDiet = (user) => {
           const diets = docSnapshot.data()?.diets || {};
           const inactiveDietsArray = Object.entries(diets)
             .filter(([, dietDetails]) => !dietDetails.isActive) // Filter for inactive diets
-            .map(([name, details]) => ({ name, details })); // Map to an array of objects with name and details
+            .map(([name, details]) => ({ name, details })) // Map to an array of objects with name and details
+            .sort((a, b) => new Date(b.details.completeDate) - new Date(a.details.completeDate)); // Sort by completeDate
           setInactiveDiets(inactiveDietsArray);
         }
       } catch (error) {
@@ -33,5 +34,5 @@ export const useInactiveDiet = (user) => {
     fetchInactiveDietsData();
   }, [user]);
 
-  return { inactiveDiets, loading };
+  return { inactiveDiets, setInactiveDiets, loading };
 };
