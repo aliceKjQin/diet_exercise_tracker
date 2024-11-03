@@ -1,20 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { storage, db } from "../firebase"; 
+import { storage, db } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import Loading from "./Loading";
 
-export default function UploadImage({ dietName, type = "current", existingImageUrl, onImageUpdate }) {
+export default function UploadImage({
+  dietName,
+  type = "current",
+  existingImageUrl,
+  onImageUpdate,
+}) {
   const [image, setImage] = useState(null);
-  const [loading, setLoading] = useState(null)
-  const { user } = useAuth(); 
+  const [loading, setLoading] = useState(null);
+  const [error, setError] = useState("");
+  const { user } = useAuth();
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
+    const validTypes = ["image/jpeg", "image/png"];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+
+    // Validate file type
+    if (!validTypes.includes(file.type)) {
+      setError("Please upload a valid image (JPEG or PNG)");
+      return; // Exit the function early
+    }
+
+    // Validate file size
+    if (file.size > maxSizeInBytes) {
+      setError("File size must be less than 5 MB");
+      return; // Exit the function early
+    }
+
     setImage(file);
+    setError("");
   };
 
   const handleSubmit = async (e) => {
@@ -22,16 +44,17 @@ export default function UploadImage({ dietName, type = "current", existingImageU
 
     if (!image) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
       const userRef = doc(db, "users", user.uid);
-      const imageType = type === "initial" ? "initialBodyImage" : "currentBodyImage"
+      const imageType =
+        type === "initial" ? "initialBodyImage" : "currentBodyImage";
       const storageRef = ref(
         storage,
         `users/${user.uid}/diets/${dietName}/${imageType}.jpg`
       );
 
-      // Upload image to Firebase Storage 
+      // Upload image to Firebase Storage
       await uploadBytes(storageRef, image);
 
       // Get download URL
@@ -42,15 +65,14 @@ export default function UploadImage({ dietName, type = "current", existingImageU
         [`diets.${dietName}.${imageType}`]: downloadUrl,
       });
       onImageUpdate(downloadUrl); // Pass the new URL to ProgressPage
-      
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
-  if (loading) return <Loading />
+  if (loading) return <Loading />;
 
   return (
     <div className="mb-4">
@@ -66,6 +88,11 @@ export default function UploadImage({ dietName, type = "current", existingImageU
         >
           {existingImageUrl ? "Update Image" : "Upload Image"}
         </button>
+        {error && (
+        <div className="mt-4 p-2 bg-red-100 text-red-800 rounded-md">
+          {error}
+        </div>
+      )}
       </form>
     </div>
   );

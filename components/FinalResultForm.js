@@ -5,6 +5,8 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import Button from "./Button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWeightUnit } from "@/contexts/WeightUnitContext";
+import { useActiveDiet } from "@/hooks/useActiveDiet";
 
 export default function FinalResultForm({
   userId,
@@ -22,13 +24,16 @@ export default function FinalResultForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [rating, setRating] = useState("");
-  const { setActiveDiet, activeDiet } = useAuth();
+  const { setActiveDiet, user } = useAuth();
+  const { activeDiet } = useActiveDiet(user)
+  const { weightUnit } = useWeightUnit()
   const maxWords = 6;
 
   const prosOptions = [
     "Increased energy",
     "Improved mood",
     "Weight loss",
+    "Weight gain",
     "Healthier eating habits",
     "Other",
   ];
@@ -38,6 +43,7 @@ export default function FinalResultForm({
     "Difficult to maintain",
     "Social eating challenges",
     "Limited food choices",
+    "Lack of energy",
     "Other",
   ];
 
@@ -120,7 +126,7 @@ export default function FinalResultForm({
           htmlFor="finalWeight"
           className="block textGradient dark:text-blue-500 text-sm sm:text-base font-bold mb-2"
         >
-          Final Weight (kg)
+          Final Weight ({weightUnit})
         </label>
         <input
           type="number"

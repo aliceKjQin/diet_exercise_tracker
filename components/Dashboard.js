@@ -25,6 +25,12 @@ export default function Dashboard() {
   const [activeDietData, setActiveDietData] = useState({});
   const [showReasonModal, setShowReasonModal] = useState(false);
   const [reasonType, setReasonType] = useState("");
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const tooltipMessage = `
+    😀 Good day: completed both exercise and diet.
+    😐 Neutral: completed only one activity.
+    😞 Missed: did not complete either.
+  `
   const now = new Date();
   const day = now.getDate();
   const month = now.getMonth();
@@ -38,6 +44,10 @@ export default function Dashboard() {
   }, [activeDiet]);
 
   const currentDayData = activeDietData?.[year]?.[month]?.[day];
+
+  const handleTooltipToggle = () => {
+    setIsTooltipVisible(!isTooltipVisible);
+  };
 
   const handleSetData = async (updatedValues) => {
     try {
@@ -214,6 +224,33 @@ export default function Dashboard() {
         >
           Today's Activities
         </h3>
+
+        {/* info icon with tooltip */}
+        <div 
+          className="relative flex flex-col items-center sm:text-xl textGradient dark:text-blue-500"
+          
+        >
+          <i className="fa-solid fa-circle-info cursor-pointer"
+            onMouseEnter={() => setIsTooltipVisible(true)}
+            onMouseLeave={() => setIsTooltipVisible(false)}
+            onClick={handleTooltipToggle} // For mobile, tap to toggle
+          ></i>
+
+          {/* Tooltip content */}
+          {isTooltipVisible && (
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 p-2 w-60 bg-stone-600 text-white text-xs rounded shadow-lg z-10">
+              😀 Good day: completed both exercise and diet.
+              <br />
+              😐 Neutral: completed one activity.
+              <br />
+              😞 Missed: completed neither activity.
+              <br />
+              *** Click once to mark an activity as completed ✅, click again to mark as missed ❌.
+              <br />
+              📝 Add Note: record any observations for the day.
+            </div>
+          )}
+        </div>
 
         <div className="flex items-stretch flex-wrap gap-4">
           {/* Exercise Button */}

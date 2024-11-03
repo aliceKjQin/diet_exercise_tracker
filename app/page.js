@@ -16,23 +16,27 @@ export default function HomePage() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const { user, activeDiet, setActiveDiet, loading } = useAuth();
-  const { deleteDiet } = useDeleteDiet()
+  const { deleteDiet } = useDeleteDiet();
 
   // Function to handle diet removal
   const handleRemoveDiet = async () => {
-    const success = deleteDiet(user.uid, activeDiet.name)
+    const success = deleteDiet(user.uid, activeDiet.name);
+
     if (success) {
       setShowConfirmation(false);
-      setActiveDiet(null)
+      setActiveDiet(null);
+    } else {
+      setErrorMessage("Failed to delete diet. Please try again.");
     }
-  }
+  };
 
-  if (loading) return <Loading />
+  if (loading) return <Loading />;
 
-    return (
-      <Main>
-        {/* conditionally render diet plan form */}
-        {activeDiet ? (<div className="max-w-lg mx-auto mt-4 p-2 sm:text-xl flex flex-col gap-4">
+  return (
+    <Main>
+      {/* conditionally render diet plan form */}
+      {activeDiet ? (
+        <div className="max-w-lg mx-auto mt-4 p-2 sm:text-xl flex flex-col gap-4">
           <h1>
             Current Active Diet:{" "}
             <span className="uppercase textGradient font-bold">
@@ -65,22 +69,23 @@ export default function HomePage() {
             <ConfirmModal
               onConfirm={() => {
                 handleRemoveDiet();
-                setErrorMessage(null);
+                setErrorMessage("");
               }}
               onCancel={() => {
                 setShowConfirmation(false);
-                setErrorMessage(null);
               }}
             />
           )}
-          {/* section to display success and error message if exits */}
+          {/* section to display error message if exits */}
           {errorMessage && (
             <p className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-red-100 text-red-800 rounded-md">
               {errorMessage}
             </p>
           )}
-        </div>) : (<DietPlanForm />)}
-      </Main>
-    );
-
+        </div>
+      ) : (
+        <DietPlanForm />
+      )}
+    </Main>
+  );
 }

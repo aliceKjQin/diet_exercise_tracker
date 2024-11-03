@@ -2,7 +2,7 @@
 
 const ConfirmModal = ({ onConfirm, onCancel }) => (
     <div className="flex flex-col gap-4">
-      <p>Are you sure you want to remove? This cannot be undone.</p>
+      <p className="text-red-500">Are you sure you want to remove? This cannot be undone.</p>
       <div className="flex justify-between">
         <button onClick={onConfirm} className="bg-teal-400 text-white font-bold py-2 px-4 rounded">
           Yes, Remove

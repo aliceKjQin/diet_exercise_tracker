@@ -8,8 +8,11 @@ import Main from "@/components/Main";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 import Link from "next/link";
+import ConfirmModal from "@/components/ConfirmModal";
 
 export default function HistoryPage() {
+  const [selectedDiet, setSelectedDiet] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("")
   const { user } = useAuth();
   const {
     inactiveDiets,
@@ -23,8 +26,11 @@ export default function HistoryPage() {
     if (success) {
       setInactiveDiets((prevDiets) =>
         prevDiets.filter((diet) => diet.name !== dietName)
-      );
+      ) 
+    } else {
+      setErrorMessage("Failed to delete diet, please try again.")
     }
+    setSelectedDiet(null); // Close delete confirm modal after delete attempt
   };
 
   if (loadingInactiveDiets) return <Loading />;
@@ -48,11 +54,15 @@ export default function HistoryPage() {
                   <Link href={`/history/${dietName}`}>
                     <h3 className="capitalize font-semibold">{dietName}</h3>
                   </Link>
-                  <button onClick={() => handleDeleteDiet(dietName)}>
+                  <button
+                    onClick={() => {
+                      setSelectedDiet(dietName)
+                    }}
+                  >
                     <i className="fa-regular fa-square-minus"></i>
                   </button>
                 </div>
-                {/* startDate & completeData */}
+                {/* startDate & completeData & star rating */}
                 <div className="flex gap-6 items-center justify-between">
                   <p>
                     {startDate} - {completeDate}
@@ -69,11 +79,27 @@ export default function HistoryPage() {
                     ))}
                   </div>
                 </div>
+                 {/* Show confirmation modal only for the selected diet */}
+                {selectedDiet === dietName && (
+                  <ConfirmModal
+                    onConfirm={() => {
+                      handleDeleteDiet(dietName)
+                      setErrorMessage("")
+                    }}
+                    onCancel={() => setSelectedDiet(null)}
+                  />
+                )}
+                {/* section to display error message if exits */}
+                {errorMessage && (
+                  <p className="max-w-lg mx-auto mt-4 p-2 sm:text-xl bg-red-100 text-red-800 rounded-md">
+                    {errorMessage}
+                  </p>
+                )}
               </div>
             );
           })}
           {/* Create diet plan button */}
-          <Link href={"/"} className="text-center mt-4">
+          <Link href={"/"} className="mt-4">
             <Button text="Create New Diet Plan" full />
           </Link>
         </div>

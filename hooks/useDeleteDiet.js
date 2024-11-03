@@ -41,6 +41,7 @@ export function useDeleteDiet() {
       return true;
     } catch (error) {
       console.error("Error removing diet:", error);
+      return false
     }
   };
 

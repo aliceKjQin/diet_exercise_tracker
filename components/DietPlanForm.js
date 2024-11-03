@@ -1,12 +1,13 @@
 "use client";
 
 import { db, storage } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loading from "./Loading";
+import { useWeightUnit } from "@/contexts/WeightUnitContext";
 
 export default function DietPlanForm() {
   const [dietPlan, setDietPlan] = useState({
@@ -18,6 +19,7 @@ export default function DietPlanForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const { weightUnit, setWeightUnit } = useWeightUnit();
   const { user, setActiveDiet } = useAuth();
   const router = useRouter();
 
@@ -37,7 +39,7 @@ export default function DietPlanForm() {
       if (files[0]) {
         const file = files[0];
         const validTypes = ["image/jpeg", "image/png"];
-        const maxSizeInBytes = 2 * 1024 * 1024; // 2 MB
+        const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
 
         // Validate file type
         if (!validTypes.includes(file.type)) {
@@ -75,12 +77,24 @@ export default function DietPlanForm() {
       .toLowerCase()
       .replace(/\s+/g, " "); // Trims and replaces multiple spaces with a single space
 
-    console.log("Formatted dietName: ", formattedDietName)
-
     if (user) {
       try {
-        // Save diet data
+        // Check if diet with the same name exists
         const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          const existingDiets = userSnap.data().diets || {};
+          if (formattedDietName in existingDiets) {
+            setError(
+              `You already have a diet record named ${dietPlan.dietName}. Try a unique name, e.g., "${dietPlan.dietName} 2024 summer" or "${dietPlan.dietName} 2".`
+            );
+            setIsSubmitting(false);
+            return;
+          }
+        }
+
+        // If diet name is unique, proceed with saving diet data
         let downloadUrl = "";
 
         if (dietPlan.initialBodyImage) {
@@ -122,7 +136,6 @@ export default function DietPlanForm() {
           initialBodyImage: null,
         });
         localStorage.removeItem("dietPlan");
-
       } catch (error) {
         console.error("Error saving diet plan:", error);
         setError("Error saving diet plan. Please try again."); // indicate err to user
@@ -178,12 +191,26 @@ export default function DietPlanForm() {
             required
           />
         </div>
+        {/* Weight Unit Selection */}
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Choose your weight unit:
+            <select
+              value={weightUnit}
+              onChange={(e) => setWeightUnit(e.target.value)}
+              className="ml-2"
+            >
+              <option value="kg">kg</option>
+              <option value="lbs">lbs</option>
+            </select>
+          </label>
+        </div>
         <div>
           <label
             className="block text-sm font-medium mb-1"
             htmlFor="targetWeight"
           >
-            Target Weight (kg)
+            Target Weight ({weightUnit})
           </label>
           <input
             type="number"
@@ -191,7 +218,7 @@ export default function DietPlanForm() {
             name="targetWeight"
             value={dietPlan.targetWeight}
             onChange={handleInputChange}
-            placeholder="Target weight in kg"
+            placeholder={`Target weight in ${weightUnit}`}
             className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
             required
           />
@@ -201,7 +228,7 @@ export default function DietPlanForm() {
             className="block text-sm font-medium mb-1"
             htmlFor="initialWeight"
           >
-            Initial Weight (kg)
+            Initial Weight ({weightUnit})
           </label>
           <input
             type="number"
@@ -209,7 +236,7 @@ export default function DietPlanForm() {
             name="initialWeight"
             value={dietPlan.initialWeight}
             onChange={handleInputChange}
-            placeholder="Initial weight in kg"
+            placeholder={`Initial weight in ${weightUnit}`}
             className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
             required
           />
@@ -219,7 +246,7 @@ export default function DietPlanForm() {
             htmlFor="initialBodyImage"
             className="block text-sm font-medium mb-1"
           >
-            Upload Initial Body Shape
+            Upload Initial Body Image
           </label>
           <input
             type="file"
