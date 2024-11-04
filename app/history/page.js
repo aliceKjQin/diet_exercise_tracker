@@ -105,7 +105,7 @@ export default function HistoryPage() {
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4">
-          <p className="font-bold">You don't have any complete diet record.</p>
+          <p className="font-bold">You don&apos;t have any complete diet record.</p>
           <Link href={"/"}>
             <Button text="Create Diet Plan" />
           </Link>

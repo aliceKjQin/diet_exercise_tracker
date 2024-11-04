@@ -13,6 +13,7 @@ import MissedDaysChart from "@/components/MissedDaysChart";
 import Button from "@/components/Button";
 import Link from "next/link";
 import WeightProgressBar from "@/components/WeightProgressBar";
+import Image from "next/image";
 
 export default function ProgressPage() {
   const [showImages, setShowImages] = useState(false);
@@ -64,7 +65,12 @@ export default function ProgressPage() {
         <h3 className="font-bold text-lg sm:text-xl">Progress Overview</h3>
 
         {/* Days Progress Bar */}
-        <ProgressBar dietData={dietData} targetDays={targetDays} dietName={dietName} isActive />
+        <ProgressBar
+          dietData={dietData}
+          targetDays={targetDays}
+          dietName={dietName}
+          isActive
+        />
 
         {/* Weight Progress Bar */}
         <WeightProgressBar
@@ -74,7 +80,7 @@ export default function ProgressPage() {
           dietName={activeDiet.name}
           isActive
         />
-       
+
         {/* Missed reasons percentage pie chart */}
         <MissedReasonsChart
           dietMissedData={data.dietMissedPercentages}
@@ -105,11 +111,15 @@ export default function ProgressPage() {
               </h3>
               {initialImageUrl ? (
                 <>
-                  <img
+                  <Image
                     src={initialImageUrl}
                     alt="Before Image"
-                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4  object-cover rounded-lg"
+                    width={300} // Use the largest width in your responsive sizes
+                    height={360} // Use the largest height in your responsive sizes
+                    className="mb-4 object-cover rounded-lg"
+                    sizes="(max-width: 640px) 220px, 300px"
                   />
+
                   <UploadImage
                     dietName={dietName}
                     type="initial"
@@ -135,11 +145,15 @@ export default function ProgressPage() {
               </h3>
               {currentImageUrl ? (
                 <>
-                  <img
+                  <Image
                     src={currentImageUrl}
                     alt="After Image"
-                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4 object-cover rounded-lg"
+                    width={300}
+                    height={360} 
+                    className="mb-4 object-cover rounded-lg"
+                    sizes="(max-width: 640px) 220px, 300px"
                   />
+
                   <UploadImage
                     dietName={dietName}
                     type="current"

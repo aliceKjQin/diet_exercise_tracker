@@ -26,11 +26,7 @@ export default function Dashboard() {
   const [showReasonModal, setShowReasonModal] = useState(false);
   const [reasonType, setReasonType] = useState("");
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-  const tooltipMessage = `
-    😀 Good day: completed both exercise and diet.
-    😐 Neutral: completed only one activity.
-    😞 Missed: did not complete either.
-  `
+ 
   const now = new Date();
   const day = now.getDate();
   const month = now.getMonth();
@@ -222,7 +218,7 @@ export default function Dashboard() {
         <h3
           className="text-lg sm:text-xl text-center font-bold"
         >
-          Today's Activities
+          Today&apos;s Activities
         </h3>
 
         {/* info icon with tooltip */}
