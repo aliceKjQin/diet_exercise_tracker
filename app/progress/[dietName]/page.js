@@ -113,7 +113,7 @@ export default function ProgressPage() {
                   <img
                     src={initialImageUrl}
                     alt="Before Image"
-                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4 object-cover rounded-lg"
+                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4  object-cover rounded-lg"
                   />
 
                   <UploadImage
@@ -144,7 +144,7 @@ export default function ProgressPage() {
                   <img
                     src={currentImageUrl}
                     alt="After Image"
-                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4 object-cover rounded-lg"
+                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4  object-cover rounded-lg"
                   />
 
                   <UploadImage
