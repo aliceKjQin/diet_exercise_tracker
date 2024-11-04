@@ -13,6 +13,7 @@ import MissedDaysChart from "@/components/MissedDaysChart";
 import Button from "@/components/Button";
 import Link from "next/link";
 import WeightProgressBar from "@/components/WeightProgressBar";
+import Image from "next/image";
 
 export default function ProgressPage() {
   const [showImages, setShowImages] = useState(false);
@@ -141,10 +142,13 @@ export default function ProgressPage() {
               </h3>
               {currentImageUrl ? (
                 <>
-                  <img
+                  <Image
                     src={currentImageUrl}
                     alt="After Image"
-                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4  object-cover rounded-lg"
+                    width={300}
+                    height={360} 
+                    className="mb-4 object-cover rounded-lg"
+                    sizes="(max-width: 640px) 220px, 300px"
                   />
 
                   <UploadImage

@@ -13,6 +13,7 @@ import Login from "@/components/Login";
 import MissedReasonsChart from "@/components/MissedReasonsChart";
 import MissedDaysChart from "@/components/MissedDaysChart";
 import Button from "@/components/Button";
+import Image from "next/image";
 
 export default function HistoryPageForSpecifiedDiet() {
   const [showImages, setShowImages] = useState(false);
@@ -154,10 +155,13 @@ export default function HistoryPageForSpecifiedDiet() {
                 Before
               </h3>
               {initialBodyImageUrl ? (
-                <img
+                <Image
                 src={initialBodyImageUrl}
                 alt="Before Image"
-                className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4  object-cover rounded-lg"
+                width={300} 
+                height={360} 
+                className="mb-4 object-cover rounded-lg"
+                sizes="(max-width: 640px) 220px, 300px"
               />
               
               ) : (
@@ -169,10 +173,13 @@ export default function HistoryPageForSpecifiedDiet() {
                 After
               </h3>
               {currentBodyImageUrl ? (
-                <img
+                <Image
                 src={currentBodyImageUrl}
                 alt="After Image"
-                className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4  object-cover rounded-lg"
+                width={300} 
+                height={360} 
+                className="mb-4 object-cover rounded-lg"
+                sizes="(max-width: 640px) 220px, 300px"
               />
               
               ) : (
