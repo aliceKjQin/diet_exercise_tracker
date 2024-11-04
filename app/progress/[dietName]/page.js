@@ -114,7 +114,10 @@ export default function ProgressPage() {
                   <img
                     src={initialImageUrl}
                     alt="Before Image"
-                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4  object-cover rounded-lg"
+                    width={300}
+                    height={360} 
+                    className="mb-4 object-cover rounded-lg"
+                    sizes="(max-width: 640px) 220px, 300px"
                   />
 
                   <UploadImage
