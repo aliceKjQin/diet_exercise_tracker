@@ -13,7 +13,6 @@ import MissedDaysChart from "@/components/MissedDaysChart";
 import Button from "@/components/Button";
 import Link from "next/link";
 import WeightProgressBar from "@/components/WeightProgressBar";
-import Image from "next/image";
 
 export default function ProgressPage() {
   const [showImages, setShowImages] = useState(false);
@@ -105,19 +104,16 @@ export default function ProgressPage() {
         {/* initial vs. current image display section */}
         {showImages && (
           <div className="sm:flex gap-8 text-center">
-            <div>
+            <div className="flex flex-col items-center">
               <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
                 Before
               </h3>
               {initialImageUrl ? (
                 <>
-                  <Image
+                  <img
                     src={initialImageUrl}
                     alt="Before Image"
-                    width={300} // Use the largest width in your responsive sizes
-                    height={360} // Use the largest height in your responsive sizes
-                    className="mb-4 object-cover rounded-lg"
-                    sizes="(max-width: 640px) 220px, 300px"
+                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4 object-cover rounded-lg"
                   />
 
                   <UploadImage
@@ -139,19 +135,16 @@ export default function ProgressPage() {
                 </div>
               )}
             </div>
-            <div>
+            <div className="flex flex-col items-center">
               <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
                 After
               </h3>
               {currentImageUrl ? (
                 <>
-                  <Image
+                  <img
                     src={currentImageUrl}
                     alt="After Image"
-                    width={300}
-                    height={360} 
-                    className="mb-4 object-cover rounded-lg"
-                    sizes="(max-width: 640px) 220px, 300px"
+                    className="w-[220px] h-[280px] sm:w-[300px] sm:h-[360px] mb-4 object-cover rounded-lg"
                   />
 
                   <UploadImage
