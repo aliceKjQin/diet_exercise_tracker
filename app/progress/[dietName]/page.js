@@ -117,7 +117,7 @@ export default function ProgressPage() {
                     width={300} // Use the largest width in your responsive sizes
                     height={360} // Use the largest height in your responsive sizes
                     className="mb-4 object-cover rounded-lg"
-                    sizes="(max-width: 640px) 220px, 300px"
+                    unoptimized
                   />
 
                   <UploadImage
@@ -151,7 +151,7 @@ export default function ProgressPage() {
                     width={300}
                     height={360} 
                     className="mb-4 object-cover rounded-lg"
-                    sizes="(max-width: 640px) 220px, 300px"
+                    unoptimized
                   />
 
                   <UploadImage

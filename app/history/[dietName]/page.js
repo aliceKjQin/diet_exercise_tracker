@@ -161,7 +161,7 @@ export default function HistoryPageForSpecifiedDiet() {
                 width={300} // Use the largest width in responsive sizes
                 height={360} // Use the largest height in responsive sizes
                 className="mb-4 object-cover rounded-lg"
-                sizes="(max-width: 640px) 220px, 300px"
+                unoptimized
               />
               
               ) : (
@@ -179,7 +179,7 @@ export default function HistoryPageForSpecifiedDiet() {
                 width={300} 
                 height={360} 
                 className="mb-4 object-cover rounded-lg"
-                sizes="(max-width: 640px) 220px, 300px"
+                unoptimized
               />
               
               ) : (
