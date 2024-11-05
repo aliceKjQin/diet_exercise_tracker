@@ -24,7 +24,7 @@ export default function Navbar() {
             >
               D & E
             </Link>
-            <Link href={'/history'} className={`flex-shrink-0 flex items-center textGradient dark:text-blue-500 font-bold ${roboto.className}`}>History</Link>
+            {user && (<Link href={'/history'} className={`flex-shrink-0 flex items-center textGradient dark:text-blue-500 font-bold ${roboto.className}`}>History</Link>)}
           </div>
           <div className="flex items-center gap-2">
             {user ? (
