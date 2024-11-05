@@ -4,6 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import Navbar from "@/components/Navbar";
 import { WeightUnitProvider } from "@/contexts/WeightUnitContext";
+import Script from "next/script";
 
 const opensans = Open_Sans({ subsets: ["latin"] });
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
@@ -26,24 +27,28 @@ export default function RootLayout({ children }) {
         />
 
         {/* google analytics */}
-        <script
-          async
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-LXCC1J48MT"
-        ></script>
-        <script>
-          {`window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-LXCC1J48MT');`}
-        </script>
+          strategy="afterInteractive"
+        ></Script>
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-LXCC1J48MT');
+          `}
+        </Script>
         {/* Microsoft Clarity */}
-        <script type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "otozvyq0wi");`}
-        </script>
+        <Script id="clarity" type="text/javascript" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "otozvyq0wi");
+          `}
+        </Script>
       </head>
       <body
         className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col ${opensans.className} bg-purple-50 dark:bg-sky-50 text-stone-700`}
