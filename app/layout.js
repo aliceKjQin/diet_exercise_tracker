@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
 
         {/* google analytics */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-LXCC1J48MT"
+          src="https://www.googletagmanager.com/gtag/js?id=G-X5WSV2ZG95"
           strategy="afterInteractive"
         ></Script>
         <Script id="google-analytics" strategy="afterInteractive">
@@ -36,11 +36,12 @@ export default function RootLayout({ children }) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-LXCC1J48MT');
+            gtag('config', 'G-X5WSV2ZG95');
           `}
         </Script>
+
         {/* Microsoft Clarity */}
-        <script
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: `
         (function(c,l,a,r,i,t,y){
@@ -50,7 +51,7 @@ export default function RootLayout({ children }) {
         })(window, document, "clarity", "script", "otozvyq0wi");
       `,
           }}
-        />
+        /> */}
       </head>
       <body
         className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col ${opensans.className} bg-purple-50 dark:bg-sky-50 text-stone-700`}
