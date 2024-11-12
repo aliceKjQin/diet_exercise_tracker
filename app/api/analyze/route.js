@@ -11,7 +11,7 @@ export async function POST(request) {
     );
   }
 
-  const apiUrl = `https://api.edamam.com/api/nutrition-details?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}`;
+  const apiUrl = `https://api.edamam.com/api/nutrition-details?app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_APP_KEY}`;
 
   console.log("API URL:", apiUrl); // Log API URL for debugging
 
