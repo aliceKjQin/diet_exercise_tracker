@@ -77,13 +77,24 @@ export default function NutritionResultsAnalysis() {
 
   return (
     <>
-      <h2 className="text-xl font-bold  ">
-        Analyze Nutrition{" "}
-        <i className="fa-solid fa-chart-simple textGradient dark:text-blue-500"></i>
-      </h2>
+      <div className="flex">
+        <h2 className="text-xl font-bold w-full">
+          Analyze Nutrition{" "}
+          <i className="fa-solid fa-chart-simple textGradient dark:text-blue-500"></i>
+        </h2>
+        <div id="edamam-badge" data-color="white" className="justify-end">
+          <img
+            src="/images/Edamam_Badge.svg"
+            alt="Edamam Badge"
+            width={200}
+            height={200}
+          />
+        </div>
+      </div>
+
       <div className="flex flex-col gap-6 bg-purple-100 dark:bg-sky-100 p-6 shadow-md rounded-lg">
         <p className="text-center">
-          Enter an ingredient list, like "1 cup rice, 10 oz chickpeas", etc.
+          Enter an ingredient list, like &quot;1 cup rice, 10 oz chickpeas&quot;, etc.
           Enter each ingredient on a new line.
         </p>
 
@@ -94,11 +105,11 @@ export default function NutritionResultsAnalysis() {
           placeholder={`1 cup rice\n10 oz chickpeas\n200g broccoli`}
           className="w-full h-32 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-yellow-100"
         />
-
         <Button
           text={loading ? "Analyzing" : "Analyze Nutrition"}
           clickHandler={analyzePantry}
           dark
+          full
         />
 
         {error && <p className="text-red-500">{error}</p>}
@@ -142,18 +153,26 @@ export default function NutritionResultsAnalysis() {
               <h4 className="text-lg font-semibold text-center">
                 Progress Towards Macro Goals
               </h4>
-              {macroGoals.calories ? (<MacroProgressBar
-                current={totals.calories}
-                goal={macroGoals.calories}
-                label="Calories"
-                unit="kcal"
-              />): <p>No calories goal set yet.</p>}
-              {macroGoals.protein ? (<MacroProgressBar
-                current={totals.protein}
-                goal={macroGoals.protein}
-                label="Protein"
-                unit="g"
-              />) : (<p>No protein goal set yet.</p>)}
+              {macroGoals.calories ? (
+                <MacroProgressBar
+                  current={totals.calories}
+                  goal={macroGoals.calories}
+                  label="Calories"
+                  unit="kcal"
+                />
+              ) : (
+                <p>No calories goal set yet.</p>
+              )}
+              {macroGoals.protein ? (
+                <MacroProgressBar
+                  current={totals.protein}
+                  goal={macroGoals.protein}
+                  label="Protein"
+                  unit="g"
+                />
+              ) : (
+                <p>No protein goal set yet.</p>
+              )}
             </div>
           </div>
         )}

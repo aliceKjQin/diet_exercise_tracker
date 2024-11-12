@@ -52,6 +52,8 @@ export default function RootLayout({ children }) {
       `,
           }}
         /> */}
+
+        <script src="https://developer.edamam.com/attribution/badge.js"></script>
       </head>
       <body
         className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col ${opensans.className} bg-purple-50 dark:bg-sky-50 text-stone-700`}
