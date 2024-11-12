@@ -62,18 +62,18 @@ export default function HistoryPage() {
                     <i className="fa-regular fa-square-minus"></i>
                   </button>
                 </div>
-                {/* startDate & completeData & star rating */}
+                {/* startDate & completeData & heart rating */}
                 <div className="flex gap-6 items-center justify-between">
                   <p>
                     {startDate} - {completeDate}
                   </p>
-                  {/* star rating */}
+                  {/* heart rating */}
                   <div className="flex sm:gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
+                    {[1, 2, 3, 4, 5].map((heart) => (
                       <i
-                        key={star}
-                        className={`fa-star fa-solid ${
-                          rating >= star ? "text-yellow-400" : "text-stone-300"
+                        key={heart}
+                        className={`fa-heart fa-solid ${
+                          rating >= heart ? "text-pink-400" : "text-stone-300"
                         }`}
                       ></i>
                     ))}

@@ -50,14 +50,11 @@ export function AuthProvider({ children }) {
         }
 
         // if user exists, fetch data from firebase database
-        console.log("Fetching User Data");
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         let firebaseData = {};
         if (docSnap.exists()) {
-          console.log("Found User Data");
           firebaseData = docSnap.data();
-          console.log(firebaseData);
         }
         setUserDataObj(firebaseData);
 

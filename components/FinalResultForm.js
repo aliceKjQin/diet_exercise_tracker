@@ -232,18 +232,18 @@ export default function FinalResultForm({
         />
       </div>
 
-      {/* Star Rating Section */}
+      {/* Heart Rating Section */}
       <h2 className="text-base sm:text-lg text-center font-bold textGradient dark:text-blue-500">
         Rate this experience?
       </h2>
       <div className="flex gap-2 mb-6">
-        {[1, 2, 3, 4, 5].map((star) => (
+        {[1, 2, 3, 4, 5].map((heart) => (
           <i
-            key={star}
-            className={`fa-star fa-solid fa-xl ${
-              rating >= star ? "text-yellow-400" : "text-stone-300"
+            key={heart}
+            className={`fa-heart fa-solid fa-xl ${
+              rating >= heart ? "text-pink-400" : "text-stone-300"
             } cursor-pointer`}
-            onClick={() => setRating(star)}
+            onClick={() => setRating(heart)}
           ></i>
         ))}
       </div>

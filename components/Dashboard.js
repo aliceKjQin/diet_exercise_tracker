@@ -26,7 +26,8 @@ export default function Dashboard() {
   const [showReasonModal, setShowReasonModal] = useState(false);
   const [reasonType, setReasonType] = useState("");
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
- 
+  const [showWarning, setShowWarning] = useState(true);
+
   const now = new Date();
   const day = now.getDate();
   const month = now.getMonth();
@@ -43,6 +44,10 @@ export default function Dashboard() {
 
   const handleTooltipToggle = () => {
     setIsTooltipVisible(!isTooltipVisible);
+  };
+
+  const handleShowWarning = () => {
+    setShowWarning(!showWarning);
   };
 
   const handleSetData = async (updatedValues) => {
@@ -123,7 +128,7 @@ export default function Dashboard() {
     }
   };
 
-  console.log("ActiveDietData on Dashboard page: ", activeDietData)
+  console.log("ActiveDietData on Dashboard page: ", activeDietData);
 
   const handleReasonSave = (reason) => {
     const type = reasonType; // The type stored in the state when user logged as false
@@ -211,22 +216,25 @@ export default function Dashboard() {
     <>
       <div className="flex mb-4 font-bold textGradient dark:text-blue-500">
         <Link href={`/progress/${activeDiet.name}`} className="ml-auto">
-          View Progress <i className="fa-solid fa-circle-arrow-right fa-lg "></i> 
+          View Progress{" "}
+          <i className="fa-solid fa-circle-arrow-right fa-lg "></i>
         </Link>
       </div>
-      <div className="flex flex-col flex-1 gap-8 sm:gap-12">
-        <h3
-          className="text-lg sm:text-xl text-center font-bold"
-        >
+      <div className="flex mb-4 font-bold textGradient dark:text-blue-500">
+        <Link href={`/pantry`} className="ml-auto">
+          View Pantry{" "}
+          <i className="fa-solid fa-circle-arrow-right fa-lg "></i>
+        </Link>
+      </div>
+      <div className="flex flex-col flex-1 gap-4 sm:gap-6">
+        <h3 className="text-lg sm:text-xl text-center font-bold">
           Today&apos;s Activities
         </h3>
 
         {/* info icon with tooltip */}
-        <div 
-          className="relative flex flex-col items-center sm:text-xl textGradient dark:text-blue-500"
-          
-        >
-          <i className="fa-solid fa-circle-info cursor-pointer"
+        <div className="relative flex flex-col items-center sm:text-xl textGradient dark:text-blue-500">
+          <i
+            className="fa-solid fa-circle-info cursor-pointer"
             onMouseEnter={() => setIsTooltipVisible(true)}
             onMouseLeave={() => setIsTooltipVisible(false)}
             onClick={handleTooltipToggle} // For mobile, tap to toggle
@@ -241,12 +249,31 @@ export default function Dashboard() {
               <br />
               😞 Missed: completed neither activity.
               <br />
-              *** Click once to mark an activity as completed ✅, click again to mark as missed ❌.
+              *** Click once to mark an activity as completed ✅, click again to
+              mark as missed ❌.
               <br />
               📝 Add Note: record any observations for the day.
             </div>
           )}
         </div>
+
+        {showWarning ? (
+          <p className="text-center">
+            <i
+              className="fa-solid fa-triangle-exclamation fa-lg  text-rose-500 cursor-pointer"
+              onClick={handleShowWarning}
+            ></i>{" "}
+            <span className="text-sm text-stone-500">
+              Make sure to log both diet and exercise to display the matched
+              emoji face
+            </span>
+          </p>
+        ) : (
+          <i
+            className="fa-solid fa-triangle-exclamation fa-lg text-rose-500 cursor-pointer text-center"
+            onClick={handleShowWarning}
+          ></i>
+        )}
 
         <div className="flex items-stretch flex-wrap gap-4">
           {/* Exercise Button */}
@@ -266,6 +293,7 @@ export default function Dashboard() {
           )}
           {renderNoteButton("📝", hasNote, () => setShowNoteModal(true))}
         </div>
+        
 
         {/* Note modal to add optional note */}
         {showNoteModal && (

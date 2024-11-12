@@ -56,16 +56,16 @@ export default function HistoryPageForSpecifiedDiet() {
           Result
         </h3>
 
-        {/* Section for summary, star rating and pros & cons */}
+        {/* Section for summary, heart rating and pros & cons */}
         <div className="flex flex-col gap-6 items-center">
-          {/* star rating */}
+          {/* heart rating */}
           {rating && (
             <div className="flex sm:gap-2">
-              {[1, 2, 3, 4, 5].map((star) => (
+              {[1, 2, 3, 4, 5].map((heart) => (
                 <i
-                  key={star}
-                  className={`fa-star fa-solid ${
-                    rating >= star ? "text-yellow-400" : "text-stone-300"
+                  key={heart}
+                  className={`fa-heart fa-solid ${
+                    rating >= heart ? "text-pink-400" : "text-stone-300"
                   }`}
                 ></i>
               ))}

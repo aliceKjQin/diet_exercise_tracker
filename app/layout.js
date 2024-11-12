@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         />
 
         {/* google analytics */}
-        <Script
+        {/* <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-X5WSV2ZG95"
           strategy="afterInteractive"
         ></Script>
@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
             gtag('js', new Date());
             gtag('config', 'G-X5WSV2ZG95');
           `}
-        </Script>
+        </Script> */}
 
         {/* Microsoft Clarity */}
         {/* <script
