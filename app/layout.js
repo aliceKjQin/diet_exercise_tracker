@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         />
 
         {/* google analytics */}
-        {/* <Script
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-X5WSV2ZG95"
           strategy="afterInteractive"
         ></Script>
@@ -38,10 +38,10 @@ export default function RootLayout({ children }) {
             gtag('js', new Date());
             gtag('config', 'G-X5WSV2ZG95');
           `}
-        </Script> */}
+        </Script>
 
         {/* Microsoft Clarity */}
-        {/* <script
+        <script
           dangerouslySetInnerHTML={{
             __html: `
         (function(c,l,a,r,i,t,y){
@@ -51,9 +51,9 @@ export default function RootLayout({ children }) {
         })(window, document, "clarity", "script", "otozvyq0wi");
       `,
           }}
-        /> */}
+        />
 
-        <script src="https://developer.edamam.com/attribution/badge.js"></script>
+        <script src="https://developer.edamam.com/attribution/badge.js" defer></script>
       </head>
       <body
         className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col ${opensans.className} bg-purple-50 dark:bg-sky-50 text-stone-700`}
