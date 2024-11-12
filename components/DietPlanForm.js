@@ -228,7 +228,7 @@ export default function DietPlanForm() {
             className="block text-sm font-medium mb-1"
             htmlFor="initialWeight"
           >
-            Initial Weight ({weightUnit})
+            Starting Weight ({weightUnit})
           </label>
           <input
             type="number"

@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { usePantry } from "@/hooks/usePantry";
 import NutritionResultsAnalysis from "./NutritionAnalysis";
 import Button from "./Button";
+import Link from "next/link";
 
 export default function MyPantry() {
   const { user, activeDiet } = useAuth();
@@ -92,7 +93,7 @@ export default function MyPantry() {
     if(!pantry.length) return <p>Your pantry is empty.</p>
 
     return (
-        <div className="p-2 grid grid-cols-2 sm:grid-cols-4 items-center gap-2 capitalize bg-yellow-50 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
+        <div className="p-4 grid grid-cols-2 sm:grid-cols-4 items-center gap-2 capitalize bg-yellow-50 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
             {pantry.map(item => (
                 <div key={item} className="flex justify-between">
                     <p>{item}</p>
@@ -105,13 +106,19 @@ export default function MyPantry() {
 
   return (
     <div className="flex flex-col gap-4 mb-4">
-      <h3 className="text-xl font-bold">My Pantry <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500"></i></h3>
+      {/* Go back button */}
+      <div className=" textGradient dark:text-blue-500 font-bold mb-2">
+        <Link href={`/dashboard/${activeDietName}`}>
+          <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back
+        </Link>
+      </div>
+      <h3 className="text-xl font-bold mb-2">My Pantry <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500"></i></h3>
       {/* List of pantry items */}
       {renderPantryList()}
       
       
       {/* Section to display Common Pantry Items */}
-      <h4 className="text-base font-semibold mt-4 text-center">
+      <h4 className="text-base font-semibold mt-2 text-center">
         Add Common Pantry Items
       </h4>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">

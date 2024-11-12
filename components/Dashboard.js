@@ -214,18 +214,21 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="flex mb-4 font-bold textGradient dark:text-blue-500">
-        <Link href={`/progress/${activeDiet.name}`} className="ml-auto">
-          View Progress{" "}
-          <i className="fa-solid fa-circle-arrow-right fa-lg "></i>
-        </Link>
-      </div>
-      <div className="flex mb-4 font-bold textGradient dark:text-blue-500">
-        <Link href={`/pantry`} className="ml-auto">
+    <div className="flex gap-4">
+      <div className="flex mb-4 font-bold">
+        <Link href={`/pantry`}>
           View Pantry{" "}
-          <i className="fa-solid fa-circle-arrow-right fa-lg "></i>
+          <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500"></i>
         </Link>
       </div>
+      <div className="flex mb-4 font-bold">
+        <Link href={`/progress/${activeDiet.name}`}>
+          View Progress{" "}
+          <i className="fa-solid fa-arrow-trend-up textGradient dark:text-blue-500"></i>
+        </Link>
+      </div>
+    </div>
+      
       <div className="flex flex-col flex-1 gap-4 sm:gap-6">
         <h3 className="text-lg sm:text-xl text-center font-bold">
           Today&apos;s Activities
