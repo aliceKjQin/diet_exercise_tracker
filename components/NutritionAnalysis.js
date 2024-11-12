@@ -82,7 +82,7 @@ export default function NutritionResultsAnalysis() {
           Analyze Nutrition{" "}
           <i className="fa-solid fa-chart-simple textGradient dark:text-blue-500"></i>
         </h2>
-        <div id="edamam-badge" data-color="white" className="justify-end">
+        <div id="edamam-badge" className="justify-end">
           <img
             src="/images/Edamam_Badge.svg"
             alt="Edamam Badge"
