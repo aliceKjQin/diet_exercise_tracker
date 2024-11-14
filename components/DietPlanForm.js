@@ -58,8 +58,14 @@ export default function DietPlanForm() {
         setError("");
       }
     } else if (["targetDays", "targetWeight", "initialWeight"].includes(name)) {
-      // Convert input value to number
-      setDietPlan((prev) => ({ ...prev, [name]: parseFloat(value) }));
+      // check if it's valid whole number
+      if (!/^\d*$/.test(value)) {
+        setError("Please enter a valid whole number.");
+        return;
+      }
+
+      setError("");
+      setDietPlan((prev) => ({ ...prev, [name]: value ? Number(value) : "" }));
     } else {
       // Handle other inputs as string
       setDietPlan((prev) => ({ ...prev, [name]: value }));
@@ -155,7 +161,7 @@ export default function DietPlanForm() {
   }
 
   return (
-    <div className="max-w-lg mx-auto mt-8 p-6 shadow-md rounded-lg">
+    <div className="max-w-lg mx-auto p-6 shadow-md rounded-lg">
       <h1 className="text-xl font-bold mb-4 text-center">Create Diet Plan</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -178,75 +184,80 @@ export default function DietPlanForm() {
             className="block text-sm font-medium mb-1"
             htmlFor="targetDays"
           >
-            Target Days
+            Duration (days)
           </label>
           <input
-            type="number"
+            type="text"
             id="targetDays"
             name="targetDays"
             value={dietPlan.targetDays}
             onChange={handleInputChange}
-            placeholder="Number of target days"
+            placeholder="Enter a number"
             className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
             required
           />
         </div>
-        {/* Weight Unit Selection */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Choose your weight unit:
-            <select
-              value={weightUnit}
-              onChange={(e) => setWeightUnit(e.target.value)}
-              className="ml-2"
+
+        {/* div for weightUnit and weight related fields */}
+        <div className="py-4 flex flex-col gap-2 p-2 rounded-xl">
+          {/* Weight Unit Selection */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Choose your weight unit:
+              <select
+                value={weightUnit}
+                onChange={(e) => setWeightUnit(e.target.value)}
+                className="ml-2 p-1 rounded-md"
+              >
+                <option value="kg">kg</option>
+                <option value="lbs">lbs</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="initialWeight"
             >
-              <option value="kg">kg</option>
-              <option value="lbs">lbs</option>
-            </select>
-          </label>
+              Starting Weight ({weightUnit})
+            </label>
+            <input
+              type="text"
+              id="initialWeight"
+              name="initialWeight"
+              value={dietPlan.initialWeight}
+              onChange={handleInputChange}
+              placeholder={`Starting weight in ${weightUnit}`}
+              className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
+              required
+            />
+          </div>
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="targetWeight"
+            >
+              Target Weight ({weightUnit})
+            </label>
+            <input
+              type="text"
+              id="targetWeight"
+              name="targetWeight"
+              value={dietPlan.targetWeight}
+              onChange={handleInputChange}
+              placeholder={`Target weight in ${weightUnit}`}
+              className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
+              required
+            />
+          </div>
         </div>
-        <div>
-          <label
-            className="block text-sm font-medium mb-1"
-            htmlFor="targetWeight"
-          >
-            Target Weight ({weightUnit})
-          </label>
-          <input
-            type="number"
-            id="targetWeight"
-            name="targetWeight"
-            value={dietPlan.targetWeight}
-            onChange={handleInputChange}
-            placeholder={`Target weight in ${weightUnit}`}
-            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
-            required
-          />
-        </div>
-        <div>
-          <label
-            className="block text-sm font-medium mb-1"
-            htmlFor="initialWeight"
-          >
-            Starting Weight ({weightUnit})
-          </label>
-          <input
-            type="number"
-            id="initialWeight"
-            name="initialWeight"
-            value={dietPlan.initialWeight}
-            onChange={handleInputChange}
-            placeholder={`Initial weight in ${weightUnit}`}
-            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
-            required
-          />
-        </div>
+
         <div>
           <label
             htmlFor="initialBodyImage"
             className="block text-sm font-medium mb-1"
           >
-            Upload Initial Body Image
+            Upload Starting Body Image
           </label>
           <input
             type="file"
@@ -258,7 +269,7 @@ export default function DietPlanForm() {
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+          className="w-full bg-indigo-400 text-white py-2 rounded-full hover:bg-indigo-500 transition-colors font-bold"
         >
           Submit Diet Plan
         </button>

@@ -94,8 +94,8 @@ export default function NutritionResultsAnalysis() {
 
       <div className="flex flex-col gap-6 bg-purple-100 dark:bg-sky-100 p-6 shadow-md rounded-lg">
         <p className="text-center">
-          Enter an ingredient list, like &quot;1 cup rice, 10 oz chickpeas&quot;, etc.
-          Enter each ingredient on a new line.
+          Enter an ingredient list, like &quot;1 cup rice, 10 oz chickpeas&quot;, etc. 
+          <span className="underline decoration-red-300 decoration-2 underline-offset-4"> Enter each ingredient on a new line.</span>
         </p>
 
         <textarea

@@ -8,9 +8,9 @@ export default function MacroProgressBar({ current, goal, label, unit }) {
         <span>{`${current} / ${goal} ${unit}`} | </span>
         <span>{((current/goal)*100).toFixed(0)} % to goal</span>
       </p>
-      <div className="w-full bg-stone-200 rounded-full h-6 sm:h-8">
+      <div className="w-full bg-stone-300 rounded-full h-6 sm:h-8">
         <div
-            className="bg-emerald-300 h-6 sm:h-8 rounded-full"
+            className="bg-emerald-400 h-6 sm:h-8 rounded-full"
             style={{ width: `${percentage}%` }}
         ></div>
       </div>

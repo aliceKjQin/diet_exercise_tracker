@@ -37,6 +37,32 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
+  // Function to refetch the active diet from db
+  const refetchActiveDiet = async () => {
+    if (!user || !user.uid) return;
+
+    try {
+      const userRef = doc(db, "users", user.uid)
+      const docSnap = await getDoc(userRef)
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data()
+        
+        const diets = userData.diets || {}
+        const activeDietEntry = Object.entries(diets).find(([, dietDetails]) => dietDetails.isActive)
+
+        if(activeDietEntry) {
+          setActiveDiet({name: activeDietEntry[0], details: activeDietEntry[1]})
+        } else {
+          console.log("No active diet found.")
+          setActiveDiet(null)
+        }
+      }
+    } catch (error) {
+      console.error("Failed to refetch updated active diet!", error.message)
+    }
+  }
+
   // When the component mounts: The useEffect runs, and it sets up the listener (onAuthStateChanged). This listener checks if a user is logged in or not, and based on that, it fetches user data if the user is logged in.
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -58,7 +84,7 @@ export function AuthProvider({ children }) {
         }
         setUserDataObj(firebaseData);
 
-        // Fetch active diet
+        // Get active diet
         const diets = firebaseData.diets || {};
         const activeDiet = Object.entries(diets).find(
           ([, dietDetails]) => dietDetails.isActive
@@ -83,6 +109,7 @@ export function AuthProvider({ children }) {
     setUserDataObj,
     activeDiet,
     setActiveDiet,
+    refetchActiveDiet,
     loading,
     signup,
     login,

@@ -18,7 +18,7 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
 export default function Dashboard() {
   const { user, userDataObj, setUserDataObj, loading } = useAuth();
-  const { activeDiet, loading: activeDietLoading } = useActiveDiet(user); // Use the active diet hook
+  const { activeDiet, loading: activeDietLoading } = useActiveDiet(user); 
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedDayNote, setSelectedDayNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false);
@@ -152,11 +152,11 @@ export default function Dashboard() {
   const renderNoteButton = (emoji, hasNote, onClick) => (
     <button
       onClick={onClick}
-      className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-yellow-400 hover:bg-purple-100 text-center flex flex-col gap-2 flex-1 items-center`}
+      className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-indigo-400 text-center flex flex-col gap-2 flex-1 items-center`}
     >
       <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
       <p
-        className={`text-stone-600 text-xs sm:text-sm md:text-base ${roboto.className}`}
+        className={`text-white text-xs sm:text-sm md:text-base ${roboto.className}`}
       >
         {hasNote ? "Update Note" : "Add Note"}
       </p>
@@ -168,14 +168,14 @@ export default function Dashboard() {
     return (
       <button
         onClick={onClick}
-        className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-${color} hover:bg-purple-100 text-center flex flex-col gap-2 flex-1 items-center`}
+        className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-${color} text-center flex flex-col gap-2 flex-1 items-center`}
       >
         {currentValue === undefined ? (
           <>
             {/* Render only the label if currentValue is undefined */}
             <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
             <p
-              className={`text-stone-600 text-xs sm:text-sm md:text-base ${roboto.className}`}
+              className={`text-stone-700 text-xs sm:text-sm md:text-base ${roboto.className}`}
             >
               {label}
             </p>
@@ -184,7 +184,7 @@ export default function Dashboard() {
           <>
             <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
             <p
-              className={`text-stone-600 text-xs sm:text-sm md:text-base ${roboto.className}`}
+              className={`text-stone-700 text-xs sm:text-sm md:text-base ${roboto.className}`}
             >
               {currentValue ? `${label} ✅` : `${label} ❌`}
             </p>
@@ -245,29 +245,29 @@ export default function Dashboard() {
 
           {/* Tooltip content */}
           {isTooltipVisible && (
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 p-2 w-60 bg-stone-600 text-white text-xs rounded shadow-lg z-10">
-              😀 Good day: completed both exercise and diet.
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 p-2 w-60 sm:w-80 bg-stone-700 text-white ring-2 ring-yellow-200 text-xs sm:text-sm rounded shadow-lg z-10">
+              <i className="fa-solid fa-face-smile text-green-300"></i> Good day: completed both exercise and diet.
               <br />
-              😐 Neutral: completed one activity.
+              <i className="fa-solid fa-face-meh text-yellow-300"></i> Neutral: completed one activity.
               <br />
-              😞 Missed: completed neither activity.
+              <i className="fa-solid fa-face-frown text-red-300"></i> Missed: completed neither activity.
               <br />
               *** Click once to mark an activity as completed ✅, click again to
               mark as missed ❌.
               <br />
-              📝 Add Note: record any observations for the day.
+              <i className="fa-solid fa-pen-to-square text-white"></i> Add Note: record observations.
             </div>
           )}
         </div>
 
         {showWarning ? (
-          <p className="text-center">
+          <p className="p-2 bg-yellow-50 rounded-lg ring-2 ring-rose-200 text-center mx-auto">
             <i
               className="fa-solid fa-triangle-exclamation fa-lg  text-rose-500 cursor-pointer"
               onClick={handleShowWarning}
             ></i>{" "}
-            <span className="text-sm text-stone-500">
-              Make sure to log both diet and exercise to display the matched
+            <span className="text-sm text-stone-700">
+              Make sure to log both diet and exercise to display the matching
               emoji face
             </span>
           </p>
@@ -278,23 +278,25 @@ export default function Dashboard() {
           ></i>
         )}
 
-        <div className="flex items-stretch flex-wrap gap-4">
-          {/* Exercise Button */}
+        <div className="flex items-stretch flex-wrap gap-4 text-white">
+          {/* Exercise & Diet Buttons */}
           {renderButton(
-            "🏋️",
+            (<i className="fa-solid fa-dumbbell"></i>),
             "Exercise",
             currentDayData?.exercise,
             () => handleToggle("exercise"),
-            "teal-400"
+            "emerald-400"
           )}
           {renderButton(
-            "🍽️",
+            (<i className="fa-solid fa-bowl-rice"></i>),
             "Diet",
             currentDayData?.diet,
             () => handleToggle("diet"),
-            "red-400"
+            "emerald-400"
           )}
-          {renderNoteButton("📝", hasNote, () => setShowNoteModal(true))}
+
+          {/* Note Button  */}
+          {renderNoteButton((<i className="fa-solid fa-pen-to-square text-white"></i>), hasNote, () => setShowNoteModal(true))}
         </div>
         
 

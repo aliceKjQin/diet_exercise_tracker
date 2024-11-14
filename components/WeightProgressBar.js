@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { db } from "@/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function WeightProgressBar({
   startingWeight,
@@ -13,32 +14,34 @@ export default function WeightProgressBar({
   isActive,
   finalWeight,
 }) {
-  // Initialize current weight with the starting weight
+  // ***  decouple the displayed currentWeight (used for the progress bar) from the input currentWeight, to ensure the progress bar updates only after the user clicks "Update" and the value is successfully saved
   const [currentWeight, setCurrentWeight] = useState(
     isActive ? "" : finalWeight
-  );
-  const [inputWeight, setInputWeight] = useState("");
+  ); // state for progressBar
+  const [inputWeight, setInputWeight] = useState("")
+  const [error, setError] = useState("")
   const { weightUnit } = useWeightUnit()
+  const { activeDiet, refetchActiveDiet } = useAuth()
 
-  // Load the current weight from db on component mount
   useEffect(() => {
-    const fetchWeight = async () => {
-      try {
-        const dietDoc = await getDoc(doc(db, "users", userId));
-        if (dietDoc.exists()) {
-          const savedWeight = dietDoc.data().diets?.[dietName]?.currentWeight;
-          if (savedWeight) {
-            setCurrentWeight(savedWeight);
-            setInputWeight(savedWeight);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching currentWeight: ", error);
-      }
-    };
+    if (activeDiet) {
+      setCurrentWeight(activeDiet.details?.currentWeight || "") // reset for progressBar
+      setInputWeight(activeDiet.details?.currentWeight || "") // reset for input field
+    }
+  }, [activeDiet]);
 
-    fetchWeight();
-  }, [userId, dietName]);
+  // Handle currentWeight input change
+  const handleInputWeightChange = (e) => {
+    const inputValue = e.target.value
+
+    if (!/^\d*\.?\d*$/.test(inputValue)) {
+      setError("Please enter a valid number.");
+      return;
+    }
+
+    setError("");
+    setInputWeight(inputValue); //Keep as string to preserve decimal during editing, then use parseFloat() before saving
+  }
 
   // Calculate the progress percentage
   const progressPercentage =
@@ -61,9 +64,10 @@ export default function WeightProgressBar({
     try {
       const userDocRef = doc(db, "users", userId);
       await updateDoc(userDocRef, {
-        [`diets.${dietName}.currentWeight`]: inputWeight,
+        [`diets.${dietName}.currentWeight`]: parseFloat(inputWeight),
       });
-      setCurrentWeight(inputWeight); // Update progress bar after saving
+      await refetchActiveDiet()
+      setCurrentWeight(inputWeight) // Update currentWeight for progressBar
       console.log("Weight updated successfully!");
     } catch (error) {
       console.error("Error updating currentWeight: ", error);
@@ -87,15 +91,13 @@ export default function WeightProgressBar({
       {/* Display Current Weight Input only for active diets */}
       {isActive ? (
         <>
-          <label htmlFor="current-weight">Update Current Weight ({weightUnit}):</label>
+          <label htmlFor="currentWeight">Update Current Weight ({weightUnit}):</label>
           <div className="flex">
             <input
-              type="number"
-              id="current-weight"
+              type="text"
+              id="currentWeight"
               value={inputWeight}
-              onChange={(e) =>
-                setInputWeight(e.target.value ? Number(e.target.value) : "")
-              }
+              onChange={handleInputWeightChange}
               className="w-20 p-2 border rounded"
             />
             <button
@@ -105,6 +107,7 @@ export default function WeightProgressBar({
               Update
             </button>
           </div>
+          {error && <p className="text-red-500">{error}</p>}
         </>
       ) : (
         <p className="textGradient dark:text-blue-500 font-semibold">

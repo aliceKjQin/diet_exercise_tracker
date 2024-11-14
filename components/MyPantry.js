@@ -90,10 +90,10 @@ export default function MyPantry() {
 
   const renderPantryList = () => {
     if (loading) return <p>Loading your pantry ...</p>
-    if(!pantry.length) return <p>Your pantry is empty.</p>
+    if(!pantry.length) return <p className="p-4 bg-yellow-100 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">Your pantry is empty.</p>
 
     return (
-        <div className="p-4 grid grid-cols-2 sm:grid-cols-4 items-center gap-2 capitalize bg-yellow-50 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
+        <div className="p-4 grid grid-cols-2 sm:grid-cols-4 items-center gap-2 capitalize bg-yellow-100 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
             {pantry.map(item => (
                 <div key={item} className="flex justify-between">
                     <p>{item}</p>
@@ -126,7 +126,7 @@ export default function MyPantry() {
           <p
             key={item}
             onClick={() => handleAddItem(item)}
-            className="cursor-pointer bg-purple-100 hover:bg-purple-200 dark:bg-sky-100 dark:hover:bg-sky-200 p-2 rounded-md text-center capitalize"
+            className="cursor-pointer bg-purple-100 hover:bg-purple-200 dark:bg-sky-100 dark:hover:bg-sky-200 shadow-md p-2 rounded-2xl text-center capitalize"
           >
             {item}
           </p>

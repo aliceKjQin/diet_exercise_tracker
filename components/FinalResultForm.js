@@ -24,9 +24,8 @@ export default function FinalResultForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [rating, setRating] = useState("");
-  const { setActiveDiet, user } = useAuth();
-  const { activeDiet } = useActiveDiet(user)
-  const { weightUnit } = useWeightUnit()
+  const { setActiveDiet, activeDiet } = useAuth();
+  const { weightUnit } = useWeightUnit();
   const maxWords = 6;
 
   const prosOptions = [
@@ -47,13 +46,26 @@ export default function FinalResultForm({
     "Other",
   ];
 
-  // Set finalWeight to currentWeight in db so if user didn't enter a value it will be default to the existing currentWeight instead of overwriting it with 0.
   useEffect(() => {
     if (activeDiet) {
       setFinalWeight(activeDiet.details.currentWeight || "");
     }
   }, [activeDiet]);
 
+  // Handle finalWeight input change
+  const handleFinalWeightChange = (e) => {
+    const inputValue = e.target.value;
+
+    if (!/^\d*\.?\d*$/.test(inputValue)) {
+      setError("Please enter a valid number.");
+      return;
+    }
+
+    setError("");
+    setFinalWeight(inputValue); //Keep as string to preserve decimal during editing, then use parseFloat() before saving
+  };
+
+  // Handle pros and cons custom input change
   const handleCustomInputChange = (input, setInput, setMessage) => (e) => {
     const words = e.target.value.trim().split(/\s+/);
     if (words.length <= maxWords) {
@@ -84,7 +96,7 @@ export default function FinalResultForm({
 
     const updatedDietPlan = {
       isActive: false,
-      currentWeight: Number(finalWeight),
+      currentWeight: parseFloat(finalWeight),
       prosNcons,
       summary: summaryInputValue,
       rating,
@@ -129,10 +141,10 @@ export default function FinalResultForm({
           Final Weight ({weightUnit})
         </label>
         <input
-          type="number"
+          type="text"
           id="finalWeight"
           value={finalWeight}
-          onChange={(e) => setFinalWeight(e.target.value)}
+          onChange={handleFinalWeightChange}
           className="border border-gray-300 p-2 w-full rounded"
           required
         />

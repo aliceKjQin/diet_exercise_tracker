@@ -56,6 +56,55 @@ export default function HistoryPageForSpecifiedDiet() {
           Result
         </h3>
 
+        {/* Button to toggle image display */}
+        <Button
+          text={showImages ? "Hide Before & After" : "Show Before & After"}
+          clickHandler={handleToggle}
+          full
+        />
+
+                {/* initial vs. current image display section */}
+                {showImages && (
+          <div className="sm:flex gap-8 text-center">
+            <div>
+              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
+                Before
+              </h3>
+              {initialBodyImageUrl ? (
+                <Image
+                src={initialBodyImageUrl}
+                alt="Before Image"
+                width={300} 
+                height={360} 
+                className="mb-4 object-cover rounded-lg"
+                sizes="(max-width: 640px) 220px, 300px"
+              />
+              
+              ) : (
+                <p>No initial image uploaded.</p>
+              )}
+            </div>
+            <div>
+              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
+                After
+              </h3>
+              {currentBodyImageUrl ? (
+                <Image
+                src={currentBodyImageUrl}
+                alt="After Image"
+                width={300} 
+                height={360} 
+                className="mb-4 object-cover rounded-lg"
+                sizes="(max-width: 640px) 220px, 300px"
+              />
+              
+              ) : (
+                <p>No current image uploaded.</p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Section for summary, heart rating and pros & cons */}
         <div className="flex flex-col gap-6 items-center">
           {/* heart rating */}
@@ -140,54 +189,7 @@ export default function HistoryPageForSpecifiedDiet() {
           isActive={false}
         />
 
-        {/* Button to toggle image display */}
-        <Button
-          text={showImages ? "Hide Before & After" : "Show Before & After"}
-          clickHandler={handleToggle}
-          full
-        />
 
-        {/* initial vs. current image display section */}
-        {showImages && (
-          <div className="sm:flex gap-8 text-center">
-            <div>
-              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
-                Before
-              </h3>
-              {initialBodyImageUrl ? (
-                <Image
-                src={initialBodyImageUrl}
-                alt="Before Image"
-                width={300} 
-                height={360} 
-                className="mb-4 object-cover rounded-lg"
-                sizes="(max-width: 640px) 220px, 300px"
-              />
-              
-              ) : (
-                <p>No initial image uploaded.</p>
-              )}
-            </div>
-            <div>
-              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
-                After
-              </h3>
-              {currentBodyImageUrl ? (
-                <Image
-                src={currentBodyImageUrl}
-                alt="After Image"
-                width={300} 
-                height={360} 
-                className="mb-4 object-cover rounded-lg"
-                sizes="(max-width: 640px) 220px, 300px"
-              />
-              
-              ) : (
-                <p>No current image uploaded.</p>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </Main>
   );

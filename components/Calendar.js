@@ -154,23 +154,23 @@ export default function Calendar(props) {
                         : "border-purple-100 dark:border-blue-100"
                     } ${
                       data?.[dayIndex]
-                        ? "text-white bg-purple-400 dark:bg-blue-400"
+                        ? "text-white bg-stone-500"
                         : "text-purple-400 dark:text-blue-400 bg-white"
                     } `}
                   >
                     <p>{dayIndex}</p>
                     {/* Div for emojis */}
-                    <div className="flex flex-col sm:flex-row items-center text-xl sm:text-2xl md:text-4xl">
+                    <div className="flex flex-col sm:flex-row items-center text-xl sm:text-2xl md:text-3xl sm:gap-2">
                       {/* display a smiley face if both diet and exercise are true */}
                       {data?.[dayIndex]?.diet && data?.[dayIndex]?.exercise ? (
-                        <p>😀</p>
+                        <p><i className="fa-solid fa-face-smile text-green-300"></i></p>
                       ) : (
                         ""
                       )}
                       {/* display a sad face if both diet and exercise are false */}
                       {data?.[dayIndex]?.diet === false &&
                       data[dayIndex]?.exercise === false ? (
-                        <p>☹️</p>
+                        <p><i className="fa-solid fa-face-frown text-red-300"></i></p>
                       ) : (
                         ""
                       )}
@@ -179,13 +179,13 @@ export default function Calendar(props) {
                         !data?.[dayIndex]?.exercise) || 
                       (!data?.[dayIndex]?.diet &&
                         data?.[dayIndex]?.exercise)  ? (
-                        <p>😐</p>
+                        <p><i className="fa-solid fa-face-meh text-yellow-300"></i></p>
                       ) : (
                         ""
                       )}
                       {/* display a note emoji if note is true, when clicks the note emoji, it sends the selected day note back to parent, Dashboard */}
                       {data?.[dayIndex]?.note ? (
-                        <p onClick={() => onNoteClick(data[dayIndex].note)} className="cursor-pointer" >📝</p>
+                        <p onClick={() => onNoteClick(data[dayIndex].note)} className="cursor-pointer" ><i className="fa-solid fa-pen-to-square text-white"></i></p>
                       ) : (
                         ""
                       )}
