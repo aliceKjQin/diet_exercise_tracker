@@ -1,21 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { subDays, format } from "date-fns";
-
-// Utility to calculate past week's dates
-const getPastWeekDates = () => {
-  const dates = [];
-  for (let i = 0; i < 7; i++) {
-    const date = subDays(new Date(), i);
-    dates.push({
-      year: format(date, "yyyy"),
-      month: format(date, "M"),
-      day: format(date, "d"),
-    });
-  }
-  return dates;
-};
 
 export default function useProgressData(diet) {
   const [data, setData] = useState({
@@ -23,9 +8,11 @@ export default function useProgressData(diet) {
     exerciseReasons: {},
     dietMissedPercentages: {},
     exerciseMissedPercentages: {},
-    missedDays: 0,
-    dietMissedDays: 0,
-    exerciseMissedDays: 0,
+    topDietMissedPercentages: {},
+    topExerciseMissedPercentages: {},
+    totalMissedDays: 0,
+    totalDietMissedDays: 0,
+    totalExerciseMissedDays: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -35,102 +22,70 @@ export default function useProgressData(diet) {
 
       setLoading(true);
       try {
-        // Step 1: Get the past week's date range
-        const pastWeekDates = getPastWeekDates();
         const dietData = diet.details.dietData;
 
-        // Step 2: Initialize counters for missed reasons and days
-        const dietMissedReasons = {};
-        const exerciseMissedReasons = {};
-        let missedDays = 0;
-        let dietMissedDays = 0;
-        let exerciseMissedDays = 0;
-
-        // Step 3: Loop through each date in the past week and aggregate data
-        pastWeekDates.forEach(({ year, month, day }) => {
-         // destructure obj { year, month, day } to extract the values associated with those keys
-
-          // Convert year, month, and day to numbers
-          const numericYear = Number(year); // "2024" -> 2024
-          const numericMonth = Number(month) - 1; // "10" -> 10
-          const numericDay = Number(day);
-
-          const dayData = dietData?.[numericYear]?.[numericMonth]?.[numericDay];
-
-          if (dayData) {
-            // Diet missed reason processing
-            if (dayData.diet === false && dayData.dietMissedReason) {
-              dietMissedReasons[dayData.dietMissedReason] =
-                (dietMissedReasons[dayData.dietMissedReason] || 0) + 1; // Check if a specific missed reason already has a count. If yes, adds 1 to the existing count, else it initializes the count to 1.
-              dietMissedDays++;
-            }
-
-            // Exercise missed reason processing
-            if (dayData.exercise === false && dayData.exerciseMissedReason) {
-              exerciseMissedReasons[dayData.exerciseMissedReason] =
-                (exerciseMissedReasons[dayData.exerciseMissedReason] || 0) + 1;
-              exerciseMissedDays++;
-            }
-
-            // Counting missed days
-            if (dayData.diet === false || dayData.exercise === false) {
-              missedDays++;
-            }
-          }
-        });
-
-        // Step 4: Calculate missed percentages for each reason
-        const dietMissedPercentages = {};
-        const exerciseMissedPercentages = {};
-
-        Object.entries(dietMissedReasons).forEach(([reason, count]) => {
-          dietMissedPercentages[reason] =
-            ((count / dietMissedDays) * 100).toFixed(2) || 0;
-        });
-
-        Object.entries(exerciseMissedReasons).forEach(([reason, count]) => {
-          exerciseMissedPercentages[reason] =
-            ((count / exerciseMissedDays) * 100).toFixed(2) || 0;
-        });
-
-        // Step 5: Calculate top 3 missed reasons and respective percentage for the entire diet period, will be used for review page
+        // Initialize counters for missed reasons and days
         const totalDietMissedReasons = {};
         const totalExerciseMissedReasons = {};
+        let totalMissedDays = 0;
         let totalDietMissedDays = 0;
         let totalExerciseMissedDays = 0;
 
-        // Traverse entire diet data
+        // Traverse entire `dietData`
         for (const year in dietData) {
           for (const month in dietData[year]) {
             for (const day in dietData[year][month]) {
               const dayData = dietData[year][month][day];
 
+              // Diet missed reason processing
               if (dayData.diet === false && dayData.dietMissedReason) {
                 totalDietMissedReasons[dayData.dietMissedReason] =
                   (totalDietMissedReasons[dayData.dietMissedReason] || 0) + 1;
                 totalDietMissedDays++;
               }
 
+              // Exercise missed reason processing
               if (dayData.exercise === false && dayData.exerciseMissedReason) {
                 totalExerciseMissedReasons[dayData.exerciseMissedReason] =
                   (totalExerciseMissedReasons[dayData.exerciseMissedReason] ||
                     0) + 1;
                 totalExerciseMissedDays++;
               }
+
+              // Counting missed days
+              if (dayData.diet === false || dayData.exercise === false) {
+                totalMissedDays++;
+              }
             }
           }
         }
 
-        // Sort reasons and get top 3 for diet and exercise with respective percentages
+        // Calculate missed percentages for each reason of all logged days
+        const dietMissedPercentages = {};
+        const exerciseMissedPercentages = {};
+
+        Object.entries(totalDietMissedReasons).forEach(([reason, count]) => {
+          dietMissedPercentages[reason] =
+            ((count / totalDietMissedDays) * 100).toFixed(2) || 0;
+        });
+
+        Object.entries(totalExerciseMissedReasons).forEach(([reason, count]) => {
+          exerciseMissedPercentages[reason] =
+            ((count / totalExerciseMissedDays) * 100).toFixed(2) || 0;
+        });
+
+        // Sort and extract top 3 missed reasons for all logged days
         const topDietMissedPercentages = Object.entries(totalDietMissedReasons)
           .sort((a, b) => b[1] - a[1]) // Sort by count
-          .slice(0, 3) // Keep top 3 
+          .slice(0, 3) // Keep top 3
           .reduce((acc, [reason, count]) => {
             acc[reason] = ((count / totalDietMissedDays) * 100).toFixed(2);
             return acc;
-          }, {})
+          }, {});
 
-        const topExerciseMissedPercentages = Object.entries(totalExerciseMissedReasons)
+        const topExerciseMissedPercentages = Object.entries(
+          totalExerciseMissedReasons
+        )
           .sort((a, b) => b[1] - a[1])
           .slice(0, 3)
           .reduce((acc, [reason, count]) => {
@@ -138,17 +93,17 @@ export default function useProgressData(diet) {
             return acc;
           }, {});
 
-        // Step 6: Set the processed data
+        // Set the processed data
         setData({
-          missedDays,
-          dietMissedDays,
-          exerciseMissedDays,
+          totalMissedDays,
+          totalDietMissedDays,
+          totalExerciseMissedDays,
           dietMissedPercentages,
           exerciseMissedPercentages,
           topDietMissedPercentages,
           topExerciseMissedPercentages,
           totalDietMissedDays,
-          totalExerciseMissedDays
+          totalExerciseMissedDays,
         });
       } catch (error) {
         console.error("Error processing progress data: ", error);

@@ -2,39 +2,43 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useActiveDiet } from "@/hooks/useActiveDiet";
-import ProgressBar from "@/components/ProgressBar";
-import Loading from "@/components/Loading";
-import Main from "@/components/Main";
+import MainProgressCharts from "@/components/progress/MainProgressCharts";
+import Loading from "@/components/shared/Loading";
+import Main from "@/components/shared/Main";
 import useProgressData from "@/hooks/useProgressData";
-import MissedReasonsChart from "@/components/MissedReasonsChart";
-import UploadImage from "@/components/UploadImage";
-import MissedDaysChart from "@/components/MissedDaysChart";
-import Button from "@/components/Button";
+import UploadImage from "@/components/progress/UploadImage";
+import Button from "@/components/shared/Button";
 import Link from "next/link";
-import WeightProgressBar from "@/components/WeightProgressBar";
+import WeightProgressBar from "@/components/progress/WeightProgressBar";
 import Image from "next/image";
+import Login from "@/components/shared/Login";
 
 export default function ProgressPage() {
   const [showImages, setShowImages] = useState(false);
-  const { user } = useAuth();
-  const { activeDiet, loading: loadingActiveDiet } = useActiveDiet(user);
-  const { data, loading: loadingProgressData } = useProgressData(activeDiet);
+  const {
+    user,
+    activeDiet,
+    refetchActiveDiet,
+    loading: loadingUser,
+  } = useAuth();
+  // const { activeDiet, loading: loadingActiveDiet } = useActiveDiet(user);
 
-  const [initialImageUrl, setInitialImageUrl] = useState(null);
-  const [currentImageUrl, setCurrentImageUrl] = useState(null);
+  const [targetDays, setTargetDays] = useState(null);
+  const [dietData, setDietData] = useState({});
+  const [dietName, setDietName] = useState("");
+  const [initialImageUrl, setInitialImageUrl] = useState("");
+  const [currentImageUrl, setCurrentImageUrl] = useState("");
 
   // Update image URLs when activeDiet data loads or changes
   useEffect(() => {
     if (activeDiet) {
-      setInitialImageUrl(activeDiet.details?.initialBodyImage || null);
-      setCurrentImageUrl(activeDiet.details?.currentBodyImage || null);
+      setTargetDays(activeDiet.details?.targetDays);
+      setDietData(activeDiet.details?.dietData);
+      setDietName(activeDiet.name);
+      setInitialImageUrl(activeDiet.details?.initialBodyImage || "");
+      setCurrentImageUrl(activeDiet.details?.currentBodyImage || "");
     }
   }, [activeDiet]);
-
-  const dietName = activeDiet?.name;
-  const dietData = activeDiet?.details.dietData;
-  const targetDays = activeDiet?.details.targetDays;
 
   const handleToggle = () => {
     setShowImages(!showImages);
@@ -44,12 +48,10 @@ export default function ProgressPage() {
   const updateInitialImageUrl = (url) => setInitialImageUrl(url);
   const updateCurrentImageUrl = (url) => setCurrentImageUrl(url);
 
-  if (loadingActiveDiet || loadingProgressData) {
-    return <Loading />;
-  }
+  if (loadingUser) return <Loading />;
 
   if (!user) {
-    return null; // Prevents further rendering of ProgressPage i.e. when user log out
+    return <Login />; // Prevents further rendering of ProgressPage i.e. when user log out
   }
 
   return (
@@ -64,8 +66,9 @@ export default function ProgressPage() {
       <div className="flex flex-col gap-4 sm:gap-8 items-center">
         <h3 className="font-bold text-lg sm:text-xl">Progress Overview</h3>
 
-        {/* Days Progress Bar */}
-        <ProgressBar
+        {/* Days Progress Bar with other charts */}
+        <MainProgressCharts
+          diet={activeDiet}
           dietData={dietData}
           targetDays={targetDays}
           dietName={dietName}
@@ -74,24 +77,10 @@ export default function ProgressPage() {
 
         {/* Weight Progress Bar */}
         <WeightProgressBar
-          startingWeight={activeDiet.details.initialWeight}
-          targetWeight={activeDiet.details.targetWeight}
+          startingWeight={activeDiet?.details?.initialWeight}
+          targetWeight={activeDiet?.details?.targetWeight}
           userId={user.uid}
-          dietName={activeDiet.name}
-          isActive
-        />
-
-        {/* Missed reasons percentage pie chart */}
-        <MissedReasonsChart
-          dietMissedData={data.dietMissedPercentages}
-          exerciseMissedData={data.exerciseMissedPercentages}
-          isActive
-        />
-
-        {/* Missed days bar chart */}
-        <MissedDaysChart
-          dietMissedDays={data.dietMissedDays}
-          exerciseMissedDays={data.exerciseMissedDays}
+          dietName={dietName}
           isActive
         />
 
@@ -115,7 +104,7 @@ export default function ProgressPage() {
                     src={initialImageUrl}
                     alt="Before Image"
                     width={300}
-                    height={360} 
+                    height={360}
                     className="mb-4 object-cover rounded-lg"
                     sizes="(max-width: 640px) 220px, 300px"
                   />
@@ -149,7 +138,7 @@ export default function ProgressPage() {
                     src={currentImageUrl}
                     alt="After Image"
                     width={300}
-                    height={360} 
+                    height={360}
                     className="mb-4 object-cover rounded-lg"
                     sizes="(max-width: 640px) 220px, 300px"
                   />

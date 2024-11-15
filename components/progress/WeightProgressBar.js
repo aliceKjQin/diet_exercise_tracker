@@ -5,6 +5,7 @@ import { db } from "@/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
 import { useAuth } from "@/contexts/AuthContext";
+import Loading from "../shared/Loading";
 
 export default function WeightProgressBar({
   startingWeight,
@@ -18,30 +19,32 @@ export default function WeightProgressBar({
   const [currentWeight, setCurrentWeight] = useState(
     isActive ? "" : finalWeight
   ); // state for progressBar
-  const [inputWeight, setInputWeight] = useState("")
-  const [error, setError] = useState("")
-  const { weightUnit } = useWeightUnit()
-  const { activeDiet, refetchActiveDiet } = useAuth()
+  const [inputWeight, setInputWeight] = useState("");
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { weightUnit } = useWeightUnit();
+  const { activeDiet, refetchActiveDiet } = useAuth();
 
   useEffect(() => {
     if (activeDiet) {
-      setCurrentWeight(activeDiet.details?.currentWeight || "") // reset for progressBar
-      setInputWeight(activeDiet.details?.currentWeight || "") // reset for input field
+      setCurrentWeight(activeDiet.details?.currentWeight || ""); // reset for progressBar
+      setInputWeight(activeDiet.details?.currentWeight || ""); // reset for input field
     }
   }, [activeDiet]);
 
   // Handle currentWeight input change
   const handleInputWeightChange = (e) => {
-    const inputValue = e.target.value
+    const inputValue = e.target.value;
 
-    if (!/^\d*\.?\d*$/.test(inputValue)) {
+    // Allow empty input
+    if (inputValue === "" || /^\d*\.?\d*$/.test(inputValue)) {
+      setError("");
+      setInputWeight(inputValue); //Keep as string to preserve decimal during editing, then use parseFloat() before saving
+    } else {
       setError("Please enter a valid number.");
-      return;
     }
-
-    setError("");
-    setInputWeight(inputValue); //Keep as string to preserve decimal during editing, then use parseFloat() before saving
-  }
+  };
 
   // Calculate the progress percentage
   const progressPercentage =
@@ -61,27 +64,34 @@ export default function WeightProgressBar({
 
   // Save the current weight to db
   const handleSaveWeight = async () => {
+    setLoading(true);
     try {
       const userDocRef = doc(db, "users", userId);
       await updateDoc(userDocRef, {
         [`diets.${dietName}.currentWeight`]: parseFloat(inputWeight),
       });
-      await refetchActiveDiet()
-      setCurrentWeight(inputWeight) // Update currentWeight for progressBar
-      console.log("Weight updated successfully!");
+      await refetchActiveDiet();
+      setCurrentWeight(inputWeight); // Update currentWeight for progressBar
+      setSuccessMessage("Weight updated successfully!");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 2000);
     } catch (error) {
       console.error("Error updating currentWeight: ", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col w-full gap-4 items-center">
-      <h3 className=" textGradient dark:text-blue-500 font-bold">
+    <div className="flex flex-col w-full gap-4 bg-indigo-400 p-4 rounded-lg text-white">
+      <h3 className="font-bold">
         <i className="fa-solid fa-weight-scale"></i>{" "}
-        {progressPercentage.toFixed(0)}% to Target Weight {targetWeight} ({weightUnit})
+        {progressPercentage.toFixed(0)}% to Target Weight {targetWeight} (
+        {weightUnit})
       </h3>
       {/* Progress Bar */}
-      <div className="w-full bg-gray-300 rounded-full h-8 sm:h-12">
+      <div className="w-full bg-stone-200 rounded-full h-8 sm:h-12">
         <div
           className="bg-emerald-400 h-8 sm:h-12 rounded-full"
           style={{ width: `${progressPercentage}%` }}
@@ -90,27 +100,31 @@ export default function WeightProgressBar({
 
       {/* Display Current Weight Input only for active diets */}
       {isActive ? (
-        <>
-          <label htmlFor="currentWeight">Update Current Weight ({weightUnit}):</label>
+        <div className="flex flex-col justify-center items-center gap-2 font-semibold">
+          <label htmlFor="currentWeight">
+            Update Current Weight ({weightUnit}):
+          </label>
           <div className="flex">
             <input
               type="text"
               id="currentWeight"
               value={inputWeight}
               onChange={handleInputWeightChange}
-              className="w-20 p-2 border rounded"
+              className="w-20 p-2 border rounded text-stone-700"
             />
             <button
               onClick={handleSaveWeight}
-              className="bg-purple-400 dark:bg-blue-400 text-white px-3 py-1 rounded font-bold"
+              className="bg-pink-400 text-white px-3 py-1 rounded font-bold"
             >
               Update
             </button>
           </div>
+          {loading && <Loading />}
           {error && <p className="text-red-500">{error}</p>}
-        </>
+          {successMessage && <p className="text-green-200">{successMessage}</p>}
+        </div>
       ) : (
-        <p className="textGradient dark:text-blue-500 font-semibold">
+        <p className="font-semibold text-center">
           {" "}
           Final Weight: {finalWeight} ({weightUnit})
         </p>

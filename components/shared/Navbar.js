@@ -3,15 +3,18 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Roboto } from "next/font/google";
 import Link from "next/link";
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 import {useRouter} from "next/navigation";
+import Loading from "./Loading";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
 
 export default function Navbar() {
-  const { user, logout, activeDiet } = useAuth();
+  const { user, logout, activeDiet, loading: loadingUser } = useAuth();
   const router = useRouter()
+
+  if (loadingUser) return <Loading />
 
   return (
     <nav className="bg-white shadow-sm">

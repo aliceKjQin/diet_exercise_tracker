@@ -2,7 +2,7 @@
 
 import { Roboto } from "next/font/google";
 import React, { useState } from "react";
-import Button from "./Button";
+import Button from "@/components/shared/Button";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -15,7 +15,9 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
 
   return (
     <div className="relative flex flex-col bg-purple-100 dark:bg-sky-100 text-purple-500 dark:text-blue-500  p-4 gap-4 rounded-lg">
-      <h2 className={`${roboto.className}`}>✏️ {initialNote ? "Update" : "Add"} Note </h2>
+      <h2 className={`${roboto.className}`}>
+        ✏️ {initialNote ? "Update" : "Add"} Note{" "}
+      </h2>
       <textarea
         value={noteInputValue}
         onChange={(e) => setNoteInputValue(e.target.value)}
@@ -25,7 +27,12 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
         autoFocus
       />
       <div className="flex gap-4 mt-auto max-w-[400px]">
-        <Button clickHandler={handleSubmit} text={initialNote ? "Update" : "Save"} full dark />
+        <Button
+          clickHandler={handleSubmit}
+          text={initialNote ? "Update" : "Save"}
+          full
+          dark
+        />
         <Button clickHandler={onClose} text="Cancel" full dark />
       </div>
     </div>

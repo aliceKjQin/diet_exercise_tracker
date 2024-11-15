@@ -154,7 +154,7 @@ export default function Calendar(props) {
                         : "border-purple-100 dark:border-blue-100"
                     } ${
                       data?.[dayIndex]
-                        ? "text-white bg-stone-500"
+                        ? "text-white bg-indigo-400"
                         : "text-purple-400 dark:text-blue-400 bg-white"
                     } `}
                   >

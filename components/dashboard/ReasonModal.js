@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Button from "./Button";
+import Button from "@/components/shared/Button";
 
 const reasons = [
   "Feeling hungry",

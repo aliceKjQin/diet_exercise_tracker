@@ -1,13 +1,13 @@
 "use client";
 
-import DietPlanForm from "@/components/DietPlanForm";
-import Main from "@/components/Main";
+import DietPlanForm from "@/components/home/DietPlanForm";
+import Main from "@/components/shared/Main";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDeleteDiet } from "@/hooks/useDeleteDiet";
 import { useEffect, useState } from "react";
-import ConfirmModal from "@/components/ConfirmModal";
-import Loading from "@/components/Loading";
+import ConfirmModal from "@/components/shared/ConfirmModal";
+import Loading from "@/components/shared/Loading";
 import { db } from "@/firebase";
 import Link from "next/link";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
@@ -17,17 +17,27 @@ export default function HomePage() {
   const [showRemoveActiveDiet, setShowRemoveActiveDiet] = useState(false);
   const [showInstruction, setShowInstruction] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [duration, setDuration] = useState("");
   const [targetWeight, setTargetWeight] = useState("");
-  const { user, activeDiet, setActiveDiet, refetchActiveDiet, loading } =
-    useAuth();
+  const [dietName, setDietName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const {
+    user,
+    activeDiet,
+    setActiveDiet,
+    refetchActiveDiet,
+    loading: loadingUser,
+  } = useAuth();
   const { deleteDiet } = useDeleteDiet();
   const { weightUnit } = useWeightUnit();
 
   useEffect(() => {
+    if (!user || !activeDiet) return;
     if (activeDiet) {
       setDuration(activeDiet.details?.targetDays || "");
       setTargetWeight(activeDiet.details?.targetWeight || "");
+      setDietName(activeDiet.name);
     }
   }, [activeDiet]);
 
@@ -69,6 +79,7 @@ export default function HomePage() {
 
   // Save updated input in db
   const saveNewInput = async (fieldName, fieldValue) => {
+    setLoading(true);
     try {
       const userRef = doc(db, "users", user.uid);
       const field = fieldName === "duration" ? "targetDays" : "targetWeight";
@@ -78,17 +89,20 @@ export default function HomePage() {
 
       // After saving, refetch the active diet
       await refetchActiveDiet(); // This will update the activeDiet in the context
-
-      console.log(`Save updated ${field}!`);
+      setSuccessMessage(`Saved new ${field}!`);
+      // Clear the success message after 2 seconds
+      setTimeout(() => setSuccessMessage(""), 2000);
     } catch (error) {
       console.error("Failed to save ${field}: ", error);
-      setErrorMessage(`Failed to save ${filed}. Please try again.`);
+      setErrorMessage(`Failed to save ${field}. Please try again.`);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Function to handle diet removal
   const handleRemoveDiet = async () => {
-    const success = deleteDiet(user.uid, activeDiet.name);
+    const success = deleteDiet(user.uid, dietName);
 
     if (success) {
       setShowConfirmation(false);
@@ -98,7 +112,7 @@ export default function HomePage() {
     }
   };
 
-  if (loading) return <Loading />;
+  if (loadingUser) return <Loading />;
 
   return (
     <Main>
@@ -116,7 +130,7 @@ export default function HomePage() {
               onClick={handleShowInstruction}
               className="font-semibold sm:text-sm text-xs text-stone-400"
             >
-              New here?
+              {showInstruction ? "Close Quick Start Guide" : "New here?"}
             </button>
           </div>
 
@@ -168,11 +182,11 @@ export default function HomePage() {
                   value={duration}
                   onChange={handleDurationChange}
                   placeholder="Enter a number"
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-1 border rounded-md"
                 />
                 <button
                   onClick={() => saveNewInput("duration", duration)}
-                  className="bg-purple-400 dark:bg-blue-400 text-white px-3 py-1 rounded font-bold"
+                  className="bg-purple-400 dark:bg-blue-400 text-white px-3 py-1 rounded-md font-bold"
                 >
                   Update
                 </button>
@@ -192,32 +206,37 @@ export default function HomePage() {
                   value={targetWeight}
                   onChange={handleTargetWeightChange}
                   placeholder="Enter a number"
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-1 border rounded-md"
                 />
                 <button
                   onClick={() => saveNewInput("targetWeight", targetWeight)}
-                  className="bg-purple-400 dark:bg-blue-400 text-white px-3 py-1 rounded font-bold"
+                  className="bg-purple-400 dark:bg-blue-400 text-white px-3 py-1 rounded-md font-bold"
                 >
                   Update
                 </button>
               </div>
             </div>
           </div>
+          {/* loading, error, success status */}
+          {loading && <Loading />}
           {errorMessage && (
             <p className="text-red-500 text-center">{errorMessage}</p>
           )}
+          {successMessage && (
+            <p className="text-green-500 text-center">{successMessage}</p>
+          )}
 
           <button className="bg-emerald-400 text-white font-bold py-2 px-4 rounded ">
-            <Link href={`/dashboard/${activeDiet.name}`}>
-              View Active Diet Dashboard
-            </Link>
+            <Link href={`/dashboard/${dietName}`}>View Dashboard</Link>
           </button>
 
           <button
             onClick={handleShowRemoveActive}
             className="font-semibold sm:text-sm text-xs text-stone-400"
           >
-            Want to start a new diet?
+            {showRemoveActiveDiet
+              ? "Hide Remove Diet"
+              : "Want to start a new diet?"}
           </button>
 
           {/* Remove active diet section */}

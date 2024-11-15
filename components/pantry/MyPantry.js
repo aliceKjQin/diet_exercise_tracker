@@ -3,9 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePantry } from "@/hooks/usePantry";
-import NutritionResultsAnalysis from "./NutritionAnalysis";
-import Button from "./Button";
-import Link from "next/link";
+import Button from "@/components/shared/Button";
 
 export default function MyPantry() {
   const { user, activeDiet } = useAuth();
@@ -47,7 +45,7 @@ export default function MyPantry() {
   };
 
   const handleAddItem = async (itemsString) => {
-    setErrMessage("")
+    setErrMessage("");
     // Format itemsString
     const items = itemsString
       .split(",") // Split by comma
@@ -68,7 +66,9 @@ export default function MyPantry() {
       } else {
         const result = await addPantryItem(item);
         if (result.success && commonPantryItems.includes(item)) {
-            setCommonPantryItems((prev) => prev.filter(commonItem => commonItem !== item))
+          setCommonPantryItems((prev) =>
+            prev.filter((commonItem) => commonItem !== item)
+          );
         }
         if (!result.success) {
           failedItems.push(item);
@@ -81,42 +81,47 @@ export default function MyPantry() {
     }
 
     if (failedItems.length) {
-        setErrMessage(`Failed to add: ${failedItems.join(", ")}. Please try again.`)
+      setErrMessage(
+        `Failed to add: ${failedItems.join(", ")}. Please try again.`
+      );
     }
     if (!alreadyInPantry.length && !failedItems.length) {
-        setNewItem("")
+      setNewItem("");
     }
   };
 
   const renderPantryList = () => {
-    if (loading) return <p>Loading your pantry ...</p>
-    if(!pantry.length) return <p className="p-4 bg-yellow-100 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">Your pantry is empty.</p>
+    if (loading) return <p>Loading your pantry ...</p>;
+    if (!pantry.length)
+      return (
+        <p className="p-4 bg-yellow-100 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
+          Your pantry is empty.
+        </p>
+      );
 
     return (
-        <div className="p-4 grid grid-cols-2 sm:grid-cols-4 items-center gap-2 capitalize bg-yellow-100 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
-            {pantry.map(item => (
-                <div key={item} className="flex justify-between">
-                    <p>{item}</p>
-                    <button onClick={() => removePantryItem(item)}><i className="fa-solid fa-xmark text-stone-300 hover:text-red-400"></i></button>
-                </div>
-            ))}
-        </div>
-    )
-  }
+      <div className="p-4 grid grid-cols-2 sm:grid-cols-4 items-center gap-2 capitalize bg-yellow-100 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
+        {pantry.map((item) => (
+          <div key={item} className="flex justify-between">
+            <p>{item}</p>
+            <button onClick={() => removePantryItem(item)}>
+              <i className="fa-solid fa-xmark text-stone-300 hover:text-red-400"></i>
+            </button>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="flex flex-col gap-4 mb-4">
-      {/* Go back button */}
-      <div className=" textGradient dark:text-blue-500 font-bold mb-2">
-        <Link href={`/dashboard/${activeDietName}`}>
-          <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back
-        </Link>
-      </div>
-      <h3 className="text-xl font-bold mb-2">My Pantry <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500"></i></h3>
+      <h3 className="text-xl font-bold mb-2">
+        My Pantry{" "}
+        <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500"></i>
+      </h3>
       {/* List of pantry items */}
       {renderPantryList()}
-      
-      
+
       {/* Section to display Common Pantry Items */}
       <h4 className="text-base font-semibold mt-2 text-center">
         Add Common Pantry Items
@@ -134,8 +139,8 @@ export default function MyPantry() {
       </div>
 
       {errMessage && (
-          <div className="text-red-500 rounded-md">{errMessage}</div>
-        )}
+        <div className="text-red-500 rounded-md">{errMessage}</div>
+      )}
 
       {/* Section to add new item to the pantry */}
       <div className="flex flex-col gap-2">
@@ -149,7 +154,6 @@ export default function MyPantry() {
 
         <Button text="Add" clickHandler={() => handleAddItem(newItem)} dark />
       </div>
-
     </div>
   );
 }

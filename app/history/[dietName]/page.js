@@ -5,14 +5,12 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useInactiveDiet } from "@/hooks/useInactiveDiet";
 import { useState } from "react";
 import useProgressData from "@/hooks/useProgressData";
-import Loading from "@/components/Loading";
-import Main from "@/components/Main";
-import ProgressBar from "@/components/ProgressBar";
-import WeightProgressBar from "@/components/WeightProgressBar";
-import Login from "@/components/Login";
-import MissedReasonsChart from "@/components/MissedReasonsChart";
-import MissedDaysChart from "@/components/MissedDaysChart";
-import Button from "@/components/Button";
+import Loading from "@/components/shared/Loading";
+import Main from "@/components/shared/Main";
+import MainProgressCharts from "@/components/progress/MainProgressCharts";
+import WeightProgressBar from "@/components/progress/WeightProgressBar";
+import Login from "@/components/shared/Login";
+import Button from "@/components/shared/Button";
 import Image from "next/image";
 
 export default function HistoryPageForSpecifiedDiet() {
@@ -63,8 +61,8 @@ export default function HistoryPageForSpecifiedDiet() {
           full
         />
 
-                {/* initial vs. current image display section */}
-                {showImages && (
+        {/* initial vs. current image display section */}
+        {showImages && (
           <div className="sm:flex gap-8 text-center">
             <div>
               <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
@@ -72,14 +70,13 @@ export default function HistoryPageForSpecifiedDiet() {
               </h3>
               {initialBodyImageUrl ? (
                 <Image
-                src={initialBodyImageUrl}
-                alt="Before Image"
-                width={300} 
-                height={360} 
-                className="mb-4 object-cover rounded-lg"
-                sizes="(max-width: 640px) 220px, 300px"
-              />
-              
+                  src={initialBodyImageUrl}
+                  alt="Before Image"
+                  width={300}
+                  height={360}
+                  className="mb-4 object-cover rounded-lg"
+                  sizes="(max-width: 640px) 220px, 300px"
+                />
               ) : (
                 <p>No initial image uploaded.</p>
               )}
@@ -90,14 +87,13 @@ export default function HistoryPageForSpecifiedDiet() {
               </h3>
               {currentBodyImageUrl ? (
                 <Image
-                src={currentBodyImageUrl}
-                alt="After Image"
-                width={300} 
-                height={360} 
-                className="mb-4 object-cover rounded-lg"
-                sizes="(max-width: 640px) 220px, 300px"
-              />
-              
+                  src={currentBodyImageUrl}
+                  alt="After Image"
+                  width={300}
+                  height={360}
+                  className="mb-4 object-cover rounded-lg"
+                  sizes="(max-width: 640px) 220px, 300px"
+                />
               ) : (
                 <p>No current image uploaded.</p>
               )}
@@ -109,7 +105,7 @@ export default function HistoryPageForSpecifiedDiet() {
         <div className="flex flex-col gap-6 items-center">
           {/* heart rating */}
           {rating && (
-            <div className="flex sm:gap-2">
+            <div className="flex gap-1 sm:gap-2">
               {[1, 2, 3, 4, 5].map((heart) => (
                 <i
                   key={heart}
@@ -158,7 +154,8 @@ export default function HistoryPageForSpecifiedDiet() {
         </div>
 
         {/* Days ProgressBar */}
-        <ProgressBar
+        <MainProgressCharts
+          diet={specifiedDiet}
           dietData={dietData}
           targetDays={targetDays}
           dietName={dietName}
@@ -174,22 +171,6 @@ export default function HistoryPageForSpecifiedDiet() {
           dietName={specifiedDiet.name}
           isActive={false}
         />
-
-        {/* Top 3 Diet & Exercise Missed Reasons Pie Chart */}
-        <MissedReasonsChart
-          dietMissedData={data.topDietMissedPercentages}
-          exerciseMissedData={data.topExerciseMissedPercentages}
-          isActive={false}
-        />
-
-        {/* Total Missed Days Per Diet and Exercise Bar Chart */}
-        <MissedDaysChart
-          dietMissedDays={data.totalDietMissedDays}
-          exerciseMissedDays={data.totalExerciseMissedDays}
-          isActive={false}
-        />
-
-
       </div>
     </Main>
   );

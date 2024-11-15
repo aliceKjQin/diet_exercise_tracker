@@ -1,11 +1,11 @@
-import Login from '@/components/Login'
-import Main from '@/components/Main'
-import React from 'react'
+import Login from "@/components/shared/Login";
+import Main from "@/components/shared/Main";
+import React from "react";
 
 export default function LoginPage() {
   return (
     <Main>
-        <Login />
+      <Login />
     </Main>
-  )
+  );
 }

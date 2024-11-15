@@ -6,7 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import Loading from "./Loading";
+import Loading from "../shared/Loading";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
 
 export default function DietPlanForm() {
@@ -161,7 +161,7 @@ export default function DietPlanForm() {
   }
 
   return (
-    <div className="max-w-lg mx-auto p-6 shadow-md rounded-lg">
+    <div className="max-w-lg mx-auto p-6 shadow-lg rounded-lg">
       <h1 className="text-xl font-bold mb-4 text-center">Create Diet Plan</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

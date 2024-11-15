@@ -1,11 +1,10 @@
 "use client";
 
 import { Roboto } from "next/font/google";
-import Button from "./Button";
+import Button from "@/components/shared/Button";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import Loading from "./Loading";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -35,7 +34,6 @@ export default function Login() {
         console.log("Signing up a new user");
         await signup(email, password);
         router.push("/");
-
       } else {
         console.log("Logging in existing user");
         await login(email, password);

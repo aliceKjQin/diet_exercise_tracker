@@ -12,7 +12,7 @@ import {
 // Register necessary components
 Chart.register(ArcElement, CategoryScale, LinearScale, BarElement, Title);
 
-const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays, isActive }) => {
+const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays }) => {
   const chartData = {
     labels: ["Diet", "Exercise"],
     datasets: [
@@ -20,6 +20,7 @@ const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays, isActive }) => {
         label: "Missed Days",
         data: [dietMissedDays, exerciseMissedDays],
         borderWidth: 1,
+        backgroundColor: "#FFAEBC", // Custom colors for bars
       },
     ],
   };
@@ -28,9 +29,7 @@ const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays, isActive }) => {
     plugins: {
       title: {
         display: true,
-        text: isActive 
-              ? "Missed Days Over the Past Week"
-              : "Total Missed Days Per Diet and Exercise"
+        text: "Total Missed Days Per Diet and Exercise"
       },
     },
     scales: {
@@ -42,8 +41,8 @@ const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays, isActive }) => {
   };
 
   return (
-    <div className="flex w-full justify-center">
-      <div className="w-[320px]">
+    <div className="flex mx-auto">
+      <div className="w-full">
         <Bar data={chartData} options={options} />
       </div>
     </div>

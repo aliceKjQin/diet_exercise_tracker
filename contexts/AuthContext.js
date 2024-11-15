@@ -63,7 +63,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // When the component mounts: The useEffect runs, and it sets up the listener (onAuthStateChanged). This listener checks if a user is logged in or not, and based on that, it fetches user data if the user is logged in.
+  // get userDataObj and activeDiet when page reload
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {

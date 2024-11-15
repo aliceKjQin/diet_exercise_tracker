@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import Button from "./Button";
+import Button from "../shared/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
-import { useActiveDiet } from "@/hooks/useActiveDiet";
 
 export default function FinalResultForm({
   userId,
@@ -24,7 +23,7 @@ export default function FinalResultForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [rating, setRating] = useState("");
-  const { setActiveDiet, activeDiet } = useAuth();
+  const { setActiveDiet, activeDiet, userDataObj, setUserDataObj } = useAuth();
   const { weightUnit } = useWeightUnit();
   const maxWords = 6;
 
@@ -117,6 +116,8 @@ export default function FinalResultForm({
 
       setActiveDiet(null); // Set activeDiet to null after form submission so Dashboard link doesn't appear in Navbar
       // call a function in parent to handle successful submission, i.e. redirect to history page or homePage to start a new diet
+
+      console.log("Updated user data Obj: ", userDataObj);
       onSubmissionSuccess();
     } catch (err) {
       console.error("Error submitting results: ", err);
@@ -127,17 +128,14 @@ export default function FinalResultForm({
   };
 
   return (
-    <div className="flex flex-col gap-6 items-center ">
+    <div className="mx-auto flex flex-col gap-4 items-center border rounded-md shadow-lg p-4">
       <h2 className="text-xl font-bold">Submit Your Final Results</h2>
 
       {error && <p className="text-red-400">{error}</p>}
 
       {/* Final Weight Input */}
       <div className="flex flex-col items-center">
-        <label
-          htmlFor="finalWeight"
-          className="block textGradient dark:text-blue-500 text-sm sm:text-base font-bold mb-2"
-        >
+        <label htmlFor="finalWeight" className="block font-semibold mb-2">
           Final Weight ({weightUnit})
         </label>
         <input
@@ -150,14 +148,14 @@ export default function FinalResultForm({
         />
       </div>
       {/* Div for pros and cons */}
-      <div className="flex flex-col gap-6 sm:flex-row">
+      <div className="flex flex-col gap-2 sm:flex-row py-2">
         {/* Pros Selection */}
-        <fieldset>
-          <legend className="block textGradient dark:text-blue-500 text-base sm:text-lg font-bold">
+        <fieldset className="w-full">
+          <legend className="block font-semibold">
             Pros of the Diet Plan:
           </legend>
           {prosOptions.map((option) => (
-            <label key={option} className="block w-[300px]">
+            <label key={option} className="block">
               <input
                 type="checkbox"
                 value={option}
@@ -191,12 +189,12 @@ export default function FinalResultForm({
         </fieldset>
 
         {/* Cons Selection */}
-        <fieldset>
-          <legend className="block textGradient dark:text-blue-500 text-base sm:text-lg font-bold">
+        <fieldset className="w-full">
+          <legend className="block font-semibold">
             Cons of the Diet Plan:
           </legend>
           {consOptions.map((option) => (
-            <label key={option} className="block w-[300px]">
+            <label key={option} className="block">
               <input
                 type="checkbox"
                 value={option}
@@ -230,34 +228,36 @@ export default function FinalResultForm({
         </fieldset>
       </div>
       {/* Option to add additional summary */}
-      <div className="relative flex flex-col p-4 gap-4 rounded-lg w-full">
-        <h2 className="text-base sm:text-lg text-center font-bold textGradient dark:text-blue-500">
-          Any reflection on this diet experience?
-        </h2>
-        <textarea
-          value={summaryInputValue}
-          onChange={(e) => setSummaryInputValue(e.target.value)}
-          placeholder="Type your summary here..."
-          className="bg-purple-200 dark:bg-sky-200 text-stone-700 border-2 border-purple-300 dark:border-blue-300 p-2 rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-blue-500"
-          rows={3}
-          autoFocus
-        />
-      </div>
+      <div className="flex flex-col gap-2 justify-center items-center">
+        <div className="relative flex flex-col p-2 gap-2 rounded-lg w-full">
+          <h2 className="text-center font-semibold">
+            Any reflection on this diet experience?
+          </h2>
+          <textarea
+            value={summaryInputValue}
+            onChange={(e) => setSummaryInputValue(e.target.value)}
+            placeholder="Type your summary here..."
+            className="bg-purple-200 dark:bg-sky-200 text-stone-700 border-2 border-purple-300 dark:border-blue-300 p-2 rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-blue-500"
+            rows={3}
+            autoFocus
+          />
+        </div>
 
-      {/* Heart Rating Section */}
-      <h2 className="text-base sm:text-lg text-center font-bold textGradient dark:text-blue-500">
-        Rate this experience?
-      </h2>
-      <div className="flex gap-2 mb-6">
-        {[1, 2, 3, 4, 5].map((heart) => (
-          <i
-            key={heart}
-            className={`fa-heart fa-solid fa-xl ${
-              rating >= heart ? "text-pink-400" : "text-stone-300"
-            } cursor-pointer`}
-            onClick={() => setRating(heart)}
-          ></i>
-        ))}
+        {/* Heart Rating Section */}
+        <div className="flex flex-col gap-4">
+          <h2 className="text-center font-semibold">Rate this experience?</h2>
+          <div className="flex gap-2 mb-6">
+            {[1, 2, 3, 4, 5].map((heart) => (
+              <i
+                key={heart}
+                className={`fa-heart fa-solid fa-xl ${
+                  rating >= heart ? "text-pink-400" : "text-stone-300"
+                } cursor-pointer`}
+                onClick={() => setRating(heart)}
+              ></i>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Submit Button */}

@@ -1,6 +1,5 @@
-import Dashboard from "@/components/Dashboard";
-import Main from "@/components/Main";
-
+import Dashboard from "@/components/dashboard/Dashboard";
+import Main from "@/components/shared/Main";
 
 export const metadata = {
   title: "Dashboard ",

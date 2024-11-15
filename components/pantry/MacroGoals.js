@@ -4,13 +4,17 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import Button from "./Button";
+import Button from "@/components/shared/Button";
+import Link from "next/link";
+import Loading from "@/components/shared/Loading";
 
 export default function MacroGoals() {
   const [proteinGoal, setProteinGoal] = useState("");
   const [caloriesGoal, setCaloriesGoal] = useState("");
   const [savedGoals, setSaveGoals] = useState(null);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { activeDiet, refetchActiveDiet, user } = useAuth();
 
@@ -23,30 +27,31 @@ export default function MacroGoals() {
 
   // Handle input changes
   const handleProteinChange = (e) => {
-    const inputValue = e.target.value
+    const inputValue = e.target.value;
 
-    if (!/^\d*\.?\d*$/.test(inputValue)){
-      setError("Please enter a valid whole number.")
-      return
+    if (!/^\d*\.?\d*$/.test(inputValue)) {
+      setError("Please enter a valid whole number.");
+      return;
     }
 
-    setError("")
-    setProteinGoal(inputValue ? Number(inputValue) : "")
-  }
+    setError("");
+    setProteinGoal(inputValue ? Number(inputValue) : "");
+  };
 
   const handleCaloriesChange = (e) => {
-    const inputValue = e.target.value
+    const inputValue = e.target.value;
 
-    if (!/^\d*\.?\d*$/.test(inputValue)){
-      setError("Please enter a valid whole number.")
-      return
+    if (!/^\d*\.?\d*$/.test(inputValue)) {
+      setError("Please enter a valid whole number.");
+      return;
     }
 
-    setError("")
-    setCaloriesGoal(inputValue ? Number(inputValue) : "")
-  }
+    setError("");
+    setCaloriesGoal(inputValue ? Number(inputValue) : "");
+  };
   // Save the goals to db
   const saveGoals = async () => {
+    setLoading(true);
     try {
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, {
@@ -56,21 +61,33 @@ export default function MacroGoals() {
         },
       });
 
-      await refetchActiveDiet()
-      console.log("Macro goals saved!");
+      await refetchActiveDiet();
+
+      setSuccess("Macro goals saved!");
+      setTimeout(() => {
+        setSuccess("");
+      }, 2000);
     } catch (error) {
       console.error("Failed to save macroGoals: ", error);
       setError("Failed to save macro goals. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {/* Go back button */}
+      <div className=" textGradient dark:text-blue-500 font-bold mb-2">
+        <Link href={`/dashboard/${activeDiet?.name}`}>
+          <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back
+        </Link>
+      </div>
       <h2 className="text-xl font-bold">
         Set Macro Goals{" "}
         <i className="fa-solid fa-bullseye textGradient dark:text-blue-500"></i>
       </h2>
-      <div className="mx-auto p-4 bg-yellow-100 shadow-md rounded-md mb-4">
+      <div className="mx-auto p-4 bg-yellow-100 shadow-md rounded-md mb-4 flex  flex-col gap-2">
         <div className=" flex gap-4 mb-4">
           <div className="">
             <label className="block mb-1 font-medium" htmlFor="protein">
@@ -99,7 +116,6 @@ export default function MacroGoals() {
             />
           </div>
         </div>
-        {error && <p className="text-red-400 text-center mb-2">{error}</p>}
 
         <Button
           text={proteinGoal || caloriesGoal ? "Update Goals" : "Save Goals"}
@@ -107,6 +123,10 @@ export default function MacroGoals() {
           full
           dark
         />
+
+        {loading && <Loading />}
+        {success && <p className="text-emerald-500 text-center">{success}</p>}
+        {error && <p className="text-red-500 text-center">{error}</p>}
       </div>
     </>
   );

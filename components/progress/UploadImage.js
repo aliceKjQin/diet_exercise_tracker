@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { storage, db } from "../firebase";
+import { storage, db } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
-import Loading from "./Loading";
+import Loading from "@/components/shared/Loading";
 
 export default function UploadImage({
   dietName,
@@ -89,10 +89,10 @@ export default function UploadImage({
           {existingImageUrl ? "Update Image" : "Upload Image"}
         </button>
         {error && (
-        <div className="mt-4 p-2 bg-red-100 text-red-800 rounded-md">
-          {error}
-        </div>
-      )}
+          <div className="mt-4 p-2 bg-red-100 text-red-800 rounded-md">
+            {error}
+          </div>
+        )}
       </form>
     </div>
   );
