@@ -106,7 +106,7 @@ export default function HomePage() {
 
     if (success) {
       setShowConfirmation(false);
-      setShowRemoveActiveDiet(false)
+      setShowRemoveActiveDiet(false);
       setActiveDiet(null);
     } else {
       setErrorMessage("Failed to delete diet. Please try again.");
@@ -173,7 +173,7 @@ export default function HomePage() {
           {/* Update duration (targetDays) and targetWeight */}
           <div className="flex gap-4">
             <div className="flex flex-col gap-2">
-              <label className="block mb-1 font-semibold" htmlFor="duration">
+              <label className="block mb-1 " htmlFor="duration">
                 Duration (days)
               </label>
               <div className="flex">
@@ -183,7 +183,7 @@ export default function HomePage() {
                   value={duration}
                   onChange={handleDurationChange}
                   placeholder="Enter a number"
-                  className="w-full p-1 border rounded-md"
+                  className="w-full p-2 border rounded-md"
                 />
                 <button
                   onClick={() => saveNewInput("duration", duration)}
@@ -194,10 +194,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <label
-                className="block mb-1 font-semibold"
-                htmlFor="targetWeight"
-              >
+              <label className="block mb-1 " htmlFor="targetWeight">
                 Target Weight ({weightUnit})
               </label>
               <div className="flex">
@@ -207,7 +204,7 @@ export default function HomePage() {
                   value={targetWeight}
                   onChange={handleTargetWeightChange}
                   placeholder="Enter a number"
-                  className="w-full p-1 border rounded-md"
+                  className="w-full p-2 border rounded-md"
                 />
                 <button
                   onClick={() => saveNewInput("targetWeight", targetWeight)}
@@ -227,10 +224,10 @@ export default function HomePage() {
             <p className="text-green-500 text-center">{successMessage}</p>
           )}
 
-          <button className="bg-emerald-400 text-white font-bold py-2 px-4 rounded ">
-          <Link href={`/dashboard/${dietName}`} passHref legacyBehavior>
-  <a className="block text-center">View Dashboard</a>
-</Link>
+          <button className="bg-emerald-400 text-white font-bold text-lg py-2 px-4 rounded-full mt-8">
+            <Link href={`/dashboard/${dietName}`}>
+              <span className="block text-center">View Dashboard</span>
+            </Link>
           </button>
 
           <button
