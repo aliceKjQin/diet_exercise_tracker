@@ -106,6 +106,7 @@ export default function HomePage() {
 
     if (success) {
       setShowConfirmation(false);
+      setShowRemoveActiveDiet(false)
       setActiveDiet(null);
     } else {
       setErrorMessage("Failed to delete diet. Please try again.");
@@ -227,7 +228,9 @@ export default function HomePage() {
           )}
 
           <button className="bg-emerald-400 text-white font-bold py-2 px-4 rounded ">
-            <Link href={`/dashboard/${dietName}`}>View Dashboard</Link>
+          <Link href={`/dashboard/${dietName}`} passHref legacyBehavior>
+  <a className="block text-center">View Dashboard</a>
+</Link>
           </button>
 
           <button
