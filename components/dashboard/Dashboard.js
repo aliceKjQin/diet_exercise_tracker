@@ -54,7 +54,7 @@ export default function Dashboard() {
         setShowPopup(true); // Show popup if the user hasn't logged today
       }
     }
-  }, [activeDiet]);
+  }, [activeDiet, day, month, year]);
 
   const currentDayData = activeDietData?.[year]?.[month]?.[day];
 

@@ -39,7 +39,7 @@ export default function HomePage() {
       setTargetWeight(activeDiet.details?.targetWeight || "");
       setDietName(activeDiet.name);
     }
-  }, [activeDiet]);
+  }, [activeDiet, user]);
 
   //  Handle show remove active diet section
   const handleShowRemoveActive = () => {
@@ -146,13 +146,13 @@ export default function HomePage() {
               <p>
                 <strong>Pantry:</strong> Analyze nutrition of items in your
                 pantry or a recipe. Access this feature in the Dashboard by
-                clicking <em>"View Pantry"</em>.
+                clicking <em>&quot;View Pantry&quot;</em>.
               </p>
               <p>
                 <strong>Progress:</strong> Track your progress with data
                 visualizations, and upload body images to document your
                 transformation. Access this feature in the Dashboard by clicking{" "}
-                <em>"View Progress"</em>.
+                <em>&quot;View Progress&quot;</em>.
               </p>
               <p>
                 <strong>History:</strong> Review past diet plans and their
