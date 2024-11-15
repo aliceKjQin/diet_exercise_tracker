@@ -304,18 +304,15 @@ export default function Dashboard() {
         </div>
 
         {showWarning ? (
-          <p className="p-2 bg-yellow-50 rounded-lg ring-2 ring-rose-200 text-center mx-auto">
-            <i
-              className="fa-solid fa-triangle-exclamation fa-lg  text-rose-500 cursor-pointer"
-              onClick={handleShowWarning}
-            ></i>{" "}
+          <button onClick={handleShowWarning} className="p-2 bg-yellow-50 rounded-lg ring-2 ring-rose-200 text-center mx-auto">
+            <i className="fa-solid fa-triangle-exclamation fa-lg  text-rose-500 "></i>{" "}
             <span className="text-sm text-stone-700">
               Make sure to log <strong>both</strong>{" "}
               <em className="text-emerald-500">diet</em> and{" "}
               <em className="text-emerald-500">exercise</em> to display the
               matching emoji face
             </span>
-          </p>
+          </button>
         ) : (
           <i
             className="fa-solid fa-triangle-exclamation fa-lg text-rose-500 cursor-pointer text-center"

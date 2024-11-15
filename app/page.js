@@ -232,7 +232,7 @@ export default function HomePage() {
 
           <button
             onClick={handleShowRemoveActive}
-            className="font-semibold sm:text-sm text-xs text-stone-400"
+            className="font-semibold sm:text-sm text-xs text-stone-400 mx-auto mt-6 ring-1 ring-stone-300 p-2 rounded-full"
           >
             {showRemoveActiveDiet
               ? "Hide Remove Diet"
@@ -249,7 +249,7 @@ export default function HomePage() {
 
               <button
                 onClick={() => setShowConfirmation(true)}
-                className="bg-red-400 text-white font-bold py-2 px-4 rounded "
+                className="bg-red-400 text-white font-bold py-2 px-4 rounded-full"
               >
                 Remove Active Diet
               </button>
