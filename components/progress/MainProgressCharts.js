@@ -111,35 +111,52 @@ export default function MainProgressCharts({
           ></div>
         </div>
         {/* Position emoji faces based on percentage */}
-        <div className="relative w-full h-0 text-lg sm:text-2xl">
-          {happyPercentage > 0 && (
-            <span
-              className="absolute"
-              style={{ left: `0%` }} // Start of happy section
-            >
+        {targetDays <= 10 ? (
+          <div className="relative w-full h-0 text-lg sm:text-2xl">
+            {happyPercentage > 0 && (
+              <span
+                className="absolute"
+                style={{ left: `0%` }} // Start of happy section
+              >
+                <i className="fa-solid fa-face-smile text-green-300"></i>{" "}
+                <span className="text-sm">{facesCount.happy}</span>
+              </span>
+            )}
+            {neutralPercentage > 0 && (
+              <span
+                className="absolute"
+                style={{ left: `${happyPercentage}%` }} // start of the neutral section which is the end of happyPercentage
+              >
+                <i className="fa-solid fa-face-meh text-yellow-300"></i>{" "}
+                <span className="text-sm">{facesCount.neutral}</span>
+              </span>
+            )}
+            {sadPercentage > 0 && (
+              <span // If there is a sad percentage, then show
+                className="absolute"
+                style={{ left: `${happyPercentage + neutralPercentage}%` }} // start of the sad section
+              >
+                <i className="fa-solid fa-face-frown text-red-300"></i>{" "}
+                <span className="text-sm">{facesCount.sad}</span>
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="flex gap-6 sm:gap-10 p-2 justify-center text-lg sm:text-xl">
+            <div>
               <i className="fa-solid fa-face-smile text-green-300"></i>{" "}
-              <span className="text-sm">{facesCount.happy}</span>
-            </span>
-          )}
-          {neutralPercentage > 0 && (
-            <span
-              className="absolute"
-              style={{ left: `${happyPercentage}%` }} // start of the neutral section which is the end of happyPercentage
-            >
+              <span className="text-sm">{facesCount.happy} D</span>
+            </div>
+            <div>
               <i className="fa-solid fa-face-meh text-yellow-300"></i>{" "}
-              <span className="text-sm">{facesCount.neutral}</span>
-            </span>
-          )}
-          {sadPercentage > 0 && (
-            <span // If there is a sad percentage, then show
-              className="absolute"
-              style={{ left: `${happyPercentage + neutralPercentage}%` }} // start of the sad section
-            >
+              <span className="text-sm">{facesCount.neutral} D</span>
+            </div>
+            <div>
               <i className="fa-solid fa-face-frown text-red-300"></i>{" "}
-              <span className="text-sm">{facesCount.sad}</span>
-            </span>
-          )}
-        </div>
+              <span className="text-sm">{facesCount.sad} D</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Check Missed Reasons Button & Charts */}
@@ -148,7 +165,7 @@ export default function MainProgressCharts({
         {(facesCount.neutral > 0 || facesCount.sad > 0) && (
           <button
             onClick={handleShowPie}
-            className="p-2 ring-2 ring-pink-200 rounded-full font-semibold"
+            className="p-2 ring-2 ring-pink-200 rounded-full font-semibold text-xs sm:text-sm"
           >
             {showPie ? (
               "Hide Charts"
@@ -158,14 +175,14 @@ export default function MainProgressCharts({
                 {facesCount.neutral > 0 && (
                   <>
                     {facesCount.neutral}{" "}
-                    <i className="fa-solid fa-face-meh fa-lg text-yellow-300"></i>
+                    <i className="fa-solid fa-face-meh text-yellow-300"></i>
                   </>
                 )}
                 {facesCount.neutral > 0 && facesCount.sad > 0 && " and "}
                 {facesCount.sad > 0 && (
                   <>
                     {facesCount.sad}{" "}
-                    <i className="fa-solid fa-face-frown fa-lg text-red-300"></i>
+                    <i className="fa-solid fa-face-frown text-red-300"></i>
                   </>
                 )}
                 . Wonder why you missed your diet or exercise?
