@@ -3,19 +3,17 @@
 import { useState } from "react";
 import { storage, db } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import Loading from "@/components/shared/Loading";
+import Button from "../shared/Button";
 
-export default function UploadImage({
-  dietName,
-  type = "current",
-  existingImageUrl,
-  onImageUpdate,
-}) {
+export default function UploadImage({ dietName, onNewImageUpload }) {
   const [image, setImage] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const { user } = useAuth();
 
   const handleImageUpload = async (e) => {
@@ -26,13 +24,13 @@ export default function UploadImage({
     // Validate file type
     if (!validTypes.includes(file.type)) {
       setError("Please upload a valid image (JPEG or PNG)");
-      return; // Exit the function early
+      return;
     }
 
     // Validate file size
     if (file.size > maxSizeInBytes) {
       setError("File size must be less than 5 MB");
-      return; // Exit the function early
+      return;
     }
 
     setImage(file);
@@ -42,16 +40,17 @@ export default function UploadImage({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!image) return;
-
+    if (!image || !date) {
+      setError("Please upload an image and select a date.");
+      return;
+    }
+    setError("");
     setLoading(true);
     try {
       const userRef = doc(db, "users", user.uid);
-      const imageType =
-        type === "initial" ? "initialBodyImage" : "currentBodyImage";
       const storageRef = ref(
         storage,
-        `users/${user.uid}/diets/${dietName}/${imageType}.jpg`
+        `users/${user.uid}/diets/${dietName}/images/${date}.jpg`
       );
 
       // Upload image to Firebase Storage
@@ -60,11 +59,22 @@ export default function UploadImage({
       // Get download URL
       const downloadUrl = await getDownloadURL(storageRef);
 
-      // Update db and call the onImageUpdate prop
+      // Update db and with image URL and date
+      const newImage = {
+        url: downloadUrl,
+        date, // User-provided date
+      };
       await updateDoc(userRef, {
-        [`diets.${dietName}.${imageType}`]: downloadUrl,
+        [`diets.${dietName}.images`]: arrayUnion(newImage),
       });
-      onImageUpdate(downloadUrl); // Pass the new URL to ProgressPage
+
+      onNewImageUpload(newImage); // Update parent component(ProgressPage) with the new image
+
+      setDate("");
+      setSuccess("Image saved!");
+      setTimeout(() => {
+        setSuccess("");
+      }, 2000);
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
@@ -75,25 +85,24 @@ export default function UploadImage({
   if (loading) return <Loading />;
 
   return (
-    <div className="mb-4">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="file"
-          onChange={handleImageUpload}
-          className="w-[220px] sm:w-[300px] block border border-stone-300 p-2 rounded-md text-stone-800"
-        />
-        <button
-          type="submit"
-          className="w-[220px] sm:w-[300px] bg-purple-400 dark:bg-blue-400 hover:bg-purple-200 hover:text-stone-600 font-bold py-2 px-6 rounded-3xl text-white"
-        >
-          {existingImageUrl ? "Update Image" : "Upload Image"}
-        </button>
-        {error && (
-          <div className="mt-4 p-2 bg-red-100 text-red-800 rounded-md">
-            {error}
-          </div>
-        )}
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <input
+        type="file"
+        onChange={handleImageUpload}
+        className="block border border-stone-300 p-2 rounded-md text-stone-800 w-full"
+      />
+      <input
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        className="block border border-stone-300 p-2 rounded-md text-stone-800 w-full"
+      />
+
+      <button className="w-full p-2 ring-2 ring-pink-200 rounded-full font-bold">
+        Upload Image
+      </button>
+      {error && <p className="p-2 text-red-200 text-center">{error}</p>}
+      {success && <p className="p-2 text-emerald-200 text-center">{success}</p>}
+    </form>
   );
 }

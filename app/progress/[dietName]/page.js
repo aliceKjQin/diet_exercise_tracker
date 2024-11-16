@@ -5,48 +5,74 @@ import { useAuth } from "@/contexts/AuthContext";
 import MainProgressCharts from "@/components/progress/MainProgressCharts";
 import Loading from "@/components/shared/Loading";
 import Main from "@/components/shared/Main";
-import useProgressData from "@/hooks/useProgressData";
 import UploadImage from "@/components/progress/UploadImage";
-import Button from "@/components/shared/Button";
 import Link from "next/link";
 import WeightProgressBar from "@/components/progress/WeightProgressBar";
-import Image from "next/image";
 import Login from "@/components/shared/Login";
+import { db, storage } from "@/firebase";
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
 
 export default function ProgressPage() {
-  const [showImages, setShowImages] = useState(false);
-  const {
-    user,
-    activeDiet,
-    refetchActiveDiet,
-    loading: loadingUser,
-  } = useAuth();
-  // const { activeDiet, loading: loadingActiveDiet } = useActiveDiet(user);
-
+  const { user, activeDiet, loading: loadingUser } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [images, setImages] = useState([]);
   const [targetDays, setTargetDays] = useState(null);
   const [dietData, setDietData] = useState({});
   const [dietName, setDietName] = useState("");
-  const [initialImageUrl, setInitialImageUrl] = useState("");
-  const [currentImageUrl, setCurrentImageUrl] = useState("");
 
   // Update image URLs when activeDiet data loads or changes
   useEffect(() => {
     if (activeDiet) {
-      setTargetDays(activeDiet.details?.targetDays);
-      setDietData(activeDiet.details?.dietData);
-      setDietName(activeDiet.name);
-      setInitialImageUrl(activeDiet.details?.initialBodyImage || "");
-      setCurrentImageUrl(activeDiet.details?.currentBodyImage || "");
+      setTargetDays(activeDiet.details?.targetDays || "");
+      setDietData(activeDiet.details?.dietData || {});
+      setDietName(activeDiet.name || "");
+      setImages(activeDiet.details?.images || []);
     }
   }, [activeDiet]);
 
-  const handleToggle = () => {
-    setShowImages(!showImages);
+  const addNewImage = (newImage) => {
+    setImages((prev) => [...prev, newImage]); // Update state with the new image
   };
 
-  // Callback functions to update images on client without reloading
-  const updateInitialImageUrl = (url) => setInitialImageUrl(url);
-  const updateCurrentImageUrl = (url) => setCurrentImageUrl(url);
+  const deleteImage = async (image) => {
+    if (!user || !dietName) return;
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const storageRef = ref(
+        storage,
+        `users/${user.uid}/diets/${dietName}/images/${image.date}.jpg`
+      );
+
+      // Delete image from Firebase Storage
+      await deleteObject(storageRef);
+
+      // Remove image data from Firestore
+      await updateDoc(userRef, {
+        [`diets.${dietName}.images`]: arrayRemove(image),
+      });
+
+      // Update local state
+      setImages((prevImages) =>
+        prevImages.filter((img) => img.url !== image.url)
+      );
+      setSuccess("Removed image.");
+      setTimeout(() => {
+        setSuccess("");
+      }, 2000);
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      setError("Failed to save the image. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loadingUser) return <Loading />;
 
@@ -84,84 +110,53 @@ export default function ProgressPage() {
           isActive
         />
 
-        {/* Button to toggle image display */}
-        <Button
-          text={showImages ? "Hide Visual Progress" : "Show Visual Progress"}
-          clickHandler={handleToggle}
-          full
-        />
+        {/* Horizontally Scrollable Image Gallery */}
+        {images.length > 0 ? (
+          <div className="w-full overflow-x-auto p-4 whitespace-nowrap bg-indigo-400 rounded-lg shadow-md text-white">
+            {/* Title */}
+            <h2 className="font-bold p-4 text-base sm:text-lg">
+            <i className="fa-solid fa-camera-retro"></i> Document Your Transformation
+            </h2>
 
-        {/* initial vs. current image display section */}
-        {showImages && (
-          <div className="sm:flex gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
-                Before
-              </h3>
-              {initialImageUrl ? (
-                <>
-                  <img
-                    src={initialImageUrl}
-                    alt="Before Image"
-                    width={300}
-                    height={360}
-                    className="mb-4 object-cover rounded-lg"
-                    sizes="(max-width: 640px) 220px, 300px"
-                  />
-
-                  <UploadImage
-                    dietName={dietName}
-                    type="initial"
-                    existingImageUrl={initialImageUrl}
-                    onImageUpdate={updateInitialImageUrl}
-                  />
-                </>
-              ) : (
-                <div className="flex flex-col gap-6">
-                  <p>No initial image uploaded.</p>
-                  {/* Upload initial body image */}
-                  <UploadImage
-                    dietName={dietName}
-                    type="initial"
-                    onImageUpdate={updateInitialImageUrl}
-                  />
+            {/* Images and Upload Button */}
+            <div className="inline-flex gap-4">
+              {images.map((image, index) => (
+                <div
+                  key={index}
+                  className="inline-block w-[220px] sm:w-[250px] p-2 mr-4"
+                >
+                  {loading && <Loading />}
+                  {success && (
+                    <p className="text-center text-emerald-200">{success}</p>
+                  )}
+                  {error && <p className="text-center text-red-200">{error}</p>}
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="flex items-center p-1 gap-2">
+                      <p className="text-sm mr-2">{image.date}</p>
+                      <button onClick={() => deleteImage(image)}>
+                        <i className="fa-solid fa-trash-can text-indigo-300 hover:text-red-400"></i>
+                      </button>
+                    </div>
+                    <img
+                      src={image.url}
+                      alt={`Progress Image ${index}`}
+                      className="w-full h-[300px] object-cover rounded-lg ring ring-lime-300 bg-white"
+                    />
+                  </div>
                 </div>
-              )}
+              ))}
+              {/* Positioned Upload Image Button */}
+              <div className="inline-block w-[220px] sm:w-[250px] p-2 mr-4">
+                <UploadImage
+                  dietName={dietName}
+                  onNewImageUpload={addNewImage}
+                />
+              </div>
             </div>
-            <div className="flex flex-col items-center">
-              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
-                After
-              </h3>
-              {currentImageUrl ? (
-                <>
-                  <Image
-                    src={currentImageUrl}
-                    alt="After Image"
-                    width={300}
-                    height={360}
-                    className="mb-4 object-cover rounded-lg"
-                    sizes="(max-width: 640px) 220px, 300px"
-                  />
-
-                  <UploadImage
-                    dietName={dietName}
-                    type="current"
-                    existingImageUrl={currentImageUrl}
-                    onImageUpdate={updateCurrentImageUrl}
-                  />
-                </>
-              ) : (
-                <div className="flex flex-col gap-6">
-                  <p>No current image uploaded.</p>
-                  {/* Upload current body image */}
-                  <UploadImage
-                    dietName={dietName}
-                    type="current"
-                    onImageUpdate={updateCurrentImageUrl}
-                  />
-                </div>
-              )}
-            </div>
+          </div>
+        ) : (
+          <div className="p-4 bg-indigo-400 w-full h-[300px] rounded-lg text-center text-white text-lg sm:text-lg ring-2 ring-lime-300">
+            <p className="mt-12">No images uploaded.</p>
           </div>
         )}
       </div>
