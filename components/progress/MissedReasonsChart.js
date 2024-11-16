@@ -1,5 +1,6 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend, Colors, Title } from "chart.js";
 
 // Register necessary components
@@ -79,6 +80,7 @@ export default function MissedReasonsChart({
         position: "bottom",
       },
     },
+    cutout: "65%", // Make it a doughnut chart
   };
 
   const exerciseChartOptions = {
@@ -91,16 +93,17 @@ export default function MissedReasonsChart({
         position: "bottom",
       },
     },
+    cutout: "65%", // Make it a doughnut chart
   };
 
   return (
     <div className="flex flex-col sm:flex-row justify-center mx-auto items-center">
       <div className="w-full">
-        <Pie data={dietChartData} options={dietChartOptions} />
+        <Doughnut data={dietChartData} options={dietChartOptions} />
       </div>
 
       <div className="w-full">
-        <Pie data={exerciseChartData} options={exerciseChartOptions} />
+        <Doughnut data={exerciseChartData} options={exerciseChartOptions} />
       </div>
     </div>
   );

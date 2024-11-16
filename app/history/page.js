@@ -58,7 +58,7 @@ export default function HistoryPage() {
 
           <div className=" flex flex-col gap-4 sm:gap-8 sm:text-xl">
             {/* archived list */}
-            {inactiveDiets.map((diet) => {
+            {inactiveDiets.map((diet, index) => {
               const dietName = diet.name;
               const dietDetails = diet.details;
               const startDate = diet.details.startDate;
@@ -66,7 +66,7 @@ export default function HistoryPage() {
               const rating = dietDetails.rating;
               console.log("Diet data: ", diet);
               return (
-                <div key={startDate} className="flex flex-col gap-2">
+                <div key={index} className="flex flex-col gap-2">
                   <div className="flex gap-4 items-center textGradient dark:text-blue-500">
                     <Link href={`/history/${dietName}`}>
                       <h3 className="capitalize font-semibold">{dietName}</h3>

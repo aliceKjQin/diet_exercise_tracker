@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useMemo, useState } from "react";
 import MissedReasonsChart from "./MissedReasonsChart";
 import MissedDaysChart from "./MissedDaysChart";
+import MissedActivityChart from "./MissedActivityChart";
 
 export default function MainProgressCharts({
   diet,
@@ -15,6 +16,12 @@ export default function MainProgressCharts({
 }) {
   const { data } = useProgressData(diet);
   const [showPie, setShowPie] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  // Handle show tooltip
+  const handleShowTooltip = () => {
+    setShowTooltip(!showTooltip);
+  };
 
   // Handle show pie chart
   const handleShowPie = () => {
@@ -77,25 +84,29 @@ export default function MainProgressCharts({
   const neutralPercentage = (facesCount.neutral / totalLoggedDays) * progress;
   const sadPercentage = (facesCount.sad / totalLoggedDays) * progress;
 
+  // Calculate neutral + sad face data for Missed Activity Doughnut
+  const sadNeutralData = {
+    "Completed one activity ": facesCount.neutral,
+    "Completed neither activity": facesCount.sad,
+  };
+
   // Other useful stats
   const daysLeft = targetDays - totalLoggedDays;
-  console.log("daysLeft: ", daysLeft);
-  console.log("meh + sad face", facesCount.neutral, facesCount.sad);
-  console.log("isActive:", isActive);
 
   return (
     <div className="flex flex-col gap-4 bg-indigo-400 p-4 text-white w-full rounded-lg">
       {/* Display daysLeft for active diet, display diet duration if inactive */}
       {isActive ? (
-        <p className="font-bold uppercase">
-          <i className="fa-regular fa-calendar"></i> {daysLeft} days left
+        <p className="font-bold">
+          <i className="fa-regular fa-calendar"></i> {daysLeft} Days Left |
+          Target: {targetDays} (D)
         </p>
       ) : (
         <p className="font-bold">Duration: {targetDays} Days</p>
       )}
 
       {/* Duration progress bar with face emojis */}
-      <div className="w-full h-8 sm:h-12 bg-stone-200 mb-6">
+      <div className="w-full h-8 sm:h-12 bg-stone-200 mb-8 sm:mb-10">
         <div className="relative w-full h-full flex">
           <div
             className="bg-green-400 h-full"
@@ -112,14 +123,14 @@ export default function MainProgressCharts({
         </div>
         {/* Position emoji faces based on percentage */}
         {targetDays <= 10 ? (
-          <div className="relative w-full h-0 text-lg sm:text-2xl">
+          <div className="relative w-full h-0 text-xs sm:text-lg">
             {happyPercentage > 0 && (
               <span
                 className="absolute"
                 style={{ left: `0%` }} // Start of happy section
               >
-                <i className="fa-solid fa-face-smile text-green-300"></i>{" "}
-                <span className="text-sm">{facesCount.happy}</span>
+                <i className="fa-solid fa-face-smile text-green-300"></i>
+                <span className="ml-1">{facesCount.happy}D</span>
               </span>
             )}
             {neutralPercentage > 0 && (
@@ -127,8 +138,8 @@ export default function MainProgressCharts({
                 className="absolute"
                 style={{ left: `${happyPercentage}%` }} // start of the neutral section which is the end of happyPercentage
               >
-                <i className="fa-solid fa-face-meh text-yellow-300"></i>{" "}
-                <span className="text-sm">{facesCount.neutral}</span>
+                <i className="fa-solid fa-face-meh text-yellow-300"></i>
+                <span className="ml-1">{facesCount.neutral}D</span>
               </span>
             )}
             {sadPercentage > 0 && (
@@ -136,28 +147,76 @@ export default function MainProgressCharts({
                 className="absolute"
                 style={{ left: `${happyPercentage + neutralPercentage}%` }} // start of the sad section
               >
-                <i className="fa-solid fa-face-frown text-red-300"></i>{" "}
-                <span className="text-sm">{facesCount.sad}</span>
+                <i className="fa-solid fa-face-frown text-red-300"></i>
+                <span className="ml-1">{facesCount.sad}D</span>
               </span>
             )}
           </div>
         ) : (
-          <div className="flex gap-6 sm:gap-10 p-2 justify-center text-lg sm:text-xl">
+          <div className="flex gap-2 sm:gap-4 justify-center text-sm sm:text-lg mt-1">
             <div>
               <i className="fa-solid fa-face-smile text-green-300"></i>{" "}
-              <span className="text-sm">{facesCount.happy} D</span>
+              <span className="bg-green-400 px-1.5 sm:px-2 mr-1"></span>
+              <span className="text-sm">{facesCount.happy}D</span>
             </div>
             <div>
               <i className="fa-solid fa-face-meh text-yellow-300"></i>{" "}
-              <span className="text-sm">{facesCount.neutral} D</span>
+              <span className="bg-yellow-400 px-1.5 sm:px-2 mr-1"></span>
+              <span className="text-sm">{facesCount.neutral}D</span>
             </div>
             <div>
               <i className="fa-solid fa-face-frown text-red-300"></i>{" "}
-              <span className="text-sm">{facesCount.sad} D</span>
+              <span className="bg-red-400 px-1.5 sm:px-2 mr-1"></span>
+              <span className="text-sm">{facesCount.sad}D</span>
             </div>
           </div>
         )}
       </div>
+
+      {/* Neutral & Sad Face Stack Bar */}
+
+      {(facesCount.neutral > 0 || facesCount.sad > 0) && (
+        <>
+          {/* stack bar title with Tooltip */}
+          <div
+            className="flex flex-col"
+            onClick={handleShowTooltip} // For mobile, tap to toggle
+          >
+            <h2 className="text-center font-bold text-xs sm:text-sm mt-3">
+              Missed Activity Days Breakdown per{" "}
+              <i className="fa-solid fa-face-meh fa-lg text-yellow-300"></i> &{" "}
+              <i className="fa-solid fa-face-frown fa-lg text-red-300"></i>{" "}
+            </h2>
+
+            {/* info icon with tooltip */}
+            <div className="relative flex flex-col items-center mt-1">
+              <i
+                className="fa-regular fa-circle-question text-white cursor-pointer"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              ></i>
+
+              {/* Tooltip content */}
+              {showTooltip && (
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 p-2 w-80 bg-indigo-500 text-white ring-2 ring-pink-400 text-sm rounded shadow-lg z-10">
+                  <i className="fa-solid fa-face-meh text-yellow-300"></i> = ✅
+                  ❌ = completed one activity.
+                  <br />
+                  <i className="fa-solid fa-face-frown text-red-300"></i> = ❌
+                  ❌ = completed neither activity.
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Missed Activity Days | Stack Bar Chart */}
+          <MissedActivityChart
+            neutralFaceCount={facesCount.neutral}
+            sadFaceCount={facesCount.sad}
+            targetDays={targetDays}
+          />
+        </>
+      )}
 
       {/* Check Missed Reasons Button & Charts */}
       <div className="flex flex-col gap-2 mt-2">
@@ -167,27 +226,9 @@ export default function MainProgressCharts({
             onClick={handleShowPie}
             className="p-2 ring-2 ring-pink-200 rounded-full font-semibold text-xs sm:text-sm"
           >
-            {showPie ? (
-              "Hide Charts"
-            ) : (
-              <>
-                You got{" "}
-                {facesCount.neutral > 0 && (
-                  <>
-                    {facesCount.neutral}{" "}
-                    <i className="fa-solid fa-face-meh text-yellow-300"></i>
-                  </>
-                )}
-                {facesCount.neutral > 0 && facesCount.sad > 0 && " and "}
-                {facesCount.sad > 0 && (
-                  <>
-                    {facesCount.sad}{" "}
-                    <i className="fa-solid fa-face-frown text-red-300"></i>
-                  </>
-                )}
-                . Wonder why you missed your diet or exercise?
-              </>
-            )}
+            {showPie
+              ? "Hide Charts"
+              : "Wonder why you missed your diet or exercise?"}
           </button>
         )}
 
@@ -204,6 +245,7 @@ export default function MainProgressCharts({
             <MissedDaysChart
               dietMissedDays={data.totalDietMissedDays}
               exerciseMissedDays={data.totalExerciseMissedDays}
+              targetDays={targetDays}
             />
           </div>
         )}

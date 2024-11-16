@@ -12,7 +12,7 @@ import {
 // Register necessary components
 Chart.register(ArcElement, CategoryScale, LinearScale, BarElement, Title);
 
-const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays }) => {
+const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays, targetDays }) => {
   const chartData = {
     labels: ["Diet", "Exercise"],
     datasets: [
@@ -29,13 +29,13 @@ const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays }) => {
     plugins: {
       title: {
         display: true,
-        text: "Total Missed Days Per Diet and Exercise"
+        text: "Total Missed Days per Diet & Exercise"
       },
     },
     scales: {
       y: {
         beginAtZero: true,
-        max: 7, // Setting max y to 7 days
+        max: targetDays, // Setting max y to targetDays
       },
     },
   };
