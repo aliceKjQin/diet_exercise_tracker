@@ -34,6 +34,22 @@ export default function MissedActivityChart({ neutralFaceCount, sadFaceCount, ta
   };
 
   const options = {
+    plugins: {
+      legend: {
+        labels: {
+          generateLabels: (chart) => {
+            const datasets = chart.data.datasets;
+            return datasets.map((dataset, index) => ({
+              text: `${dataset.label}: ${dataset.data[0]}`, // Combine label with data value
+              fillStyle: dataset.backgroundColor, // Use dataset color for the legend
+              hidden: !chart.isDatasetVisible(index),
+              fontColor: "#fff", // Explicitly set the text color for each legend label text
+            }));
+          },
+        },
+      },
+    },
+    
     scales: {
       x: {
         stacked: true, // Enable stacking for x-axis
