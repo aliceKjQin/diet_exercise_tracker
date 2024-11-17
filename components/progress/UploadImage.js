@@ -91,9 +91,9 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
         onChange={handleImageUpload}
         className="block p-2 rounded-md w-full border-outline-none ring-2 ring-lime-200"
       />
-      <div className="flex flex-col gap-1">
-      <label className="block" htmlFor="date">
-        Select a date
+      <div className="flex flex-col gap-1 items-center">
+      <label className="block p-3 mb-1" htmlFor="date">
+        <span className="p-2 rounded-lg bg-indigo-400 ring-2 ring-pink-200 m font-bold">Select a date</span>
       </label>
       <input
         type="date"
