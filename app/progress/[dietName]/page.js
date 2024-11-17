@@ -147,6 +147,7 @@ export default function ProgressPage() {
               {images.map((image, index) => (
                 <div key={index} className="inline-block w-[270px] p-2 mr-4">
                   <div className="flex flex-col items-center gap-2">
+                    {/* div for image date and delete button */}
                     <div className="flex items-center p-1 gap-2">
                       <p className="text-sm mr-2">{image.date}</p>
                       <button
@@ -173,7 +174,7 @@ export default function ProgressPage() {
                 </div>
               ))}
               {/* Positioned Upload Image Button */}
-              <div className="inline-block w-[270px] p-2 mr-4 mt-6">
+              <div className="inline-block w-[250px] p-2 mr-4 mt-6">
                 <UploadImage
                   dietName={dietName}
                   onNewImageUpload={addNewImage}
@@ -188,7 +189,7 @@ export default function ProgressPage() {
               <i className="fa-solid fa-camera-retro"></i> Document Your
               Transformation
             </h2>
-            <div className=" w-[270px] p-2 mx-auto mt-4">
+            <div className=" w-[250px] p-2 mx-auto mt-4">
               <p className="text-center text-lime-200 p-2">
                 No images uploaded.
               </p>

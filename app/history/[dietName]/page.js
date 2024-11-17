@@ -14,7 +14,6 @@ import Button from "@/components/shared/Button";
 import Image from "next/image";
 
 export default function HistoryPageForSpecifiedDiet() {
-  const [showImages, setShowImages] = useState(false);
   const { user, loading: loadingUser } = useAuth();
   const { inactiveDiets, loading: loadingInactiveDiets } =
     useInactiveDiet(user);
@@ -28,15 +27,10 @@ export default function HistoryPageForSpecifiedDiet() {
 
   const dietData = specifiedDiet?.details.dietData;
   const targetDays = specifiedDiet?.details.targetDays;
-  const initialBodyImageUrl = specifiedDiet?.details.initialBodyImage;
-  const currentBodyImageUrl = specifiedDiet?.details.currentBodyImage;
   const rating = specifiedDiet?.details.rating;
   const summary = specifiedDiet?.details.summary;
   const prosNcons = specifiedDiet?.details.prosNcons;
-
-  const handleToggle = () => {
-    setShowImages(!showImages);
-  };
+  const images = specifiedDiet?.details.images || [];
 
   if (loadingInactiveDiets || loadingProgressData || loadingUser)
     return <Loading />;
@@ -54,50 +48,27 @@ export default function HistoryPageForSpecifiedDiet() {
           Result
         </h3>
 
-        {/* Button to toggle image display */}
-        <Button
-          text={showImages ? "Hide Before & After" : "Show Before & After"}
-          clickHandler={handleToggle}
-          full
-        />
+        {/* Transformation gallery */}
+        {images.length > 0 && (
+          <div className="w-full overflow-x-auto p-4 whitespace-nowrap bg-indigo-400 rounded-lg shadow-md text-white">
+            {/* Title */}
+            <h2 className="font-bold">
+              <i className="fa-solid fa-camera-retro"></i> Document Your
+              Transformation
+            </h2>
 
-        {/* initial vs. current image display section */}
-        {showImages && (
-          <div className="sm:flex gap-8 text-center">
-            <div>
-              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
-                Before
-              </h3>
-              {initialBodyImageUrl ? (
-                <Image
-                  src={initialBodyImageUrl}
-                  alt="Before Image"
-                  width={300}
-                  height={360}
-                  className="mb-4 object-cover rounded-lg"
-                  sizes="(max-width: 640px) 220px, 300px"
-                />
-              ) : (
-                <p>No initial image uploaded.</p>
-              )}
-            </div>
-            <div>
-              <h3 className="mb-4 textGradient dark:text-blue-500 font-bold uppercase">
-                After
-              </h3>
-              {currentBodyImageUrl ? (
-                <Image
-                  src={currentBodyImageUrl}
-                  alt="After Image"
-                  width={300}
-                  height={360}
-                  className="mb-4 object-cover rounded-lg"
-                  sizes="(max-width: 640px) 220px, 300px"
-                />
-              ) : (
-                <p>No current image uploaded.</p>
-              )}
-            </div>
+            {images.map((image, index) => (
+              <div key={index} className="inline-block w-[270px] p-2 mr-4">
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-sm mr-2">{image.date}</p>
+                  <img
+                      src={image.url}
+                      alt={`Progress Image ${index}`}
+                      className="w-full h-[320px] object-cover rounded-lg ring ring-lime-300 bg-white"
+                    />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

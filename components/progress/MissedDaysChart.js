@@ -12,15 +12,19 @@ import {
 // Register necessary components
 Chart.register(ArcElement, CategoryScale, LinearScale, BarElement, Title);
 
-const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays, targetDays }) => {
+const MissedDaysChart = ({
+  dietMissedDays,
+  exerciseMissedDays,
+  targetDays,
+}) => {
   const chartData = {
     labels: ["Diet", "Exercise"],
     datasets: [
       {
-        label: "Missed Days",
+        label: ["Missed Days"],
         data: [dietMissedDays, exerciseMissedDays],
         borderWidth: 1,
-        backgroundColor: "#FFAEBC", // Custom colors for bars
+        backgroundColor: ["#7cf3a0", "#b4f8c8"], // Custom colors for bars
       },
     ],
   };
@@ -29,9 +33,13 @@ const MissedDaysChart = ({ dietMissedDays, exerciseMissedDays, targetDays }) => 
     plugins: {
       title: {
         display: true,
-        text: "Total Missed Days per Diet & Exercise"
+        text: "Total Missed Days per Diet & Exercise",
+      },
+      legend: {
+        display: false
       },
     },
+
     scales: {
       y: {
         beginAtZero: true,
