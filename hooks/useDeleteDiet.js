@@ -9,7 +9,7 @@ export function useDeleteDiet() {
     try {
       const userRef = doc(db, "users", userId);
 
-      // Fetch the diet data first to check for image URLs
+      // Fetch user data from db
       const userDoc = await getDoc(userRef);
       const userData = userDoc.data();
       const dietData = userData?.diets?.[dietName];
@@ -19,22 +19,17 @@ export function useDeleteDiet() {
         [`diets.${dietName}`]: deleteField(), // Remove the diet
       });
 
-      // Delete the initialBodyImage from Firebase Storage
-      if (dietData?.initialBodyImage) {
-        const storageRef = ref(
-          storage,
-          `users/${userId}/diets/${dietName}/initialBodyImage.jpg`
-        );
-        await deleteObject(storageRef);
-      }
-
-      // Delete the currentBodyImage from Firebase Storage
-      if (dietData?.currentBodyImage) {
-        const storageRef = ref(
-          storage,
-          `users/${userId}/diets/${dietName}/currentBodyImage.jpg`
-        );
-        await deleteObject(storageRef);
+      // Check if images exist and delete each one from storage
+      if (dietData?.images?.length > 0) {
+        for (const image of dietData.images) {
+          if(image.url) {
+            const storageRef = ref(
+              storage,
+              `users/${userId}/diets/${dietName}/images/${image.date}.jpg`
+            )
+            await deleteObject(storageRef)
+          }
+        }
       }
 
       console.log(`Successfully deleted diet: ${dietName}`);

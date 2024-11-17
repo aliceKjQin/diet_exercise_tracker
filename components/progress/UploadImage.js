@@ -85,26 +85,34 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
   if (loading) return <Loading />;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+    <form onSubmit={handleSubmit} className="space-y-8 mr-4 mt-4">
       <input
         type="file"
         onChange={handleImageUpload}
         className="block p-2 rounded-md w-full border-outline-none ring-2 ring-lime-200"
       />
-      <label className="block" htmlFor="date">Select a date</label>
+      <div className="flex flex-col gap-1">
+      <label className="block" htmlFor="date">
+        Select a date
+      </label>
       <input
         type="date"
         id="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="block p-2 rounded-md bg-indigo-400 w-full border-outline-none ring-2 ring-lime-200"
+        className="block p-2 rounded-md bg-indigo-400 w-full border-
+        outline-none ring-2 ring-lime-200"
       />
-
+      </div>
+      
+      {error && <p className="text-red-200 text-center text-wrap">{error}</p>}
+      {success && <p className="text-emerald-200 text-center text-wrap ">{success}</p>}
+      
       <button className="w-full p-2 bg-pink-400 rounded-full font-bold">
         Upload Image
       </button>
-      {error && <p className="p-2 text-red-200 text-center">{error}</p>}
-      {success && <p className="p-2 text-emerald-200 text-center">{success}</p>}
+
     </form>
   );
+  t;
 }
