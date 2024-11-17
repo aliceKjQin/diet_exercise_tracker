@@ -267,7 +267,7 @@ export default function MainProgressCharts({
             <p id="popup-description" className="mb-4 gap-2">
               <Link
                 href={`/complete/${dietName}`}
-                className="text-emerald-400 font-bold"
+                className="text-lime-300 font-bold"
               >
                 Go enter your final result{" "}
                 <i className="fa-regular fa-flag"></i>

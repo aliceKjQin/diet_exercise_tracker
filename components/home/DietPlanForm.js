@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loading from "../shared/Loading";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
+import Button from "../shared/Button";
 
 export default function DietPlanForm() {
   const [dietPlan, setDietPlan] = useState({
@@ -122,7 +123,7 @@ export default function DietPlanForm() {
   }
 
   return (
-    <div className="mx-auto p-6 shadow-xl rounded-3xl ring-2 ring-lime-300">
+    <div className="w-[300px] mx-auto p-6 shadow-xl rounded-3xl ring-2 ring-lime-300">
       <h1 className="text-xl font-bold mb-6 text-center">Create Diet Plan</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Section for dietName and targetDays (duration) */}
@@ -224,12 +225,7 @@ export default function DietPlanForm() {
             {error}
           </div>
         )}
-        <button
-          type="submit"
-          className="w-full bg-indigo-400 text-white py-2 rounded-full hover:bg-indigo-500 transition-colors font-bold"
-        >
-          Submit Diet Plan
-        </button>
+        <Button text="Submit" dark full/>
       </form>
     </div>
   );

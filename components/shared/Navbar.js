@@ -17,17 +17,17 @@ export default function Navbar() {
   if (loadingUser) return <Loading />
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-white shadow-sm textGradient dark:text-blue-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex gap-4">
             <Link
               href="/"
-              className={`flex-shrink-0 flex items-center textGradient dark:text-blue-500 font-bold ${roboto.className}`}
+              className={`flex-shrink-0 flex items-center font-bold ${roboto.className}`}
             >
               D & E
             </Link>
-            {user && (<Link href={'/history'} className={`flex-shrink-0 flex items-center textGradient dark:text-blue-500 font-bold ${roboto.className}`}>History</Link>)}
+            {user && (<Link href={'/history'} className={`flex-shrink-0 flex items-center font-bold ${roboto.className}`}>History</Link>)}
           </div>
           <div className="flex items-center gap-2">
             {user ? (
@@ -35,7 +35,7 @@ export default function Navbar() {
                 <ThemeToggle />
                 {activeDiet && <Link
                   href={`/dashboard/${activeDiet?.name}`}
-                  className="textGradient dark:text-blue-500 font-bold mx-4"
+                  className="font-bold mx-4"
                 >
                   Dashboard
                 </Link>}
@@ -44,7 +44,7 @@ export default function Navbar() {
                     logout();
                     router.push("/login");
                   }}
-                  className="textGradient dark:text-blue-500 font-bold"
+                  className="font-bold"
                 >
                   Logout
                 </button>
@@ -52,7 +52,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="textGradient dark:text-blue-500 font-bold"
+                className="font-bold"
               >
                 Login
               </Link>

@@ -125,8 +125,8 @@ export default function MacroGoals() {
         />
 
         {loading && <Loading />}
-        {success && <p className="text-emerald-500 text-center">{success}</p>}
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {success && <p className="text-emerald-500 text-center">{success} <i className="fa-regular fa-square-check fa-lg"></i></p>}
+        {error && <p className="text-red-500 text-center">{error} <i className="fa-regular fa-square-check fa-lg"></i></p>}
       </div>
     </>
   );

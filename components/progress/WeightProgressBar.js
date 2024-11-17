@@ -120,8 +120,18 @@ export default function WeightProgressBar({
             </button>
           </div>
           {loading && <Loading />}
-          {error && <p className="text-red-500">{error}</p>}
-          {successMessage && <p className="text-green-200">{successMessage}</p>}
+          {error && (
+            <p className="text-red-500">
+              {error} <i className="fa-regular fa-circle-xmark fa-lg"></i>
+            </p>
+          )}
+
+          {successMessage && (
+            <p className="text-green-200">
+              {successMessage}{" "}
+              <i className="fa-regular fa-square-check fa-lg"></i>{" "}
+            </p>
+          )}
         </div>
       ) : (
         <p className="font-semibold text-center">

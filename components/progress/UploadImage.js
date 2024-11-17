@@ -110,8 +110,8 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
       />
       </div>
       
-      {error && <p className="text-red-200 text-center text-wrap">{error}</p>}
-      {success && <p className="text-emerald-200 text-center text-wrap ">{success}</p>}
+      {error && <p className="text-red-200 text-center text-wrap">{error} <i class="fa-regular fa-circle-xmark fa-lg"></i></p>}
+      {success && <p className="text-emerald-200 text-center text-wrap ">{success} <i className="fa-regular fa-square-check  fa-lg"></i></p>}
       
       <button className="w-full p-2 bg-pink-400 rounded-full font-bold">
         Upload Image

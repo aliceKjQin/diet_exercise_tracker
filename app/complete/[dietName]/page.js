@@ -30,8 +30,8 @@ export default function CompletePage() {
         onSubmissionSuccess={onSubmissionSuccess}
       />
       {isSaved ? (
-        <p className="text-center text-emerald-600">
-          Your final result has been saved successfully!
+        <p className="text-center text-emerald-600 mt-2">
+          Your final result has been saved successfully! <i className="fa-regular fa-square-check  fa-lg"></i>
         </p>
       ) : (
         ""

@@ -161,8 +161,8 @@ export default function ProgressPage() {
                     {/* display loading or error on deleting  */}
                     {image.deleting && <Loading />}
                     {image.deleteError && (
-                      <p className="text-center text-red-200">
-                        {image.deleteError}
+                      <p className="text-center text-red-200"> <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        {image.deleteError} 
                       </p>
                     )}
 

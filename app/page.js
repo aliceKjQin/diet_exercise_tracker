@@ -123,9 +123,9 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row justify-between gap-2">
             <h1 className="text-lg">
               <span className="font-bold">Current Active Diet:</span>{" "}
-              <span className="uppercase textGradient dark:text-blue-500 font-bold">
+              <p className="uppercase textGradient dark:text-blue-500 font-bold">
                 {activeDiet.name}
-              </span>
+              </p>
             </h1>
             <button
               onClick={handleShowInstruction}
@@ -218,10 +218,10 @@ export default function HomePage() {
           {/* loading, error, success status */}
           {loading && <Loading />}
           {errorMessage && (
-            <p className="text-red-500 text-center">{errorMessage}</p>
+            <p className="text-red-500 text-center">{errorMessage} <i class="fa-regular fa-circle-xmark fa-lg"></i></p>
           )}
           {successMessage && (
-            <p className="text-green-500 text-center">{successMessage}</p>
+            <p className="text-emerald-500 text-center">{successMessage} <i className="fa-regular fa-square-check  fa-lg"></i></p>
           )}
 
           <button className="bg-emerald-400 text-white font-bold text-lg py-2 px-4 rounded-full mt-8">

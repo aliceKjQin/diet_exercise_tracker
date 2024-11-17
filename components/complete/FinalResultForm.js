@@ -128,10 +128,10 @@ export default function FinalResultForm({
   };
 
   return (
-    <div className="mx-auto flex flex-col gap-4 items-center border rounded-md shadow-lg p-4">
+    <div className="mx-auto flex flex-col gap-4 items-center  ring-2 ring-lime-300 rounded-3xl shadow-xl p-4">
       <h2 className="text-xl font-bold">Submit Your Final Results</h2>
 
-      {error && <p className="text-red-400">{error}</p>}
+      {error && <p className="text-red-400">{error} <i className="fa-regular fa-square-check  fa-lg"></i></p>}
 
       {/* Final Weight Input */}
       <div className="flex flex-col items-center">
@@ -237,7 +237,7 @@ export default function FinalResultForm({
             value={summaryInputValue}
             onChange={(e) => setSummaryInputValue(e.target.value)}
             placeholder="Type your summary here..."
-            className="bg-purple-200 dark:bg-sky-200 text-stone-700 border-2 border-purple-300 dark:border-blue-300 p-2 rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-blue-500"
+            className="bg-indigo-100 text-stone-700 border-2 border-indigo-200 p-2 rounded-md before:focus:outline-none focus:ring-2 focus:ring-indigo-500"
             rows={3}
             autoFocus
           />
