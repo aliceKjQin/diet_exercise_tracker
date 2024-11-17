@@ -85,15 +85,15 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
   if (loading) return <Loading />;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mr-4 mt-4">
+    <form onSubmit={handleSubmit} className="space-y-2 mr-4 mt-2">
       <input
         type="file"
         onChange={handleImageUpload}
         className="block p-2 rounded-md w-full border-outline-none ring-2 ring-lime-200"
       />
       <div className="flex flex-col gap-1 items-center">
-      <label className="block p-3 mb-1" htmlFor="date">
-        <span className="p-2 rounded-lg bg-indigo-400 ring-2 ring-pink-200 m font-bold">Select a date</span>
+      <label className="block" htmlFor="date">
+        Select a date
       </label>
       <input
         type="date"
