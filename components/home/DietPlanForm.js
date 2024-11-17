@@ -15,7 +15,6 @@ export default function DietPlanForm() {
     targetWeight: "",
     initialWeight: "",
     dietName: "",
-    initialBodyImage: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -32,32 +31,8 @@ export default function DietPlanForm() {
   }, []);
 
   const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "initialBodyImage") {
-      // Handle file input
-      // Check for valid file type
-      if (files[0]) {
-        const file = files[0];
-        const validTypes = ["image/jpeg", "image/png"];
-        const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
-
-        // Validate file type
-        if (!validTypes.includes(file.type)) {
-          setError("Please upload a valid image (JPEG or PNG)");
-          return; // Exit the function early
-        }
-
-        // Validate file size
-        if (file.size > maxSizeInBytes) {
-          setError("File size must be less than 2 MB");
-          return; // Exit the function early
-        }
-
-        // If valid, update state
-        setDietPlan((prev) => ({ ...prev, initialBodyImage: file }));
-        setError("");
-      }
-    } else if (["targetDays", "targetWeight", "initialWeight"].includes(name)) {
+    const { name, value } = e.target;
+     if (["targetDays", "targetWeight", "initialWeight"].includes(name)) {
       // check if it's valid whole number
       if (!/^\d*$/.test(value)) {
         setError("Please enter a valid whole number.");
@@ -100,25 +75,12 @@ export default function DietPlanForm() {
           }
         }
 
-        // If diet name is unique, proceed with saving diet data
-        let downloadUrl = "";
-
-        if (dietPlan.initialBodyImage) {
-          const imageRef = ref(
-            storage,
-            `users/${user.uid}/diets/${formattedDietName}/initialBodyImage.jpg`
-          );
-          await uploadBytes(imageRef, dietPlan.initialBodyImage);
-          downloadUrl = await getDownloadURL(imageRef);
-        }
-
         const updatedDietPlan = {
           ...dietPlan,
           startDate: new Date().toLocaleDateString("en-CA"), // 'en-CA' gives the date format YYYY-MM-DD
           isActive: true,
           currentWeight: dietPlan.initialWeight,
           dietData: {},
-          initialBodyImage: downloadUrl || null,
         };
 
         await setDoc(
@@ -139,7 +101,6 @@ export default function DietPlanForm() {
           targetWeight: "",
           initialWeight: "",
           dietName: "",
-          initialBodyImage: null,
         });
         localStorage.removeItem("dietPlan");
       } catch (error) {
@@ -161,10 +122,12 @@ export default function DietPlanForm() {
   }
 
   return (
-    <div className="max-w-lg mx-auto p-6 shadow-lg rounded-lg">
-      <h1 className="text-xl font-bold mb-4 text-center">Create Diet Plan</h1>
+    <div className="mx-auto p-6 shadow-xl rounded-3xl ring-2 ring-lime-300">
+      <h1 className="text-xl font-bold mb-6 text-center">Create Diet Plan</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
+        {/* Section for dietName and targetDays (duration) */}
+        <section className="relative">
+        <div className="mb-2">
           <label className="block text-sm font-medium mb-1" htmlFor="dietName">
             Diet Name
           </label>
@@ -197,9 +160,10 @@ export default function DietPlanForm() {
             required
           />
         </div>
+        </section>
 
-        {/* div for weightUnit and weight related fields */}
-        <div className="py-4 flex flex-col gap-2 p-2 rounded-xl">
+        {/* Section for weightUnit and weight related fields */}
+        <section className="relative border-t-2 border-gray-300 pt-8 mt-8">
           {/* Weight Unit Selection */}
           <div>
             <label className="block text-sm font-medium mb-1">
@@ -214,7 +178,7 @@ export default function DietPlanForm() {
               </select>
             </label>
           </div>
-          <div>
+          <div className="mb-2">
             <label
               className="block text-sm font-medium mb-1"
               htmlFor="initialWeight"
@@ -250,23 +214,7 @@ export default function DietPlanForm() {
               required
             />
           </div>
-        </div>
-
-        <div>
-          <label
-            htmlFor="initialBodyImage"
-            className="block text-sm font-medium mb-1"
-          >
-            Upload Starting Body Image
-          </label>
-          <input
-            type="file"
-            name="initialBodyImage"
-            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
-            onChange={handleInputChange}
-            accept="image/*"
-          />
-        </div>
+        </section>
         <button
           type="submit"
           className="w-full bg-indigo-400 text-white py-2 rounded-full hover:bg-indigo-500 transition-colors font-bold"

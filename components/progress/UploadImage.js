@@ -85,7 +85,7 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
   if (loading) return <Loading />;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 mr-4 mt-4">
+    <form onSubmit={handleSubmit} className="space-y-4 mr-4 mt-4">
       <input
         type="file"
         onChange={handleImageUpload}
