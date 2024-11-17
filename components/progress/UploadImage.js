@@ -89,16 +89,18 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
       <input
         type="file"
         onChange={handleImageUpload}
-        className="block border border-stone-300 p-2 rounded-md text-stone-800 w-full"
+        className="block p-2 rounded-md w-full border-outline-none ring-2 ring-lime-200"
       />
+      <label className="block" htmlFor="date">Select a date</label>
       <input
         type="date"
+        id="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="block border border-stone-300 p-2 rounded-md text-stone-800 w-full"
+        className="block p-2 rounded-md bg-indigo-400 w-full border-outline-none ring-2 ring-lime-200"
       />
 
-      <button className="w-full p-2 ring-2 ring-pink-200 rounded-full font-bold">
+      <button className="w-full p-2 bg-pink-400 rounded-full font-bold">
         Upload Image
       </button>
       {error && <p className="p-2 text-red-200 text-center">{error}</p>}
