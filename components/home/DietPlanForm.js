@@ -32,7 +32,7 @@ export default function DietPlanForm() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-     if (["targetDays", "targetWeight", "initialWeight"].includes(name)) {
+    if (["targetDays", "targetWeight", "initialWeight"].includes(name)) {
       // check if it's valid whole number
       if (!/^\d*$/.test(value)) {
         setError("Please enter a valid whole number.");
@@ -127,39 +127,42 @@ export default function DietPlanForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Section for dietName and targetDays (duration) */}
         <section className="relative">
-        <div className="mb-2">
-          <label className="block text-sm font-medium mb-1" htmlFor="dietName">
-            Diet Name
-          </label>
-          <input
-            type="text"
-            id="dietName"
-            name="dietName"
-            value={dietPlan.dietName}
-            onChange={handleInputChange}
-            placeholder="Enter diet name (e.g., Vegan)"
-            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
-            required
-          />
-        </div>
-        <div>
-          <label
-            className="block text-sm font-medium mb-1"
-            htmlFor="targetDays"
-          >
-            Duration (days)
-          </label>
-          <input
-            type="text"
-            id="targetDays"
-            name="targetDays"
-            value={dietPlan.targetDays}
-            onChange={handleInputChange}
-            placeholder="Enter a number"
-            className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
-            required
-          />
-        </div>
+          <div className="mb-2">
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="dietName"
+            >
+              Diet Name
+            </label>
+            <input
+              type="text"
+              id="dietName"
+              name="dietName"
+              value={dietPlan.dietName}
+              onChange={handleInputChange}
+              placeholder="Enter diet name (e.g., Vegan)"
+              className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
+              required
+            />
+          </div>
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="targetDays"
+            >
+              Duration (days)
+            </label>
+            <input
+              type="text"
+              id="targetDays"
+              name="targetDays"
+              value={dietPlan.targetDays}
+              onChange={handleInputChange}
+              placeholder="Enter a number"
+              className="w-full border border-gray-300 p-2 rounded-md text-stone-800"
+              required
+            />
+          </div>
         </section>
 
         {/* Section for weightUnit and weight related fields */}
@@ -215,6 +218,12 @@ export default function DietPlanForm() {
             />
           </div>
         </section>
+
+        {error && (
+          <div className="mt-4 p-2 bg-red-100 text-red-800 rounded-md">
+            {error}
+          </div>
+        )}
         <button
           type="submit"
           className="w-full bg-indigo-400 text-white py-2 rounded-full hover:bg-indigo-500 transition-colors font-bold"
@@ -222,12 +231,6 @@ export default function DietPlanForm() {
           Submit Diet Plan
         </button>
       </form>
-
-      {error && (
-        <div className="mt-4 p-2 bg-red-100 text-red-800 rounded-md">
-          {error}
-        </div>
-      )}
     </div>
   );
 }
