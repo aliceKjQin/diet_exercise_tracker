@@ -15,9 +15,6 @@ import { ref, deleteObject } from "firebase/storage";
 
 export default function ProgressPage() {
   const { user, activeDiet, loading: loadingUser } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [images, setImages] = useState([]);
   const [targetDays, setTargetDays] = useState(null);
   const [dietData, setDietData] = useState({});
@@ -29,19 +26,34 @@ export default function ProgressPage() {
       setTargetDays(activeDiet.details?.targetDays || "");
       setDietData(activeDiet.details?.dietData || {});
       setDietName(activeDiet.name || "");
-      setImages(activeDiet.details?.images || []);
+      setImages(
+        (activeDiet.details?.images || []).map((img) => ({
+          ...img,
+          deleting: false,
+          deleteError: "",
+        }))
+      );
     }
   }, [activeDiet]);
 
   const addNewImage = (newImage) => {
-    setImages((prev) => [...prev, newImage]); // Update state with the new image
+    setImages((prev) => [
+      ...prev,
+      { ...newImage, deleting: false, deleteError: "" },
+    ]); // Update state with the new image
   };
 
   const deleteImage = async (image) => {
     if (!user || !dietName) return;
 
-    setError("");
-    setLoading(true);
+    // Update local state to mark the image as being deleted
+    setImages((prevImages) =>
+      prevImages.map((img) =>
+        img.url === image.url
+          ? { ...img, deleting: true, deleteError: "" }
+          : img
+      )
+    );
 
     try {
       const userRef = doc(db, "users", user.uid);
@@ -49,28 +61,39 @@ export default function ProgressPage() {
         storage,
         `users/${user.uid}/diets/${dietName}/images/${image.date}.jpg`
       );
+      // Prepare the original object by omitting the transient UI state properties before calling arrayRemove
+      const originalImage = {
+        url: image.url,
+        date: image.date,
+      };
 
       // Delete image from Firebase Storage
       await deleteObject(storageRef);
 
       // Remove image data from Firestore
       await updateDoc(userRef, {
-        [`diets.${dietName}.images`]: arrayRemove(image),
+        [`diets.${dietName}.images`]: arrayRemove(originalImage),
       });
 
-      // Update local state
+      // Update local state to remove the deleted image on success
       setImages((prevImages) =>
         prevImages.filter((img) => img.url !== image.url)
       );
-      setSuccess("Removed image.");
-      setTimeout(() => {
-        setSuccess("");
-      }, 2000);
     } catch (error) {
       console.error("Error deleting image:", error);
-      setError("Failed to save the image. Please try again.");
-    } finally {
-      setLoading(false);
+      // Update local state to show error for the specific image
+      setImages(
+        (prevImages) =>
+          prevImages.map((img) =>
+            img.url === image.url
+              ? {
+                  ...img,
+                  deleting: false,
+                  deleteError: "Failed to delete. Please try again.",
+                }
+              : img
+          ) // deleting used to check for loading state & disable the delete button
+      ); // if failed, add an failed state to that image and no need to reset the images local state with filter()
     }
   };
 
@@ -114,39 +137,43 @@ export default function ProgressPage() {
         {images.length > 0 ? (
           <div className="w-full overflow-x-auto p-4 whitespace-nowrap bg-indigo-400 rounded-lg shadow-md text-white">
             {/* Title */}
-            <h2 className="font-bold p-4 text-base sm:text-lg">
-            <i className="fa-solid fa-camera-retro"></i> Document Your Transformation
+            <h2 className="font-bold">
+              <i className="fa-solid fa-camera-retro"></i> Document Your
+              Transformation
             </h2>
 
             {/* Images and Upload Button */}
-            <div className="inline-flex gap-4">
+            <div className="inline-flex gap-1">
               {images.map((image, index) => (
-                <div
-                  key={index}
-                  className="inline-block w-[220px] sm:w-[250px] p-2 mr-4"
-                >
-                  {loading && <Loading />}
-                  {success && (
-                    <p className="text-center text-emerald-200">{success}</p>
-                  )}
-                  {error && <p className="text-center text-red-200">{error}</p>}
+                <div key={index} className="inline-block w-[270px] p-2 mr-4">
                   <div className="flex flex-col items-center gap-2">
                     <div className="flex items-center p-1 gap-2">
                       <p className="text-sm mr-2">{image.date}</p>
-                      <button onClick={() => deleteImage(image)}>
+                      <button
+                        onClick={() => deleteImage(image)}
+                        disabled={image.deleting}
+                      >
                         <i className="fa-solid fa-trash-can text-indigo-300 hover:text-red-400"></i>
                       </button>
                     </div>
+                    {/* display loading or error on deleting  */}
+                    {image.deleting && <Loading />}
+                    {image.deleteError && (
+                      <p className="text-center text-red-200">
+                        {image.deleteError}
+                      </p>
+                    )}
+
                     <img
                       src={image.url}
                       alt={`Progress Image ${index}`}
-                      className="w-full h-[300px] object-cover rounded-lg ring ring-lime-300 bg-white"
+                      className="w-full h-[320px] object-cover rounded-lg ring ring-lime-300 bg-white"
                     />
                   </div>
                 </div>
               ))}
               {/* Positioned Upload Image Button */}
-              <div className="inline-block w-[220px] sm:w-[250px] p-2 mr-4">
+              <div className="inline-block w-[270px] p-2 mr-4 mt-6">
                 <UploadImage
                   dietName={dietName}
                   onNewImageUpload={addNewImage}
@@ -155,8 +182,19 @@ export default function ProgressPage() {
             </div>
           </div>
         ) : (
-          <div className="p-4 bg-indigo-400 w-full h-[300px] rounded-lg text-center text-white text-lg sm:text-lg ring-2 ring-lime-300">
-            <p className="mt-12">No images uploaded.</p>
+          <div className="p-4 bg-indigo-400 w-full h-[300px] rounded-lg text-white ring-2 ring-lime-300">
+            {/* Title */}
+            <h2 className="font-bold">
+              <i className="fa-solid fa-camera-retro"></i> Document Your
+              Transformation
+            </h2>
+            <div className=" w-[270px] p-2 mx-auto mt-4">
+              <p className="text-center text-lime-200 p-2">
+                No images uploaded.
+              </p>
+
+              <UploadImage dietName={dietName} onNewImageUpload={addNewImage} />
+            </div>
           </div>
         )}
       </div>
