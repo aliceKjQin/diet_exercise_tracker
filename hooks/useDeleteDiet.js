@@ -22,10 +22,10 @@ export function useDeleteDiet() {
       // Check if images exist and delete each one from storage
       if (dietData?.images?.length > 0) {
         for (const image of dietData.images) {
-          if(image.url) {
+          if(image.uid) {
             const storageRef = ref(
               storage,
-              `users/${userId}/diets/${dietName}/images/${image.date}.jpg`
+              `users/${userId}/diets/${dietName}/images/${image.uid}.jpg`
             )
             await deleteObject(storageRef)
           }

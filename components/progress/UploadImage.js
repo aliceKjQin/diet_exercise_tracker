@@ -48,9 +48,13 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
     setLoading(true);
     try {
       const userRef = doc(db, "users", user.uid);
+
+      // Generate a unique identifier for the image
+      const uid = Date.now().toString(); // Unique ID based on timestamp
+
       const storageRef = ref(
         storage,
-        `users/${user.uid}/diets/${dietName}/images/${date}.jpg`
+        `users/${user.uid}/diets/${dietName}/images/${uid}.jpg`
       );
 
       // Upload image to Firebase Storage
@@ -61,6 +65,7 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
 
       // Update db and with image URL and date
       const newImage = {
+        uid, // Save the unique identifier 
         url: downloadUrl,
         date, // User-provided date
       };

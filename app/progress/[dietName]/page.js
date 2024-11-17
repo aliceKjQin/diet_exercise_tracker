@@ -49,7 +49,7 @@ export default function ProgressPage() {
     // Update local state to mark the image as being deleted
     setImages((prevImages) =>
       prevImages.map((img) =>
-        img.url === image.url
+        img.uid === image.uid
           ? { ...img, deleting: true, deleteError: "" }
           : img
       )
@@ -59,10 +59,11 @@ export default function ProgressPage() {
       const userRef = doc(db, "users", user.uid);
       const storageRef = ref(
         storage,
-        `users/${user.uid}/diets/${dietName}/images/${image.date}.jpg`
+        `users/${user.uid}/diets/${dietName}/images/${image.uid}.jpg`
       );
       // Prepare the original object by omitting the transient UI state properties before calling arrayRemove
       const originalImage = {
+        uid: image.uid, // Use uid as the unique identifier
         url: image.url,
         date: image.date,
       };
@@ -77,7 +78,7 @@ export default function ProgressPage() {
 
       // Update local state to remove the deleted image on success
       setImages((prevImages) =>
-        prevImages.filter((img) => img.url !== image.url)
+        prevImages.filter((img) => img.uid !== image.uid)
       );
     } catch (error) {
       console.error("Error deleting image:", error);
@@ -85,7 +86,7 @@ export default function ProgressPage() {
       setImages(
         (prevImages) =>
           prevImages.map((img) =>
-            img.url === image.url
+            img.uid === image.uid
               ? {
                   ...img,
                   deleting: false,
