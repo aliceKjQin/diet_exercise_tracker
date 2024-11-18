@@ -117,7 +117,7 @@ export default function WeightProgressBar({
               />
               <UpdateInputButton
                 onClick={handleSaveWeight}
-                className="bg-pink-400 hover:bg-pink-300 w-24"
+                className="bg-pink-400 hover:bg-pink-300"
               />
             </div>
           </div>
