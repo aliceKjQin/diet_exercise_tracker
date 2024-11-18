@@ -124,7 +124,7 @@ export default function WeightProgressBar({
           {/*  loading and message state */}
           {loading && <Loading />}
           {error && (
-            <p className="text-red-500 flex-1 text-center">
+            <p className="text-pink-200 flex-1 text-center">
               {error} <i className="fa-regular fa-circle-xmark fa-lg"></i>
             </p>
           )}
