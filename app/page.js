@@ -183,7 +183,6 @@ export default function HomePage() {
                   id="duration"
                   value={duration}
                   onChange={handleDurationChange}
-                  placeholder="Enter a number"
                   className="p-2 border border-solid border-indigo-300 rounded-full outline-none"
                 />
 
@@ -203,7 +202,6 @@ export default function HomePage() {
                   id="targetWeight"
                   value={targetWeight}
                   onChange={handleTargetWeightChange}
-                  placeholder="Enter a number"
                   className="p-2 border border-solid border-indigo-300 rounded-full outline-none"
                 />
                 <UpdateInputButton
