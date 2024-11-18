@@ -89,7 +89,7 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
   if (loading) return <Loading />;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mr-2">
+    <form onSubmit={handleSubmit} className="space-y-4 mr-4">
       {/*  file field */}
       <div>
         <label className="block font-semibold mb-1" htmlFor="date">

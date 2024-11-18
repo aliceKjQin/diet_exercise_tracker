@@ -253,7 +253,7 @@ export default function HomePage() {
 
               <button
                 onClick={() => setShowConfirmation(true)}
-                className="bg-red-400 text-white font-bold py-2 px-4 rounded-full"
+                className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-full"
               >
                 Remove Active Diet
               </button>
