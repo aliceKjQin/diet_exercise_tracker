@@ -71,7 +71,7 @@ export default function Login() {
       <input
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full max-w-[400px] mx-auto px-3 duration-200 hover:border-purple-400 dark:hover:border-blue-400 focus:border-purple-400 dark:focus:border-blue-400 py-2 sm:py-3 border border-solid border-purple-300 dark:border-blue-300 rounded-full outline-none text-black"
+        className="w-full max-w-[400px] mx-auto px-3 duration-200 hover:border-indigo-400 focus:border-indigo-400 py-2 sm:py-3 border border-solid border-indigo-300 rounded-full outline-none text-black"
         placeholder="Email"
       />
       {/* password input field */}
@@ -79,14 +79,14 @@ export default function Login() {
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-3 duration-200 hover:border-purple-400 dark:hover:border-blue-400 focus:border-purple-400 dark:focus:border-blue-400 py-2 sm:py-3 border border-solid border-purple-300 dark:border-blue-300 rounded-full outline-none text-black"
+          className="w-full px-3 duration-200 hover:border-indigo-400 focus:border-indigo-400 py-2 sm:py-3 border border-solid border-indigo-300 rounded-full outline-none text-black"
           placeholder="Password"
           type={showPassword ? "text" : "password"}
         />
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-400 dark:text-blue-400"
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-400 "
         >
           {showPassword ? "Hide" : "Show"}
         </button>
@@ -111,7 +111,7 @@ export default function Login() {
             setIsRegister(!isRegister);
             setErrorMessage(""); // Clear error message when switching mode
           }}
-          className="text-purple-400 dark:text-blue-400"
+          className="text-indigo-400 "
         >
           {isRegister ? "Sign in" : "Sign up"}
         </button>

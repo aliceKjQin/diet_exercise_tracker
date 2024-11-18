@@ -254,15 +254,27 @@ export default function Dashboard() {
   return (
     <>
       <div className="flex gap-4 mb-6 justify-center sm:justify-start">
-          <Link href={`/pantry`} className="flex font-bold ring-2 ring-indigo-300 hover:ring-green-400 shadow-lg rounded-full p-2">
-            View Pantry{" "}
-            <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500"></i>
-          </Link>
-  
-          <Link href={`/progress/${activeDiet?.name}`} className="flex font-bold ring-2 ring-indigo-300 hover:ring-green-400 shadow-lg rounded-full p-2">
-            View Progress{" "}
-            <i className="fa-solid fa-arrow-trend-up textGradient dark:text-blue-500"></i>
-          </Link>
+        <Link href={`/pantry`}>
+          <Button
+            text={
+              <>
+                <i className="fa-solid fa-basket-shopping"></i> View Pantry
+              </>
+            }
+            dark
+          ></Button>
+        </Link>
+
+        <Link href={`/progress/${activeDiet?.name}`}>
+          <Button
+            text={
+              <>
+                <i className="fa-solid fa-arrow-trend-up "></i> View Progress
+              </>
+            }
+            dark
+          />
+        </Link>
       </div>
 
       <div className="flex flex-col flex-1 gap-4 sm:gap-6">
@@ -301,7 +313,10 @@ export default function Dashboard() {
         </div>
 
         {showWarning ? (
-          <button onClick={handleShowWarning} className="p-2 bg-yellow-50 rounded-lg ring-2 ring-rose-200 text-center mx-auto">
+          <button
+            onClick={handleShowWarning}
+            className="p-2 bg-yellow-50 rounded-lg ring-2 ring-rose-200 text-center mx-auto"
+          >
             <i className="fa-solid fa-triangle-exclamation fa-lg  text-rose-500 "></i>{" "}
             <span className="text-sm text-stone-700">
               Make sure to log <strong>both</strong>{" "}

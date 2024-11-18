@@ -107,11 +107,12 @@ export default function ProgressPage() {
   return (
     <Main>
       {/* Go back button */}
-      <div className=" textGradient dark:text-blue-500 font-bold mb-4">
-        <Link href={`/dashboard/${dietName}`}>
-          <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back
-        </Link>
-      </div>
+      <Link
+        href={`/dashboard/${activeDiet?.name}`}
+        className="textGradient dark:text-blue-500 font-bold mb-2"
+      >
+        <i className="fa-solid fa-circle-arrow-left fa-lg mr-1"></i> Go back
+      </Link>
 
       <div className="flex flex-col gap-4 sm:gap-8 items-center">
         <h3 className="font-bold text-lg sm:text-xl">Progress Overview</h3>
@@ -139,7 +140,7 @@ export default function ProgressPage() {
           <div className="w-full overflow-x-auto p-4 whitespace-nowrap bg-indigo-400 rounded-lg shadow-md text-white">
             {/* Title */}
             <h2 className="font-bold">
-              <i className="fa-solid fa-camera-retro"></i> Document Your
+              <i className="fa-solid fa-camera-retro mr-2"></i>Document Your
               Transformation
             </h2>
 
@@ -175,7 +176,7 @@ export default function ProgressPage() {
                 </div>
               ))}
               {/* Positioned Upload Image Button */}
-              <div className="inline-block w-[270px] p-2 mt-10">
+              <div className="inline-block w-[270px] h-[300px] p-2 mt-10">
                 <UploadImage
                   dietName={dietName}
                   onNewImageUpload={addNewImage}
@@ -184,10 +185,10 @@ export default function ProgressPage() {
             </div>
           </div>
         ) : (
-          <div className="p-4 bg-indigo-400 w-full h-[300px] rounded-lg text-white ring-2 ring-lime-300">
+          <div className="p-4 bg-indigo-400 w-full rounded-lg text-white ring-2 ring-lime-300">
             {/* Title */}
             <h2 className="font-bold">
-              <i className="fa-solid fa-camera-retro"></i> Document Your
+              <i className="fa-solid fa-camera-retro mr-2"></i>Document Your
               Transformation
             </h2>
             <div className=" w-[270px] p-1 mx-auto mt-2">

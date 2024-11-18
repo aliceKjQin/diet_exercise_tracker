@@ -78,14 +78,17 @@ export default function MacroGoals() {
   return (
     <>
       {/* Go back button */}
-      <div className=" textGradient dark:text-blue-500 font-bold mb-2">
-        <Link href={`/dashboard/${activeDiet?.name}`}>
-          <i className="fa-solid fa-circle-arrow-left fa-lg"></i> Go back
-        </Link>
-      </div>
+
+      <Link
+        href={`/dashboard/${activeDiet?.name}`}
+        className="textGradient dark:text-blue-500 font-bold mb-2"
+      >
+        <i className="fa-solid fa-circle-arrow-left fa-lg mr-1"></i> Go back
+      </Link>
+
       <h2 className="text-xl font-bold">
-        Set Macro Goals{" "}
-        <i className="fa-solid fa-bullseye textGradient dark:text-blue-500"></i>
+        <i className="fa-solid fa-bullseye textGradient dark:text-blue-500 mr-2"></i>
+        Set Macro Goals
       </h2>
       <div className="mx-auto p-4 bg-yellow-100 shadow-md rounded-md mb-4 flex  flex-col gap-2">
         <div className=" flex gap-4 mb-4">
@@ -125,8 +128,16 @@ export default function MacroGoals() {
         />
 
         {loading && <Loading />}
-        {success && <p className="text-emerald-500 text-center">{success} <i className="fa-regular fa-square-check fa-lg"></i></p>}
-        {error && <p className="text-red-500 text-center">{error} <i className="fa-regular fa-square-check fa-lg"></i></p>}
+        {success && (
+          <p className="text-emerald-500 text-center">
+            {success} <i className="fa-regular fa-square-check fa-lg"></i>
+          </p>
+        )}
+        {error && (
+          <p className="text-red-500 text-center">
+            {error} <i className="fa-regular fa-square-check fa-lg"></i>
+          </p>
+        )}
       </div>
     </>
   );

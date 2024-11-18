@@ -2,7 +2,6 @@
 
 import { db, storage } from "@/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -225,7 +224,7 @@ export default function DietPlanForm() {
             {error}
           </div>
         )}
-        <Button text="Submit" dark full/>
+        <Button type="submit" text="Submit" dark full/>
       </form>
     </div>
   );

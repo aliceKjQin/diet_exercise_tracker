@@ -11,6 +11,7 @@ import Loading from "@/components/shared/Loading";
 import { db } from "@/firebase";
 import Link from "next/link";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
+import UpdateInputButton from "@/components/shared/UpdateInputButton";
 
 export default function HomePage() {
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -119,7 +120,7 @@ export default function HomePage() {
     <Main>
       {/* conditionally render diet plan form */}
       {activeDiet ? (
-        <div className="max-w-lg mx-auto mt-4 p-2 flex flex-col gap-4 ">
+        <div className="w-full mx-auto mt-4 p-2 flex flex-col gap-4 ">
           <div className="flex flex-col sm:flex-row justify-between gap-2">
             <h1 className="text-lg">
               <span className="font-bold">Current Active Diet:</span>{" "}
@@ -162,7 +163,7 @@ export default function HomePage() {
             </div>
           )}
 
-          <p>
+          <p className="text-center">
             You started on{" "}
             <span className="textGradient dark:text-blue-500">
               {activeDiet.details.startDate}
@@ -171,59 +172,56 @@ export default function HomePage() {
           </p>
 
           {/* Update duration (targetDays) and targetWeight */}
-          <div className="flex gap-4">
-            <div className="flex flex-col gap-2">
+          <div className="mx-auto">
+            <div className="flex flex-col gap-2 mb-4">
               <label className="block mb-1 " htmlFor="duration">
                 Duration (days)
               </label>
-              <div className="flex">
+              <div className="relative w-full">
                 <input
                   type="text"
                   id="duration"
                   value={duration}
                   onChange={handleDurationChange}
                   placeholder="Enter a number"
-                  className="w-full p-2 border rounded-md"
+                  className="p-2 border border-solid border-indigo-300 rounded-full outline-none"
                 />
-                <button
+
+                <UpdateInputButton
                   onClick={() => saveNewInput("duration", duration)}
-                  className="bg-purple-400 dark:bg-blue-400 text-white px-3 py-1 rounded-md font-bold"
-                >
-                  Update
-                </button>
+                  className="bg-indigo-400 hover:bg-indigo-300"
+                />
               </div>
             </div>
             <div className="flex flex-col gap-2">
               <label className="block mb-1 " htmlFor="targetWeight">
                 Target Weight ({weightUnit})
               </label>
-              <div className="flex">
+              <div className="relative w-full">
                 <input
                   type="text"
                   id="targetWeight"
                   value={targetWeight}
                   onChange={handleTargetWeightChange}
                   placeholder="Enter a number"
-                  className="w-full p-2 border rounded-md"
+                  className="p-2 border border-solid border-indigo-300 rounded-full outline-none"
                 />
-                <button
+                <UpdateInputButton
                   onClick={() => saveNewInput("targetWeight", targetWeight)}
-                  className="bg-purple-400 dark:bg-blue-400 text-white px-3 py-1 rounded-md font-bold"
-                >
-                  Update
-                </button>
+                  className="bg-indigo-400 hover:bg-indigo-300"
+                />
               </div>
             </div>
           </div>
           {/* loading, error, success status */}
           {loading && <Loading />}
           {errorMessage && (
-            <p className="text-red-500 text-center">
+            <p className="p-2 mt-4 text-red-500 text-center">
               {errorMessage} <i class="fa-regular fa-circle-xmark fa-lg"></i>
             </p>
           )}
           {successMessage && (
-            <p className="text-emerald-500 text-center">
+            <p className="p-2 mt-2 text-emerald-500 text-center transition duration-200">
               {successMessage}{" "}
               <i className="fa-regular fa-square-check  fa-lg"></i>
             </p>
@@ -231,7 +229,7 @@ export default function HomePage() {
 
           <Link
             href={`/dashboard/${dietName}`}
-            className="bg-emerald-400 text-white font-bold text-lg text-center py-2 px-4 rounded-full mt-8"
+            className="bg-emerald-400 hover:bg-emerald-500 text-white font-bold text-lg text-center py-2 px-4 rounded-full mt-8"
           >
             View Dashboard
           </Link>

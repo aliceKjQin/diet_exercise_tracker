@@ -105,7 +105,7 @@ export default function MyPantry() {
           <div key={item} className="flex justify-between">
             <p>{item}</p>
             <button onClick={() => removePantryItem(item)}>
-              <i className="fa-solid fa-xmark text-stone-300 hover:text-red-400"></i>
+              <i className="fa-solid fa-xmark fa-lg text-stone-300 hover:text-red-400"></i>
             </button>
           </div>
         ))}
@@ -116,8 +116,8 @@ export default function MyPantry() {
   return (
     <div className="flex flex-col gap-4 mb-4">
       <h3 className="text-xl font-bold mb-2">
-        My Pantry{" "}
-        <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500"></i>
+        <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500 mr-2"></i>
+        My Pantry
       </h3>
       {/* List of pantry items */}
       {renderPantryList()}

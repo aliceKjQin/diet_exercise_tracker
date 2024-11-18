@@ -75,7 +75,8 @@ export default function FinalResultForm({
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
     setError("");
 
@@ -96,9 +97,9 @@ export default function FinalResultForm({
     const updatedDietPlan = {
       isActive: false,
       currentWeight: parseFloat(finalWeight),
+      rating,
       prosNcons,
       summary: summaryInputValue,
-      rating,
       completeDate: new Date().toLocaleDateString("en-CA"), // 'en-CA' gives the date format YYYY-MM-DD
     };
 
@@ -116,8 +117,6 @@ export default function FinalResultForm({
 
       setActiveDiet(null); // Set activeDiet to null after form submission so Dashboard link doesn't appear in Navbar
       // call a function in parent to handle successful submission, i.e. redirect to history page or homePage to start a new diet
-
-      console.log("Updated user data Obj: ", userDataObj);
       onSubmissionSuccess();
     } catch (err) {
       console.error("Error submitting results: ", err);
@@ -128,108 +127,134 @@ export default function FinalResultForm({
   };
 
   return (
-    <div className="mx-auto flex flex-col gap-4 items-center  ring-2 ring-lime-300 rounded-3xl shadow-xl p-4">
-      <h2 className="text-xl font-bold">Submit Your Final Results</h2>
+    <div className="mx-auto ring-2 ring-lime-300 rounded-3xl shadow-xl p-4">
+      <h2 className="text-xl font-bold text-center mb-6">
+        Submit Your Final Results
+      </h2>
 
-      {error && <p className="text-red-400">{error} <i className="fa-regular fa-square-check  fa-lg"></i></p>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <p className="p-2 text-red-400">
+            {error} <i className="fa-regular fa-square-check  fa-lg"></i>
+          </p>
+        )}
 
-      {/* Final Weight Input */}
-      <div className="flex flex-col items-center">
-        <label htmlFor="finalWeight" className="block font-semibold mb-2">
-          Final Weight ({weightUnit})
-        </label>
-        <input
-          type="text"
-          id="finalWeight"
-          value={finalWeight}
-          onChange={handleFinalWeightChange}
-          className="border border-gray-300 p-2 w-full rounded"
-          required
-        />
-      </div>
-      {/* Div for pros and cons */}
-      <div className="flex flex-col gap-2 sm:flex-row py-2">
-        {/* Pros Selection */}
-        <fieldset className="w-full">
-          <legend className="block font-semibold">
-            Pros of the Diet Plan:
-          </legend>
-          {prosOptions.map((option) => (
-            <label key={option} className="block">
+        {/* Final Weight Input */}
+        <div className="flex flex-col items-center">
+          <label htmlFor="finalWeight" className="block font-semibold mb-2">
+            Final Weight ({weightUnit})
+          </label>
+          <input
+            type="text"
+            id="finalWeight"
+            value={finalWeight}
+            onChange={handleFinalWeightChange}
+            className="border border-gray-300 p-2 rounded w-[120px]"
+            required
+          />
+        </div>
+
+        {/* Heart Rating Section */}
+        <div className="flex flex-col gap-4 items-center">
+          <h2 className="text-center font-semibold">Rate this experience?</h2>
+          <div className="flex gap-2 mb-4">
+            {[1, 2, 3, 4, 5].map((heart) => (
+              <i
+                key={heart}
+                className={`fa-heart fa-solid fa-xl ${
+                  rating >= heart ? "text-pink-400" : "text-stone-300"
+                } cursor-pointer`}
+                onClick={() => setRating(heart)}
+              ></i>
+            ))}
+          </div>
+        </div>
+
+        {/* Div for pros and cons */}
+        <div className="flex flex-col gap-4 sm:flex-row py-2 justify-between">
+          {/* Pros Selection */}
+
+          <fieldset className="">
+            <legend className="block font-semibold">
+              Pros of the Diet Plan:
+            </legend>
+            {prosOptions.map((option) => (
+              <label key={option} className="block">
+                <input
+                  type="checkbox"
+                  value={option}
+                  checked={selectedPros.includes(option)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSelectedPros((prev) =>
+                      prev.includes(value)
+                        ? prev.filter((pro) => pro !== value)
+                        : [...prev, value]
+                    );
+                  }}
+                />
+                {option}
+              </label>
+            ))}
+            {selectedPros.includes("Other") && (
               <input
-                type="checkbox"
-                value={option}
-                checked={selectedPros.includes(option)}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setSelectedPros((prev) =>
-                    prev.includes(value)
-                      ? prev.filter((pro) => pro !== value)
-                      : [...prev, value]
-                  );
-                }}
+                type="text"
+                placeholder="Enter your own pro"
+                value={customPro}
+                onChange={handleCustomInputChange(
+                  customPro,
+                  setCustomPro,
+                  setProMessage
+                )}
+                className="border border-gray-300 p-2  rounded mt-2"
               />
-              {option}
-            </label>
-          ))}
-          {selectedPros.includes("Other") && (
-            <input
-              type="text"
-              placeholder="Enter your own pro"
-              value={customPro}
-              onChange={handleCustomInputChange(
-                customPro,
-                setCustomPro,
-                setProMessage
-              )}
-              className="border border-gray-300 p-2 w-full rounded mt-2"
-            />
-          )}
-          {proMessage && <p className="text-red-500">{proMessage}</p>}
-        </fieldset>
+            )}
+            {proMessage && <p className="text-red-500">{proMessage}</p>}
+          </fieldset>
 
-        {/* Cons Selection */}
-        <fieldset className="w-full">
-          <legend className="block font-semibold">
-            Cons of the Diet Plan:
-          </legend>
-          {consOptions.map((option) => (
-            <label key={option} className="block">
+          {/* Cons Selection */}
+
+          <fieldset className="ml-auto">
+            <legend className="block font-semibold">
+              Cons of the Diet Plan:
+            </legend>
+            {consOptions.map((option) => (
+              <label key={option} className="block">
+                <input
+                  type="checkbox"
+                  value={option}
+                  checked={selectedCons.includes(option)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSelectedCons((prev) =>
+                      prev.includes(value)
+                        ? prev.filter((con) => con !== value)
+                        : [...prev, value]
+                    );
+                  }}
+                />
+                {option}
+              </label>
+            ))}
+            {selectedCons.includes("Other") && (
               <input
-                type="checkbox"
-                value={option}
-                checked={selectedCons.includes(option)}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setSelectedCons((prev) =>
-                    prev.includes(value)
-                      ? prev.filter((con) => con !== value)
-                      : [...prev, value]
-                  );
-                }}
+                type="text"
+                placeholder="Enter your own con"
+                value={customCon}
+                onChange={handleCustomInputChange(
+                  customCon,
+                  setCustomCon,
+                  setConMessage
+                )}
+                className="border border-gray-300 p-2  rounded mt-2"
               />
-              {option}
-            </label>
-          ))}
-          {selectedCons.includes("Other") && (
-            <input
-              type="text"
-              placeholder="Enter your own con"
-              value={customCon}
-              onChange={handleCustomInputChange(
-                customCon,
-                setCustomCon,
-                setConMessage
-              )}
-              className="border border-gray-300 p-2 w-full rounded mt-2"
-            />
-          )}
-          {conMessage && <p className="text-red-500">{conMessage}</p>}
-        </fieldset>
-      </div>
-      {/* Option to add additional summary */}
-      <div className="flex flex-col gap-2 justify-center items-center">
-        <div className="relative flex flex-col p-2 gap-2 rounded-lg w-full">
+            )}
+            {conMessage && <p className="text-red-500">{conMessage}</p>}
+          </fieldset>
+        </div>
+
+        {/* Option to add additional summary */}
+        <div className="relative flex flex-col p-2 gap-2 rounded-lg">
           <h2 className="text-center font-semibold">
             Any reflection on this diet experience?
           </h2>
@@ -243,32 +268,13 @@ export default function FinalResultForm({
           />
         </div>
 
-        {/* Heart Rating Section */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-center font-semibold">Rate this experience?</h2>
-          <div className="flex gap-2 mb-6">
-            {[1, 2, 3, 4, 5].map((heart) => (
-              <i
-                key={heart}
-                className={`fa-heart fa-solid fa-xl ${
-                  rating >= heart ? "text-pink-400" : "text-stone-300"
-                } cursor-pointer`}
-                onClick={() => setRating(heart)}
-              ></i>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Submit Button */}
-      <div className="max-w-[400px] w-full mx-auto">
         <Button
-          clickHandler={handleSubmit}
+          type="submit"
           text={loading ? "Submitting" : "Submit"}
           full
           dark
         />
-      </div>
+      </form>
     </div>
   );
 }

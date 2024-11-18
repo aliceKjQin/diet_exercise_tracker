@@ -79,8 +79,8 @@ export default function NutritionResultsAnalysis() {
     <>
       <div className="flex">
         <h2 className="text-xl font-bold w-full">
-          Analyze Nutrition{" "}
-          <i className="fa-solid fa-chart-simple textGradient dark:text-blue-500"></i>
+          <i className="fa-solid fa-chart-simple textGradient dark:text-blue-500 mr-2"></i>
+          Analyze Nutrition
         </h2>
         <div id="edamam-badge" className="justify-end">
           <img

@@ -6,6 +6,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Loading from "../shared/Loading";
+import UpdateInputButton from "../shared/UpdateInputButton";
 
 export default function WeightProgressBar({
   startingWeight,
@@ -85,11 +86,11 @@ export default function WeightProgressBar({
 
   return (
     <div className="flex flex-col w-full gap-4 bg-indigo-400 p-4 rounded-lg text-white">
-      <h3 className="font-bold">
-        <i className="fa-solid fa-weight-scale"></i>{" "}
+      <h2 className="font-bold">
+        <i className="fa-solid fa-weight-scale mr-2"></i>
         {progressPercentage.toFixed(0)}% to Target Weight {targetWeight} (
         {weightUnit})
-      </h3>
+      </h2>
       {/* Progress Bar */}
       <div className="w-full bg-stone-200 rounded-full h-8 sm:h-12">
         <div
@@ -100,39 +101,40 @@ export default function WeightProgressBar({
 
       {/* Display Current Weight Input only for active diets */}
       {isActive ? (
-        <div className="flex flex-col justify-center items-center gap-2 font-semibold">
-          <label htmlFor="currentWeight">
-            Update Current Weight ({weightUnit}):
-          </label>
-          <div className="flex">
-            <input
-              type="text"
-              id="currentWeight"
-              value={inputWeight}
-              onChange={handleInputWeightChange}
-              className="w-20 p-2 border rounded text-stone-700"
-            />
-            <button
-              onClick={handleSaveWeight}
-              className="bg-pink-400 text-white px-3 py-1 rounded font-bold"
-            >
-              Update
-            </button>
+        <>
+          {/* update currentWeight field */}
+          <div className="flex mx-auto flex-col gap-2 font-semibold">
+            <label htmlFor="currentWeight" className="text-center">
+              Current Weight ({weightUnit}):
+            </label>
+            <div className="relative flex">
+              <input
+                type="text"
+                id="currentWeight"
+                value={inputWeight}
+                onChange={handleInputWeightChange}
+                className="flex-1 p-2 border border-solid text-stone-700 border-pink-300 rounded-full outline-none"
+              />
+              <UpdateInputButton
+                onClick={handleSaveWeight}
+                className="bg-pink-400 hover:bg-pink-300 w-24"
+              />
+            </div>
           </div>
+          {/*  loading and message state */}
           {loading && <Loading />}
           {error && (
-            <p className="text-red-500">
+            <p className="text-red-500 flex-1 text-center">
               {error} <i className="fa-regular fa-circle-xmark fa-lg"></i>
             </p>
           )}
-
           {successMessage && (
-            <p className="text-green-200">
+            <p className="text-green-200 flex-1 text-center">
               {successMessage}{" "}
-              <i className="fa-regular fa-square-check fa-lg"></i>{" "}
+              <i className="fa-regular fa-square-check fa-lg"></i>
             </p>
           )}
-        </div>
+        </>
       ) : (
         <p className="font-semibold text-center">
           {" "}

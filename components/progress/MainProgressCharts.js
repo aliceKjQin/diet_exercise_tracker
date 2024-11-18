@@ -97,10 +97,10 @@ export default function MainProgressCharts({
     <div className="flex flex-col gap-4 bg-indigo-400 p-4 text-white w-full rounded-lg">
       {/* Display daysLeft for active diet, display diet duration if inactive */}
       {isActive ? (
-        <p className="font-bold">
-          <i className="fa-regular fa-calendar"></i> {daysLeft} Days Left |
+        <h2 className="font-bold">
+          <i className="fa-regular fa-calendar mr-2"></i>{daysLeft} Days Left |
           Target: {targetDays} (D)
-        </p>
+        </h2>
       ) : (
         <p className="font-bold">Duration: {targetDays} Days</p>
       )}
