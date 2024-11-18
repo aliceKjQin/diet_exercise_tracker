@@ -6,7 +6,6 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import Loading from "@/components/shared/Loading";
-import Button from "../shared/Button";
 
 export default function UploadImage({ dietName, onNewImageUpload }) {
   const [image, setImage] = useState(null);
@@ -90,10 +89,10 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
   if (loading) return <Loading />;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mr-4">
+    <form onSubmit={handleSubmit} className="space-y-4 mr-2">
       {/*  file field */}
       <div>
-        <label className="block font-semibold text-center mb-1" htmlFor="date">
+        <label className="block font-semibold mb-1" htmlFor="date">
           Select an image
         </label>
         <input
@@ -103,8 +102,8 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
         />
       </div>
       {/*  date field */}
-      <div>
-        <label className="block font-semibold text-center mb-1" htmlFor="date">
+      <div className="">
+        <label className="block font-semibold mb-1" htmlFor="date">
           Select a date
         </label>
         <input
@@ -113,7 +112,7 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
           value={date}
           onChange={(e) => setDate(e.target.value)}
           className="block p-2 rounded-md bg-indigo-400 w-full border-
-        outline-none ring-2 ring-lime-200 mb-2"
+        outline-none ring-2 ring-lime-200 mb-1"
         />
       </div>
 
@@ -129,10 +128,9 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
           </p>
         )}
 
-        <button className="w-full p-2 bg-pink-400 rounded-full font-bold">
+        <button type="submit" className="w-full p-2 bg-pink-400 hover:bg-pink-300 rounded-full font-bold">
           Upload Image
         </button>
-      
     </form>
   );
   t;

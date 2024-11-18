@@ -51,7 +51,7 @@ export default function HistoryPage() {
         <div className="flex flex-col">
           {/* loading, success, error state section */}
           {loading && <Loading />}
-          {success && <p className="text-center text-emerald-500 transition duration-200">{success} <i className="fa-regular fa-square-check  fa-xl"></i></p>}
+          {success && <p className="p-2 text-center text-emerald-500 transition duration-200">{success} <i className="fa-regular fa-square-check  fa-xl"></i></p>}
           {errorMessage && (
             <p className="text-center text-red-500">{errorMessage} <i class="fa-regular fa-circle-xmark fa-xl"></i></p>
           )}

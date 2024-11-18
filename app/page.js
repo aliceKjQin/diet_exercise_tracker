@@ -229,7 +229,7 @@ export default function HomePage() {
 
           <Link
             href={`/dashboard/${dietName}`}
-            className="bg-emerald-400 hover:bg-emerald-500 text-white font-bold text-lg text-center py-2 px-4 rounded-full mt-8"
+            className="bg-emerald-400 hover:bg-emerald-500 text-white font-bold text-lg text-center py-2 px-4 rounded-full mt-2"
           >
             View Dashboard
           </Link>

@@ -176,7 +176,7 @@ export default function ProgressPage() {
                 </div>
               ))}
               {/* Positioned Upload Image Button */}
-              <div className="inline-block w-[270px] h-[300px] p-2 mt-10">
+              <div className="inline-block w-[270px] h-[300px] p-2 mt-8">
                 <UploadImage
                   dietName={dietName}
                   onNewImageUpload={addNewImage}
