@@ -260,7 +260,7 @@ export default function MainProgressCharts({
           aria-labelledby="popup-title"
           aria-describedby="popup-description"
         >
-          <div className="bg-indigo-500 text-white p-6 rounded-lg shadow-lg w-96 text-center">
+          <div className="bg-indigo-500 text-white p-6 rounded-lg shadow-lg w-96 text-center ring-2 ring-lime-300">
             <h2 id="popup-title" className="text-lg font-bold mb-4 capitalize">
               {`${dietName} Diet Complete!`}
             </h2>

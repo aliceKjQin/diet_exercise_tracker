@@ -218,17 +218,23 @@ export default function HomePage() {
           {/* loading, error, success status */}
           {loading && <Loading />}
           {errorMessage && (
-            <p className="text-red-500 text-center">{errorMessage} <i class="fa-regular fa-circle-xmark fa-lg"></i></p>
+            <p className="text-red-500 text-center">
+              {errorMessage} <i class="fa-regular fa-circle-xmark fa-lg"></i>
+            </p>
           )}
           {successMessage && (
-            <p className="text-emerald-500 text-center">{successMessage} <i className="fa-regular fa-square-check  fa-lg"></i></p>
+            <p className="text-emerald-500 text-center">
+              {successMessage}{" "}
+              <i className="fa-regular fa-square-check  fa-lg"></i>
+            </p>
           )}
 
-          <button className="bg-emerald-400 text-white font-bold text-lg py-2 px-4 rounded-full mt-8">
-            <Link href={`/dashboard/${dietName}`}>
-              <span className="block text-center">View Dashboard</span>
-            </Link>
-          </button>
+          <Link
+            href={`/dashboard/${dietName}`}
+            className="bg-emerald-400 text-white font-bold text-lg text-center py-2 px-4 rounded-full mt-8"
+          >
+            View Dashboard
+          </Link>
 
           <button
             onClick={handleShowRemoveActive}

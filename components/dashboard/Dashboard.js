@@ -254,18 +254,15 @@ export default function Dashboard() {
   return (
     <>
       <div className="flex gap-4 mb-6 justify-center sm:justify-start">
-        <div className="flex font-bold ring-2 ring-indigo-300 hover:ring-pink-300 shadow-lg rounded-full p-2">
-          <Link href={`/pantry`}>
+          <Link href={`/pantry`} className="flex font-bold ring-2 ring-indigo-300 hover:ring-green-400 shadow-lg rounded-full p-2">
             View Pantry{" "}
             <i className="fa-solid fa-basket-shopping textGradient dark:text-blue-500"></i>
           </Link>
-        </div>
-        <div className="flex font-bold ring-2 ring-indigo-300 hover:ring-pink-300 shadow-lg rounded-full p-2">
-          <Link href={`/progress/${activeDiet?.name}`}>
+  
+          <Link href={`/progress/${activeDiet?.name}`} className="flex font-bold ring-2 ring-indigo-300 hover:ring-green-400 shadow-lg rounded-full p-2">
             View Progress{" "}
             <i className="fa-solid fa-arrow-trend-up textGradient dark:text-blue-500"></i>
           </Link>
-        </div>
       </div>
 
       <div className="flex flex-col flex-1 gap-4 sm:gap-6">
