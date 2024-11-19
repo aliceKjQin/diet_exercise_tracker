@@ -22,11 +22,11 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
         value={noteInputValue}
         onChange={(e) => setNoteInputValue(e.target.value)}
         placeholder="Type any notes on your diet, exercise, or feelings today"
-        className="bg-purple-200 dark:bg-sky-200 text-stone-700 border-2 border-purple-300 dark:border-blue-300 p-2 rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-blue-500"
-        rows={2}
+        className="bg-purple-200 dark:bg-sky-200 text-stone-700 border-2 border-purple-300 dark:border-blue-300 p-2 rounded-md  focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-blue-500"
+        rows={15}
         autoFocus
       />
-      <div className="flex gap-4 mt-auto max-w-[400px]">
+      <div className="flex gap-4 mx-auto max-w-[400px]">
         <Button
           clickHandler={handleSubmit}
           text={initialNote ? "Update" : "Save"}

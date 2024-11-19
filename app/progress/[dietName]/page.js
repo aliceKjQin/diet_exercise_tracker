@@ -135,7 +135,7 @@ export default function ProgressPage() {
           isActive
         />
 
-        {/* Horizontally Scrollable Image Gallery */}
+        {/* Transformation Gallery */}
         {images.length > 0 ? (
           <div className="w-full overflow-x-auto p-4 whitespace-nowrap bg-indigo-400 rounded-lg shadow-md text-white">
             {/* Title */}
