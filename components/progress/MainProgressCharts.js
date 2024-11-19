@@ -264,14 +264,16 @@ export default function MainProgressCharts({
             <h2 id="popup-title" className="text-lg font-bold mb-4 capitalize">
               {`${dietName} Diet Complete!`}
             </h2>
-            <p id="popup-description" className="mb-4 gap-2">
+            <p id="popup-description" className="gap-2">
               <Link
                 href={`/complete/${dietName}`}
-                className="text-lime-300 font-bold"
+                className="text-lime-300 font-bold block mb-6"
               >
                 Go enter your final result{" "}
                 <i className="fa-regular fa-flag"></i>
               </Link>
+
+              <Link href={'/'} className="p-2 text-stone-300 block">Extend the diet?</Link>
             </p>
           </div>
         </div>
