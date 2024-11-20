@@ -79,7 +79,7 @@ export default function HistoryPageForSpecifiedDiet() {
           finalWeight={specifiedDiet.details.currentWeight}
           targetWeight={specifiedDiet.details.targetWeight}
           userId={user.uid}
-          dietName={specifiedDiet.name}
+          inactiveDiet ={specifiedDiet}
           isActive={false}
         />
 

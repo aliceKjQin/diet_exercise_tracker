@@ -12,7 +12,7 @@ export default function WeightProgressBar({
   startingWeight,
   targetWeight,
   userId,
-  dietName,
+  inactiveDiet,
   isActive,
   finalWeight,
 }) {
@@ -27,12 +27,20 @@ export default function WeightProgressBar({
   const { weightUnit } = useWeightUnit();
   const { activeDiet, refetchActiveDiet } = useAuth();
 
+  // fetch currentWeight of activeDiet for progress page view 
   useEffect(() => {
     if (activeDiet) {
-      setCurrentWeight(activeDiet.details?.currentWeight || ""); // reset for progressBar
-      setInputWeight(activeDiet.details?.currentWeight || ""); // reset for input field
+      setCurrentWeight(activeDiet.details?.currentWeight || ""); // for progressBar
+      setInputWeight(activeDiet.details?.currentWeight || ""); // for input field
     }
   }, [activeDiet]);
+
+  // fetch currentWeight of inactiveDiet from db for history review page
+ useEffect(() => {
+    if (inactiveDiet) {
+      setCurrentWeight(inactiveDiet.details?.currentWeight)
+    }
+  }, [inactiveDiet])
 
   // Handle currentWeight input change
   const handleInputWeightChange = (e) => {
@@ -69,7 +77,7 @@ export default function WeightProgressBar({
     try {
       const userDocRef = doc(db, "users", userId);
       await updateDoc(userDocRef, {
-        [`diets.${dietName}.currentWeight`]: parseFloat(inputWeight),
+        [`diets.${activeDiet.name}.currentWeight`]: parseFloat(inputWeight),
       });
       await refetchActiveDiet();
       setCurrentWeight(inputWeight); // Update currentWeight for progressBar
