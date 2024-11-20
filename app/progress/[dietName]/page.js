@@ -151,6 +151,7 @@ export default function ProgressPage() {
           images={images}
           dietName={dietName}
           addNewImage={addNewImage}
+          deleteImage={deleteImage}
           isActive
         />
       </div>

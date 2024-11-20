@@ -1,10 +1,12 @@
 import React from "react";
 import UploadImage from "../progress/UploadImage";
+import Loading from "./Loading";
 
 export default function TransformationGallery({
   images,
   dietName,
   addNewImage,
+  deleteImage,
   isActive,
 }) {
   return (
