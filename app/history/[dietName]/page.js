@@ -3,24 +3,24 @@
 import { useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useInactiveDiet } from "@/hooks/useInactiveDiet";
-import { useState } from "react";
 import useProgressData from "@/hooks/useProgressData";
 import Loading from "@/components/shared/Loading";
 import Main from "@/components/shared/Main";
 import MainProgressCharts from "@/components/progress/MainProgressCharts";
 import WeightProgressBar from "@/components/progress/WeightProgressBar";
 import Login from "@/components/shared/Login";
-import Button from "@/components/shared/Button";
-import Image from "next/image";
+import { useNote } from "@/hooks/useNote";
 
 export default function HistoryPageForSpecifiedDiet() {
   const { user, loading: loadingUser } = useAuth();
   const { inactiveDiets, loading: loadingInactiveDiets } =
     useInactiveDiet(user);
   const { dietName: encodedDietName } = useParams();
-  const dietName = decodeURIComponent(encodedDietName);
+  const dietName = decodeURIComponent(encodedDietName); // Decode back to original dietName that matched the db
   const specifiedDiet = inactiveDiets.find((diet) => diet.name === dietName);
   const { data, loading: loadingProgressData } = useProgressData(specifiedDiet);
+  const { notes } = useNote(user?.uid, dietName);
+  console.log("Notes: ", notes);
 
   console.log(inactiveDiets);
   console.log("Specified diet data: ", specifiedDiet);
@@ -53,8 +53,8 @@ export default function HistoryPageForSpecifiedDiet() {
           <div className="w-full overflow-x-auto p-4 whitespace-nowrap bg-indigo-400 rounded-lg shadow-md text-white">
             {/* Title */}
             <h2 className="font-bold">
-              <i className="fa-solid fa-camera-retro"></i> Document Your
-              Transformation
+              <i className="fa-solid fa-camera-retro mr-2"></i>
+              Transformation Gallery
             </h2>
 
             {images.map((image, index) => (
@@ -62,15 +62,26 @@ export default function HistoryPageForSpecifiedDiet() {
                 <div className="flex flex-col items-center gap-2">
                   <p className="text-sm mr-2">{image.date}</p>
                   <img
-                      src={image.url}
-                      alt={`Progress Image ${index}`}
-                      className="w-full h-[320px] object-cover rounded-lg ring ring-lime-300 bg-white"
-                    />
+                    src={image.url}
+                    alt={`Progress Image ${index}`}
+                    className="w-full h-[320px] object-cover rounded-lg ring ring-lime-300 bg-white"
+                  />
                 </div>
               </div>
             ))}
           </div>
         )}
+
+
+        {/* Weight Progress Bar */}
+        <WeightProgressBar
+          startingWeight={specifiedDiet.details.initialWeight}
+          finalWeight={specifiedDiet.details.currentWeight}
+          targetWeight={specifiedDiet.details.targetWeight}
+          userId={user.uid}
+          dietName={specifiedDiet.name}
+          isActive={false}
+        />
 
         {/* Section for summary, heart rating and pros & cons */}
         <div className="flex flex-col gap-6 items-center">
@@ -124,6 +135,7 @@ export default function HistoryPageForSpecifiedDiet() {
           )}
         </div>
 
+
         {/* Days ProgressBar */}
         <MainProgressCharts
           diet={specifiedDiet}
@@ -133,15 +145,27 @@ export default function HistoryPageForSpecifiedDiet() {
           isActive={false}
         />
 
-        {/* Weight Progress Bar */}
-        <WeightProgressBar
-          startingWeight={specifiedDiet.details.initialWeight}
-          finalWeight={specifiedDiet.details.currentWeight}
-          targetWeight={specifiedDiet.details.targetWeight}
-          userId={user.uid}
-          dietName={specifiedDiet.name}
-          isActive={false}
-        />
+        {/* Review Note Section */}
+        {notes.length > 0 && (
+          <div className="w-full p-4 bg-indigo-400 text-stone-700">
+            <h2 className="font-bold text-lg text-white">
+              <i className="fa-regular fa-note-sticky mr-2"></i>Review Notes
+            </h2>
+            <div className="flex flex-col gap-4 mt-4">
+              {notes.map((note, index) => (
+                <div
+                  key={index}
+                  className="p-3 bg-yellow-200 shadow-sm rounded-lg flex flex-col"
+                >
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm font-semibold">{note.date}</p>
+                  </div>
+                  <p className="mt-1">{note.note}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </Main>
   );

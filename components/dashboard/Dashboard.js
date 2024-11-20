@@ -112,12 +112,13 @@ export default function Dashboard() {
       // Update local state
       setActiveDietData(newDietData);
 
-      // Update userDataObj with the new diet data
+
+      // update global state: userDataObj with the new diet data
       const updatedDietPlan = {
         ...userDataObj.diets[dietName],
         dietData: newDietData,
       };
-      // update global state
+      
       setUserDataObj({
         ...userDataObj,
         diets: {
