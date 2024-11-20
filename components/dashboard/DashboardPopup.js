@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
-export default function Popup({day, month , year, dietName}) {
+export default function DashboardPopup({day, month , year, dietName}) {
   const [showPopup, setShowPopup] = useState(false);
   const { activeDiet, setActiveDiet, user } = useAuth();
 

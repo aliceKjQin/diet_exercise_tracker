@@ -12,8 +12,9 @@ import Button from "@/components/sharedUI/Button";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import ReasonModal from "@/components/dashboard/ReasonModal";
-import Popup from "./popup";
 import TooltipNwarning from "./TooltipNwarning";
+import DashboardPopup from "./DashboardPopup";
+
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -300,7 +301,7 @@ export default function Dashboard() {
 
         <Calendar completeData={activeDietData} onNoteClick={onNoteClick} />
 
-        <Popup day={day} month={month} year={year}  dietName={dietName}/>
+        <DashboardPopup day={day} month={month} year={year}  dietName={dietName}/>
 
       </div>
     </>
