@@ -175,7 +175,7 @@ export default function ProgressPage() {
                   </div>
                 </div>
               ))}
-              {/* Positioned Upload Image Button */}
+              {/* Upload Image Button */}
               <div className="inline-block w-[270px] h-[300px] p-2 mt-8">
                 <UploadImage
                   dietName={dietName}

@@ -252,7 +252,7 @@ export default function MainProgressCharts({
       </div>
 
       {/* Show popup when daysLeft <= 0 */}
-      {daysLeft <= 0 && isActive && (
+      {(daysLeft <= 0 && isActive) && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50"
           role="dialog"
