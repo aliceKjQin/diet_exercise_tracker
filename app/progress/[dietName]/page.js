@@ -136,7 +136,7 @@ export default function ProgressPage() {
         />
 
         {/* Transformation Gallery */}
-        {images.length > 0 ? (
+         
           <div className="w-full overflow-x-auto p-4 whitespace-nowrap bg-indigo-400 rounded-lg shadow-md text-white">
             {/* Title */}
             <h2 className="font-bold">
@@ -184,18 +184,7 @@ export default function ProgressPage() {
               </div>
             </div>
           </div>
-        ) : (
-          <div className="p-4 bg-indigo-400 w-full rounded-lg text-white ring-2 ring-lime-300">
-            {/* Title */}
-            <h2 className="font-bold">
-              <i className="fa-solid fa-camera-retro mr-2"></i>Document Your
-              Transformation
-            </h2>
-            <div className=" w-[270px] p-1 mx-auto mt-2">
-              <UploadImage dietName={dietName} onNewImageUpload={addNewImage} />
-            </div>
-          </div>
-        )}
+        
       </div>
     </Main>
   );
