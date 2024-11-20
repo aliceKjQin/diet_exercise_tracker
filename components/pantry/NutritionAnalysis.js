@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import MacroProgressBar from "./MacroProgressBar";
 import { useAuth } from "@/contexts/AuthContext";
-import Button from "@/components/shared/Button";
+import Button from "@/components/sharedUI/Button";
 
 export default function NutritionResultsAnalysis() {
   const [ingredientList, setIngredientList] = useState(""); // Raw textarea input

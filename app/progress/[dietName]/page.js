@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import MainProgressCharts from "@/components/progress/MainProgressCharts";
-import Loading from "@/components/shared/Loading";
-import Main from "@/components/shared/Main";
+import Loading from "@/components/sharedUI/Loading";
+import Main from "@/components/sharedUI/Main";
 import UploadImage from "@/components/progress/UploadImage";
 import Link from "next/link";
 import WeightProgressBar from "@/components/progress/WeightProgressBar";
-import Login from "@/components/shared/Login";
+import Login from "@/components/core/Login";
 import { db, storage } from "@/firebase";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
@@ -18,7 +18,11 @@ import TransformationGallery from "@/components/sharedUI/TransformationGallery";
 
 export default function ProgressPage() {
   const { user, activeDiet, loading: loadingUser } = useAuth();
-  const { notes, deleteNote, loading: loadingNotes } = useNote(user?.uid, activeDiet?.name);
+  const {
+    notes,
+    deleteNote,
+    loading: loadingNotes,
+  } = useNote(user?.uid, activeDiet?.name);
   const [images, setImages] = useState([]);
   const [targetDays, setTargetDays] = useState(null);
   const [dietData, setDietData] = useState({});
@@ -39,7 +43,6 @@ export default function ProgressPage() {
       );
     }
   }, [activeDiet]);
-
 
   const addNewImage = (newImage) => {
     setImages((prev) => [
@@ -144,8 +147,12 @@ export default function ProgressPage() {
         <ReviewNotes notes={notes} loadingNotes={loadingNotes} />
 
         {/* Transformation Gallery */}
-        <TransformationGallery images={images} dietName={dietName} addNewImage={addNewImage} isActive/>
-        
+        <TransformationGallery
+          images={images}
+          dietName={dietName}
+          addNewImage={addNewImage}
+          isActive
+        />
       </div>
     </Main>
   );

@@ -2,7 +2,7 @@
 
 import { Roboto } from "next/font/google";
 import React, { useState } from "react";
-import Button from "@/components/shared/Button";
+import Button from "@/components/sharedUI/Button";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 

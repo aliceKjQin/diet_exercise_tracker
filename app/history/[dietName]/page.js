@@ -4,11 +4,11 @@ import { useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useInactiveDiet } from "@/hooks/useInactiveDiet";
 import useProgressData from "@/hooks/useProgressData";
-import Loading from "@/components/shared/Loading";
-import Main from "@/components/shared/Main";
+import Loading from "@/components/sharedUI/Loading";
+import Main from "@/components/sharedUI/Main";
 import MainProgressCharts from "@/components/progress/MainProgressCharts";
 import WeightProgressBar from "@/components/progress/WeightProgressBar";
-import Login from "@/components/shared/Login";
+import Login from "@/components/core/Login";
 import { useNote } from "@/hooks/useNote";
 import ReviewNotes from "@/components/sharedUI/ReviewNotes";
 import TransformationGallery from "@/components/sharedUI/TransformationGallery";
@@ -47,10 +47,7 @@ export default function HistoryPageForSpecifiedDiet() {
         </h3>
 
         {/* Transformation gallery */}
-        {images.length > 0 && (
-          <TransformationGallery images={images} />
-        )}
-
+        {images.length > 0 && <TransformationGallery images={images} />}
 
         {/* Weight Progress Bar */}
         <WeightProgressBar
@@ -58,7 +55,7 @@ export default function HistoryPageForSpecifiedDiet() {
           finalWeight={specifiedDiet.details.currentWeight}
           targetWeight={specifiedDiet.details.targetWeight}
           userId={user.uid}
-          inactiveDiet ={specifiedDiet}
+          inactiveDiet={specifiedDiet}
         />
 
         {/* Section for summary, heart rating and pros & cons */}
@@ -113,7 +110,6 @@ export default function HistoryPageForSpecifiedDiet() {
           )}
         </div>
 
-
         {/* Days ProgressBar */}
         <MainProgressCharts
           diet={specifiedDiet}
@@ -124,7 +120,7 @@ export default function HistoryPageForSpecifiedDiet() {
         />
 
         {/* Review Note Section */}
-        <ReviewNotes notes={notes} loadingNotes={loadingNotes}/>
+        <ReviewNotes notes={notes} loadingNotes={loadingNotes} />
       </div>
     </Main>
   );

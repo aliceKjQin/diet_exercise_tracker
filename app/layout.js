@@ -2,7 +2,7 @@ import { Open_Sans, Roboto } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
-import Navbar from "@/components/shared/Navbar";
+import Navbar from "@/components/core/Navbar";
 import { WeightUnitProvider } from "@/contexts/WeightUnitContext";
 import Script from "next/script";
 
@@ -53,7 +53,10 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        <script src="https://developer.edamam.com/attribution/badge.js" defer></script>
+        <script
+          src="https://developer.edamam.com/attribution/badge.js"
+          defer
+        ></script>
       </head>
       <body
         className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col ${opensans.className} bg-purple-50 dark:bg-sky-50 text-stone-700`}

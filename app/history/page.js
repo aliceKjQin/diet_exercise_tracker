@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { useInactiveDiet } from "@/hooks/useInactiveDiet";
 import { useDeleteDiet } from "@/hooks/useDeleteDiet";
 import { useAuth } from "@/contexts/AuthContext";
-import Main from "@/components/shared/Main";
-import Button from "@/components/shared/Button";
-import Loading from "@/components/shared/Loading";
+import Main from "@/components/sharedUI/Main";
+import Button from "@/components/sharedUI/Button";
+import Loading from "@/components/sharedUI/Loading";
 import Link from "next/link";
-import ConfirmModal from "@/components/shared/ConfirmModal";
+import ConfirmModal from "@/components/sharedUI/ConfirmModal";
 
 export default function HistoryPage() {
   const [selectedDiet, setSelectedDiet] = useState(null);
@@ -51,9 +51,15 @@ export default function HistoryPage() {
         <div className="flex flex-col">
           {/* loading, success, error state section */}
           {loading && <Loading />}
-          {success && <p className="p-2 text-center text-emerald-500 transition duration-200">{success} <i className="fa-regular fa-square-check  fa-xl"></i></p>}
+          {success && (
+            <p className="p-2 text-center text-emerald-500 transition duration-200">
+              {success} <i className="fa-regular fa-square-check  fa-xl"></i>
+            </p>
+          )}
           {errorMessage && (
-            <p className="text-center text-red-500">{errorMessage} <i class="fa-regular fa-circle-xmark fa-xl"></i></p>
+            <p className="text-center text-red-500">
+              {errorMessage} <i class="fa-regular fa-circle-xmark fa-xl"></i>
+            </p>
           )}
 
           <div className=" flex flex-col gap-4 sm:gap-8 sm:text-xl">

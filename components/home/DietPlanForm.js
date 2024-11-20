@@ -5,9 +5,9 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import Loading from "../shared/Loading";
+import Loading from "../sharedUI/Loading";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
-import Button from "../shared/Button";
+import Button from "../sharedUI/Button";
 
 export default function DietPlanForm() {
   const [dietPlan, setDietPlan] = useState({
@@ -224,7 +224,7 @@ export default function DietPlanForm() {
             {error}
           </div>
         )}
-        <Button type="submit" text="Submit" dark full/>
+        <Button type="submit" text="Submit" dark full />
       </form>
     </div>
   );

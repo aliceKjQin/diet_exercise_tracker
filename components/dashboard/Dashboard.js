@@ -4,11 +4,11 @@ import { Roboto } from "next/font/google";
 import React, { useEffect, useState } from "react";
 import Calendar from "./Calendar";
 import { useAuth } from "@/contexts/AuthContext";
-import Loading from "@/components/shared/Loading";
-import Login from "@/components/shared/Login";
+import Loading from "@/components/sharedUI/Loading";
+import Login from "@/components/core/Login";
 import { db } from "@/firebase";
 import NoteModal from "@/components/dashboard/NoteModal";
-import Button from "@/components/shared/Button";
+import Button from "@/components/sharedUI/Button";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import ReasonModal from "@/components/dashboard/ReasonModal";
@@ -112,13 +112,12 @@ export default function Dashboard() {
       // Update local state
       setActiveDietData(newDietData);
 
-
       // update global state: userDataObj with the new diet data
       const updatedDietPlan = {
         ...userDataObj.diets[dietName],
         dietData: newDietData,
       };
-      
+
       setUserDataObj({
         ...userDataObj,
         diets: {

@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import Button from "@/components/shared/Button";
+import Button from "@/components/sharedUI/Button";
 import Link from "next/link";
-import Loading from "@/components/shared/Loading";
+import Loading from "@/components/sharedUI/Loading";
 
 export default function MacroGoals() {
   const [proteinGoal, setProteinGoal] = useState("");

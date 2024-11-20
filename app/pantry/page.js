@@ -1,5 +1,5 @@
 import MacroGoals from "@/components/pantry/MacroGoals";
-import Main from "@/components/shared/Main";
+import Main from "@/components/sharedUI/Main";
 import Pantry from "@/components/pantry/MyPantry";
 import NutritionResultsAnalysis from "@/components/pantry/NutritionAnalysis";
 import React from "react";

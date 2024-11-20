@@ -1,7 +1,7 @@
 "use client";
 
 import { Roboto } from "next/font/google";
-import Button from "@/components/shared/Button";
+import Button from "@/components/sharedUI/Button";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";

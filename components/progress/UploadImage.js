@@ -5,7 +5,7 @@ import { storage, db } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
-import Loading from "@/components/shared/Loading";
+import Loading from "@/components/sharedUI/Loading";
 
 export default function UploadImage({ dietName, onNewImageUpload }) {
   const [image, setImage] = useState(null);
@@ -116,21 +116,23 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
         />
       </div>
 
-      
-        {error && (
-          <p className="text-red-200 text-center text-wrap">
-            {error} <i class="fa-regular fa-circle-xmark fa-lg"></i>
-          </p>
-        )}
-        {success && (
-          <p className="text-emerald-200 text-center transition duration-200">
-            {success} <i className="fa-regular fa-square-check  fa-lg"></i>
-          </p>
-        )}
+      {error && (
+        <p className="text-red-200 text-center text-wrap">
+          {error} <i class="fa-regular fa-circle-xmark fa-lg"></i>
+        </p>
+      )}
+      {success && (
+        <p className="text-emerald-200 text-center transition duration-200">
+          {success} <i className="fa-regular fa-square-check  fa-lg"></i>
+        </p>
+      )}
 
-        <button type="submit" className="w-full p-2 bg-pink-400 hover:bg-pink-300 rounded-full font-bold">
-          Upload Image
-        </button>
+      <button
+        type="submit"
+        className="w-full p-2 bg-pink-400 hover:bg-pink-300 rounded-full font-bold"
+      >
+        Upload Image
+      </button>
     </form>
   );
   t;

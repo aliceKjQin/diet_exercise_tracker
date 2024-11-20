@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import Button from "../shared/Button";
+import Button from "../sharedUI/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
 

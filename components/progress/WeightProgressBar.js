@@ -5,8 +5,8 @@ import { db } from "@/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
 import { useAuth } from "@/contexts/AuthContext";
-import Loading from "../shared/Loading";
-import UpdateInputButton from "../shared/UpdateInputButton";
+import Loading from "../sharedUI/Loading";
+import UpdateInputButton from "../sharedUI/UpdateInputButton";
 
 export default function WeightProgressBar({
   startingWeight,
@@ -27,7 +27,7 @@ export default function WeightProgressBar({
   const { weightUnit } = useWeightUnit();
   const { activeDiet, refetchActiveDiet } = useAuth();
 
-  // fetch currentWeight of activeDiet for progress page view 
+  // fetch currentWeight of activeDiet for progress page view
   useEffect(() => {
     if (activeDiet) {
       setCurrentWeight(activeDiet.details?.currentWeight || ""); // for progressBar
@@ -36,11 +36,11 @@ export default function WeightProgressBar({
   }, [activeDiet]);
 
   // fetch currentWeight of inactiveDiet from db for history review page
- useEffect(() => {
+  useEffect(() => {
     if (inactiveDiet) {
-      setCurrentWeight(inactiveDiet.details?.currentWeight)
+      setCurrentWeight(inactiveDiet.details?.currentWeight);
     }
-  }, [inactiveDiet])
+  }, [inactiveDiet]);
 
   // Handle currentWeight input change
   const handleInputWeightChange = (e) => {

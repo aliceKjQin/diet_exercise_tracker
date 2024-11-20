@@ -1,4 +1,4 @@
-'use client'
+
 
 const ConfirmModal = ({ onConfirm, onCancel }) => (
     <div className="flex flex-col gap-4">

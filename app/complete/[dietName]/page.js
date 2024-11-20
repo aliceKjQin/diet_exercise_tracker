@@ -1,7 +1,7 @@
 "use client";
 
 import FinalResultForm from "@/components/complete/FinalResultForm";
-import Main from "@/components/shared/Main";
+import Main from "@/components/sharedUI/Main";
 import { useAuth } from "@/contexts/AuthContext";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,8 @@ export default function CompletePage() {
       />
       {isSaved ? (
         <p className="text-center text-emerald-500 mt-2 transition duration-200">
-          Your final result has been saved successfully! <i className="fa-regular fa-square-check  fa-lg"></i>
+          Your final result has been saved successfully!{" "}
+          <i className="fa-regular fa-square-check  fa-lg"></i>
         </p>
       ) : (
         ""

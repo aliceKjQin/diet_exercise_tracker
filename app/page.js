@@ -1,17 +1,17 @@
 "use client";
 
 import DietPlanForm from "@/components/home/DietPlanForm";
-import Main from "@/components/shared/Main";
+import Main from "@/components/sharedUI/Main";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDeleteDiet } from "@/hooks/useDeleteDiet";
 import { useEffect, useState } from "react";
-import ConfirmModal from "@/components/shared/ConfirmModal";
-import Loading from "@/components/shared/Loading";
+import ConfirmModal from "@/components/sharedUI/ConfirmModal";
+import Loading from "@/components/sharedUI/Loading";
 import { db } from "@/firebase";
 import Link from "next/link";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
-import UpdateInputButton from "@/components/shared/UpdateInputButton";
+import UpdateInputButton from "@/components/sharedUI/UpdateInputButton";
 
 export default function HomePage() {
   const [showConfirmation, setShowConfirmation] = useState(false);

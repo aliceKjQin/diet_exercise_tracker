@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePantry } from "@/hooks/usePantry";
-import Button from "@/components/shared/Button";
+import Button from "@/components/sharedUI/Button";
 
 export default function MyPantry() {
   const { user, activeDiet } = useAuth();

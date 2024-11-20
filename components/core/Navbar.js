@@ -5,7 +5,7 @@ import { Roboto } from "next/font/google";
 import Link from "next/link";
 import ThemeToggle from "@/components/core/ThemeToggle";
 import { useRouter } from "next/navigation";
-import Loading from "./Loading";
+import Loading from "../sharedUI/Loading";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
