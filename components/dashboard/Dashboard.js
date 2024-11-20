@@ -12,6 +12,8 @@ import Button from "@/components/sharedUI/Button";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import ReasonModal from "@/components/dashboard/ReasonModal";
+import Popup from "./popup";
+import TooltipNwarning from "./TooltipNwarning";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -22,10 +24,8 @@ export default function Dashboard() {
     setUserDataObj,
     activeDiet,
     refetchActiveDiet,
-    setActiveDiet,
     loading: loadingUser,
   } = useAuth();
-  const [showPopup, setShowPopup] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedDayNote, setSelectedDayNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false);
@@ -33,8 +33,6 @@ export default function Dashboard() {
   const [dietName, setDietName] = useState("");
   const [showReasonModal, setShowReasonModal] = useState(false);
   const [reasonType, setReasonType] = useState("");
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-  const [showWarning, setShowWarning] = useState(true);
 
   const now = new Date();
   const day = now.getDate();
@@ -46,51 +44,10 @@ export default function Dashboard() {
     if (activeDiet) {
       setActiveDietData(activeDiet.details?.dietData);
       setDietName(activeDiet.name);
-
-      const lastLoggedDate = activeDiet.details?.lastLoggedDate;
-      const today = `${year}-${month + 1}-${day}`; // Format:YYYY-MM-DD
-
-      if (lastLoggedDate !== today) {
-        setShowPopup(true); // Show popup if the user hasn't logged today
-      }
     }
-  }, [activeDiet, day, month, year]);
+  }, [activeDiet]);
 
   const currentDayData = activeDietData?.[year]?.[month]?.[day];
-
-  const handleDismissPopup = async () => {
-    const today = `${year}-${month + 1}-${day}`;
-
-    try {
-      // Update local state
-      setActiveDiet((prev) => ({
-        ...prev,
-        details: {
-          ...prev.details,
-          lastLoggedDate: today, // Update the specific property
-        },
-      }));
-
-      // Update db
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        [`diets.${dietName}.lastLoggedDate`]: today,
-      });
-
-      console.log("Popup dismissed and last logged date updated.");
-      setShowPopup(false);
-    } catch (error) {
-      console.error("Error updating last logged date: ", error);
-    }
-  };
-
-  const handleTooltipToggle = () => {
-    setIsTooltipVisible(!isTooltipVisible);
-  };
-
-  const handleShowWarning = () => {
-    setShowWarning(!showWarning);
-  };
 
   const handleSetData = async (updatedValues) => {
     try {
@@ -143,6 +100,7 @@ export default function Dashboard() {
       console.error(`Failed to update data: ${err.message}`);
     }
   };
+
   // handle toggle and handle set exercise and diet
   const handleToggle = (type) => {
     const currentValue = currentDayData?.[type];
@@ -282,55 +240,7 @@ export default function Dashboard() {
           Today&apos;s Activities
         </h3>
 
-        {/* info icon with tooltip */}
-        <div className="relative flex flex-col items-center sm:text-xl textGradient dark:text-blue-500">
-          <i
-            className="fa-solid fa-circle-info cursor-pointer"
-            onMouseEnter={() => setIsTooltipVisible(true)}
-            onMouseLeave={() => setIsTooltipVisible(false)}
-            onClick={handleTooltipToggle} // For mobile, tap to toggle
-          ></i>
-
-          {/* Tooltip content */}
-          {isTooltipVisible && (
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 p-2 w-60 sm:w-80 bg-indigo-500 text-white ring-2 ring-pink-400 text-xs sm:text-sm rounded shadow-lg z-10">
-              <i className="fa-solid fa-face-smile text-green-300"></i> Good
-              day: completed both exercise and diet.
-              <br />
-              <i className="fa-solid fa-face-meh text-yellow-300"></i> Neutral:
-              completed one activity.
-              <br />
-              <i className="fa-solid fa-face-frown text-red-300"></i> Missed:
-              completed neither activity.
-              <br />
-              *** Click once to mark an activity as completed ✅, click again to
-              mark as missed ❌.
-              <br />
-              <i className="fa-solid fa-pen-to-square text-white"></i> Add Note:
-              record observations.
-            </div>
-          )}
-        </div>
-
-        {showWarning ? (
-          <button
-            onClick={handleShowWarning}
-            className="p-2 bg-yellow-50 rounded-lg ring-2 ring-rose-200 text-center mx-auto"
-          >
-            <i className="fa-solid fa-triangle-exclamation fa-lg  text-rose-500 "></i>{" "}
-            <span className="text-sm text-stone-700">
-              Make sure to log <strong>both</strong>{" "}
-              <em className="text-emerald-500">diet</em> and{" "}
-              <em className="text-emerald-500">exercise</em> to display the
-              matching emoji face
-            </span>
-          </button>
-        ) : (
-          <i
-            className="fa-solid fa-triangle-exclamation fa-lg text-rose-500 cursor-pointer text-center"
-            onClick={handleShowWarning}
-          ></i>
-        )}
+        <TooltipNwarning />
 
         <div className="flex items-stretch flex-wrap gap-4 text-white">
           {/* Exercise & Diet Buttons */}
@@ -390,49 +300,8 @@ export default function Dashboard() {
 
         <Calendar completeData={activeDietData} onNoteClick={onNoteClick} />
 
-        {showPopup && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="popup-title"
-            aria-describedby="popup-description"
-          >
-            <div className="bg-indigo-500 text-white p-6 rounded-lg shadow-lg w-96">
-              <h2
-                id="popup-title"
-                className="text-lg font-bold mb-4 text-center"
-              >
-                Don&apos;t Forget to Log!
-              </h2>
-              <div id="popup-description" className="mb-4 text-center gap-2">
-                Make sure to log <strong>both</strong> your diet and exercise
-                for today to display the matching emoji face!
-                <p className="text-2xl">
-                  ✅ ✅ ={" "}
-                  <i className="fa-solid fa-face-smile text-green-300"></i>
-                </p>
-                <p className="text-2xl">
-                  ✅ ❌ ={" "}
-                  <i className="fa-solid fa-face-meh text-yellow-300"></i>
-                </p>
-                <p className="text-2xl">
-                  ❌ ❌ ={" "}
-                  <i className="fa-solid fa-face-frown text-red-300"></i>
-                </p>
-              </div>
+        <Popup day={day} month={month} year={year}  dietName={dietName}/>
 
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={handleDismissPopup}
-                  className="bg-pink-400 hover:bg-pink-500 font-bold text-white py-2 px-4 rounded transition duration-200"
-                >
-                  Got it!
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
