@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export const useNote = (userId, dietName) => {
   const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true)
   const {refetchActiveDiet}  = useAuth()
 
   const fetchNotes = async () => {
@@ -36,6 +37,8 @@ export const useNote = (userId, dietName) => {
       setNotes(extractedNotes);
     } catch (error) {
       console.error("Error fetching notes:", error);
+    } finally {
+        setLoading(false)
     }
   };
 
@@ -70,6 +73,8 @@ export const useNote = (userId, dietName) => {
       }
     } catch (error) {
       console.error("Error deleting note:", error);
+    } finally {
+        setLoading(false)
     }
   };
 
@@ -77,5 +82,5 @@ export const useNote = (userId, dietName) => {
     fetchNotes();
   }, [userId, dietName]);
 
-  return { notes, fetchNotes, deleteNote };
+  return { notes, fetchNotes, deleteNote, loading };
 };

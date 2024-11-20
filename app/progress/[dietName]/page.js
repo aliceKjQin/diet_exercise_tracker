@@ -16,7 +16,7 @@ import { useNote } from "@/hooks/useNote";
 
 export default function ProgressPage() {
   const { user, activeDiet, loading: loadingUser } = useAuth();
-  const { notes, deleteNote } = useNote(user?.uid, activeDiet?.name);
+  const { notes, deleteNote, loading: loadingNotes } = useNote(user?.uid, activeDiet?.name);
   const [images, setImages] = useState([]);
   const [targetDays, setTargetDays] = useState(null);
   const [dietData, setDietData] = useState({});
@@ -141,7 +141,7 @@ export default function ProgressPage() {
         {/* Review Note Section */}
         <div className="w-full p-4 bg-indigo-400 text-stone-800">
         <h2 className="font-bold text-lg text-white"><i className="fa-regular fa-note-sticky mr-2"></i>Review Notes</h2>
-        <div className="flex flex-col gap-4 mt-4">
+        {loadingNotes ? <p className="text-white">Loading your notes ...</p> : (<div className="flex flex-col gap-4 mt-4">
           {notes.length > 0 ? (
             notes.map((note, index) => (
               <div
@@ -160,9 +160,9 @@ export default function ProgressPage() {
               </div>
             ))
           ) : (
-            <p>No notes available to review.</p>
+            <p className="text-white">No notes available to review.</p>
           )}
-        </div>
+        </div>)}
         </div>
 
         {/* Transformation Gallery */}

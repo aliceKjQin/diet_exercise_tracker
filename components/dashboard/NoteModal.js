@@ -21,7 +21,7 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
       <textarea
         value={noteInputValue}
         onChange={(e) => setNoteInputValue(e.target.value)}
-        placeholder="Type any notes on your diet, exercise, or feelings today"
+        placeholder="Type any observation on your diet, exercise today ..."
         className="bg-purple-200 dark:bg-sky-200 text-stone-700 border-2 border-purple-300 dark:border-blue-300 p-2 rounded-md  focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-blue-500"
         rows={15}
         autoFocus
