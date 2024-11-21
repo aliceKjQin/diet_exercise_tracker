@@ -50,7 +50,7 @@ export default function HistoryPageForSpecifiedDiet() {
         {/* Weight Progress Bar */}
         <WeightProgressBar
           startingWeight={specifiedDiet.details.initialWeight}
-          finalWeight={specifiedDiet.details.currentWeight}
+          currentWeight={specifiedDiet.details.currentWeight}
           targetWeight={specifiedDiet.details.targetWeight}
           userId={user.uid}
           inactiveDiet={specifiedDiet}

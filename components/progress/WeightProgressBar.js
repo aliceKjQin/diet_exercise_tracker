@@ -17,10 +17,8 @@ export default function WeightProgressBar({
   finalWeight,
 }) {
   // ***  decouple the displayed currentWeight (used for the progress bar) from the input currentWeight, to ensure the progress bar updates only after the user clicks "Update" and the value is successfully saved
-  const [currentWeight, setCurrentWeight] = useState(
-    isActive ? "" : finalWeight
-  ); // state for progressBar
-  const [inputWeight, setInputWeight] = useState("");
+  const [currentWeight, setCurrentWeight] = useState("")// state for progressBar
+  const [inputWeight, setInputWeight] = useState(""); // state for input field
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -146,7 +144,7 @@ export default function WeightProgressBar({
       ) : (
         <p className="font-semibold text-center">
           {" "}
-          Final Weight: {finalWeight} ({weightUnit})
+          Final Weight: {currentWeight} ({weightUnit})
         </p>
       )}
     </div>
