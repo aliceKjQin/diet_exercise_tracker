@@ -1,116 +1,81 @@
 "use client";
 
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/firebase";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWeightUnit } from "@/contexts/WeightUnitContext";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import UpdateInputButton from "@/components/sharedUI/UpdateInputButton";
+import Loading from "@/components/sharedUI/Loading";
 import DietPlanForm from "@/components/home/DietPlanForm";
 import Main from "@/components/sharedUI/Main";
-import { doc, updateDoc } from "firebase/firestore";
-import { useAuth } from "@/contexts/AuthContext";
-import { useDeleteDiet } from "@/hooks/useDeleteDiet";
-import { useEffect, useState } from "react";
-import ConfirmModal from "@/components/sharedUI/ConfirmModal";
-import Loading from "@/components/sharedUI/Loading";
-import { db } from "@/firebase";
-import Link from "next/link";
-import { useWeightUnit } from "@/contexts/WeightUnitContext";
-import UpdateInputButton from "@/components/sharedUI/UpdateInputButton";
+import Instruction from "@/components/home/Instruction";
+import RemoveDiet from "@/components/home/RemoveDiet";
 
 export default function HomePage() {
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showRemoveActiveDiet, setShowRemoveActiveDiet] = useState(false);
   const [showInstruction, setShowInstruction] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [duration, setDuration] = useState("");
+  const [targetDays, setTargetDays] = useState("");
   const [targetWeight, setTargetWeight] = useState("");
   const [dietName, setDietName] = useState("");
   const [loading, setLoading] = useState(false);
   const {
     user,
     activeDiet,
-    setActiveDiet,
     refetchActiveDiet,
     loading: loadingUser,
   } = useAuth();
-  const { deleteDiet } = useDeleteDiet();
   const { weightUnit } = useWeightUnit();
 
   useEffect(() => {
     if (!user || !activeDiet) return;
     if (activeDiet) {
-      setDuration(activeDiet.details?.targetDays || "");
+      setTargetDays(activeDiet.details?.targetDays || "");
       setTargetWeight(activeDiet.details?.targetWeight || "");
       setDietName(activeDiet.name);
     }
   }, [activeDiet, user]);
-
-  //  Handle show remove active diet section
-  const handleShowRemoveActive = () => {
-    setShowRemoveActiveDiet(!showRemoveActiveDiet);
-  };
 
   // Handle show instruction for new users
   const handleShowInstruction = () => {
     setShowInstruction(!showInstruction);
   };
 
-  // Handle duration input change
-  const handleDurationChange = (e) => {
-    const inputValue = e.target.value;
-    // Allow only whole numbers and empty string; *** Ensure input type is "text" not "number", as it won't trigger regex check
-    if (!/^\d*$/.test(inputValue)) {
-      setErrorMessage("Please enter a valid whole number.");
-      return;
-    }
+  // Handle input change (higher-order function: returns another function)
+  const handleInputChange = (setter) => (e) => {
+      const inputValue = e.target.value;
+      // Allow only whole numbers and empty string; *** Ensure input type is "text" not "number", as it won't trigger regex check
+      if (!/^\d*$/.test(inputValue)) {
+        setErrorMessage("Please enter a valid whole number.");
+        return;
+      }
 
-    setErrorMessage("");
-    setDuration(inputValue ? Number(inputValue) : ""); // Empty string allow user for deletion
-  };
+      setErrorMessage("");
+      setter(inputValue ? Number(inputValue) : ""); // Empty string allow user for deletion
+    };
 
-  // Handle targetWeight input change
-  const handleTargetWeightChange = (e) => {
-    const inputValue = e.target.value;
-
-    if (!/^\d*$/.test(inputValue)) {
-      setErrorMessage("Please enter a valid whole number.");
-      return;
-    }
-
-    setErrorMessage("");
-    setTargetWeight(inputValue ? Number(inputValue) : "");
-  };
 
   // Save updated input in db
   const saveNewInput = async (fieldName, fieldValue) => {
     setLoading(true);
     try {
       const userRef = doc(db, "users", user.uid);
-      const field = fieldName === "duration" ? "targetDays" : "targetWeight";
       await updateDoc(userRef, {
-        [`diets.${activeDiet.name}.${field}`]: fieldValue,
+        [`diets.${activeDiet.name}.${fieldName}`]: fieldValue,
       });
 
       // After saving, refetch the active diet
       await refetchActiveDiet(); // This will update the activeDiet in the context
-      setSuccessMessage(`Saved new ${field}!`);
+      setSuccessMessage(`Saved new ${fieldName}!`);
       // Clear the success message after 2 seconds
       setTimeout(() => setSuccessMessage(""), 2000);
     } catch (error) {
       console.error("Failed to save ${field}: ", error);
-      setErrorMessage(`Failed to save ${field}. Please try again.`);
+      setErrorMessage(`Failed to save ${fieldName}. Please try again.`);
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Function to handle diet removal
-  const handleRemoveDiet = async () => {
-    const success = deleteDiet(user.uid, dietName);
-
-    if (success) {
-      setShowConfirmation(false);
-      setShowRemoveActiveDiet(false);
-      setActiveDiet(null);
-    } else {
-      setErrorMessage("Failed to delete diet. Please try again.");
     }
   };
 
@@ -137,32 +102,9 @@ export default function HomePage() {
           </div>
 
           {/* Instruction section for new user */}
-          {showInstruction && (
-            <div className="flex flex-col gap-2 p-2 bg-indigo-50 ring-2 ring-indigo-300 rounded-md">
-              <h3 className="font-bold text-center">Quick Start Guide</h3>
+          {showInstruction && <Instruction />}
 
-              <p>
-                <strong>Dashboard:</strong> Log exercise and diet, and add
-                optional notes to record daily observations.
-              </p>
-              <p>
-                <strong>Pantry:</strong> Analyze nutrition of items in your
-                pantry or a recipe. Access this feature in the Dashboard by
-                clicking <em>&quot;View Pantry&quot;</em>.
-              </p>
-              <p>
-                <strong>Progress:</strong> Track your progress with data
-                visualizations, and upload body images to document your
-                transformation. Access this feature in the Dashboard by clicking{" "}
-                <em>&quot;View Progress&quot;</em>.
-              </p>
-              <p>
-                <strong>History:</strong> Review past diet plans and their
-                details.
-              </p>
-            </div>
-          )}
-
+          {/* Diet info */}
           <p className="text-center">
             You started on{" "}
             <span className="textGradient dark:text-blue-500">
@@ -171,23 +113,23 @@ export default function HomePage() {
             and still in progress.
           </p>
 
-          {/* Update duration (targetDays) and targetWeight */}
+          {/* Update Field for duration (targetDays) and targetWeight */}
           <div className="mx-auto">
             <div className="flex flex-col gap-2 mb-4">
-              <label className="block mb-1 " htmlFor="duration">
+              <label className="block mb-1 " htmlFor="targetDays">
                 Duration (days)
               </label>
               <div className="relative w-full">
                 <input
                   type="text"
-                  id="duration"
-                  value={duration}
-                  onChange={handleDurationChange}
+                  id="targetDays"
+                  value={targetDays}
+                  onChange={handleInputChange(setTargetDays)} // call handleInputChange(outer function) immediately and it returns the inner arrow function (e) => { ... } which will execute when onChange event fires
                   className="p-2 border border-solid border-indigo-300 rounded-full outline-none"
                 />
 
                 <UpdateInputButton
-                  onClick={() => saveNewInput("duration", duration)}
+                  onClick={() => saveNewInput("targetDays", targetDays)}
                   className="bg-indigo-400 hover:bg-indigo-300"
                 />
               </div>
@@ -201,7 +143,7 @@ export default function HomePage() {
                   type="text"
                   id="targetWeight"
                   value={targetWeight}
-                  onChange={handleTargetWeightChange}
+                  onChange={handleInputChange(setTargetWeight)}
                   className="p-2 border border-solid border-indigo-300 rounded-full outline-none"
                 />
                 <UpdateInputButton
@@ -232,49 +174,8 @@ export default function HomePage() {
             View Dashboard
           </Link>
 
-          <button
-            onClick={handleShowRemoveActive}
-            className="font-semibold sm:text-sm text-xs text-stone-400 mx-auto mt-6 ring-1 ring-stone-300 p-2 rounded-full"
-          >
-            {showRemoveActiveDiet
-              ? "Hide Remove Diet"
-              : "Want to start a new diet?"}
-          </button>
-
           {/* Remove active diet section */}
-          {showRemoveActiveDiet ? (
-            <>
-              <p>
-                To start a new diet, please remove the current active one, as
-                you can have only one active diet at a time.
-              </p>
-
-              <button
-                onClick={() => setShowConfirmation(true)}
-                className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-full"
-              >
-                Remove Active Diet
-              </button>
-              {/* Remove active diet confirmation */}
-              {showConfirmation && (
-                <ConfirmModal
-                  onConfirm={() => {
-                    handleRemoveDiet();
-                    setErrorMessage("");
-                  }}
-                  onCancel={() => {
-                    setShowConfirmation(false);
-                  }}
-                />
-              )}
-              {/* section to display error message if exits */}
-              {errorMessage && (
-                <p className="text-red-500 text-center">{errorMessage}</p>
-              )}
-            </>
-          ) : (
-            ""
-          )}
+          <RemoveDiet dietName={dietName} />
         </div>
       ) : (
         <DietPlanForm />
