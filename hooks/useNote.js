@@ -7,8 +7,10 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export const useNote = (userId, dietName) => {
   const [notes, setNotes] = useState([]);
-  const [loading, setLoading] = useState(true)
-  const {refetchActiveDiet}  = useAuth()
+  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const { refetchActiveDiet } = useAuth();
 
   const fetchNotes = async () => {
     if (!userId || !dietName) return;
@@ -38,7 +40,7 @@ export const useNote = (userId, dietName) => {
     } catch (error) {
       console.error("Error fetching notes:", error);
     } finally {
-        setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -63,18 +65,23 @@ export const useNote = (userId, dietName) => {
 
         // Update the dietData in Firestore
         await updateDoc(userRef, {
-          [`diets.${dietName}.dietData.${year}.${month}.${day}`]: updatedDayData,
+          [`diets.${dietName}.dietData.${year}.${month}.${day}`]:
+            updatedDayData,
         });
 
         // Refresh notes after deletion to display the updated notes array in ProgressPage
         fetchNotes();
 
-        refetchActiveDiet() // refetch activeDietDiet to reflect the updated data, which is remove note icon of the specified day in calendar of Dashboard
+        refetchActiveDiet(); // refetch activeDietDiet to reflect the updated data, which is remove note icon of the specified day in calendar of Dashboard
+
+        setSuccess("Deleted note.");
+        setTimeout(() => setSuccess(""), 2000);
       }
     } catch (error) {
       console.error("Error deleting note:", error);
+      setError("Failed to delete note, please try again.")
     } finally {
-        setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -82,5 +89,5 @@ export const useNote = (userId, dietName) => {
     fetchNotes();
   }, [userId, dietName]);
 
-  return { notes, fetchNotes, deleteNote, loading };
+  return { notes, fetchNotes, deleteNote, loading, success, error };
 };

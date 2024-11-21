@@ -21,7 +21,9 @@ export default function ProgressPage() {
   const {
     notes,
     deleteNote,
-    loading: loadingNotes,
+    loading,
+    success,
+    error
   } = useNote(user?.uid, activeDiet?.name);
   const [images, setImages] = useState([]);
   const [targetDays, setTargetDays] = useState(null);
@@ -144,7 +146,7 @@ export default function ProgressPage() {
         />
 
         {/* Review Notes Section */}
-        <ReviewNotes notes={notes} loadingNotes={loadingNotes} isActive />
+        <ReviewNotes notes={notes} loading={loading} deleteNote={deleteNote} success={success} error={error} isActive />
 
         {/* Transformation Gallery */}
         <TransformationGallery

@@ -37,7 +37,7 @@ export default function TransformationGallery({
               {image.deleteError && (
                 <p className="text-center text-red-200">
                   {" "}
-                  <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                  <i class="fa-regular fa-circle-xmark fa-lg mr-1"></i>
                   {image.deleteError}
                 </p>
               )}
