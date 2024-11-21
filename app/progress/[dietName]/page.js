@@ -144,7 +144,7 @@ export default function ProgressPage() {
         />
 
         {/* Review Notes Section */}
-        <ReviewNotes notes={notes} loadingNotes={loadingNotes} />
+        <ReviewNotes notes={notes} loadingNotes={loadingNotes} isActive />
 
         {/* Transformation Gallery */}
         <TransformationGallery

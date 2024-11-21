@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ReviewNotes({ notes, loadingNotes }) {
+export default function ReviewNotes({ notes, loadingNotes, isActive }) {
   return (
     <div className="w-full p-4 bg-indigo-400 text-stone-800">
       <h2 className="font-bold text-lg text-white">
@@ -18,9 +18,9 @@ export default function ReviewNotes({ notes, loadingNotes }) {
               >
                 <div className="flex justify-between items-center">
                   <p className="text-sm font-semibold">{note.date}</p>
-                  <button onClick={() => deleteNote(note.date)}>
+                  {isActive && <button onClick={() => deleteNote(note.date)}>
                     <i className="fa-solid fa-trash-can text-stone-400 hover:text-red-300"></i>
-                  </button>
+                  </button>}
                 </div>
                 <p className="mt-1">{note.note}</p>
               </div>
