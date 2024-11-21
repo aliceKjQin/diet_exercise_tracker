@@ -7,6 +7,7 @@ import { db } from "@/firebase";
 import Button from "@/components/sharedUI/Button";
 import Link from "next/link";
 import Loading from "@/components/sharedUI/Loading";
+import GeneralGuideline from "./GeneralGuideline";
 
 export default function MacroGoals() {
   const [proteinGoal, setProteinGoal] = useState("");
@@ -25,8 +26,9 @@ export default function MacroGoals() {
     }
   }, [activeDiet]);
 
+
   // Handle input changes
-  const handleProteinChange = (e) => {
+  const handleInputChange = (setter) => (e) => {
     const inputValue = e.target.value;
 
     if (!/^\d*\.?\d*$/.test(inputValue)) {
@@ -35,20 +37,9 @@ export default function MacroGoals() {
     }
 
     setError("");
-    setProteinGoal(inputValue ? Number(inputValue) : "");
+    setter(inputValue ? Number(inputValue) : "");
   };
 
-  const handleCaloriesChange = (e) => {
-    const inputValue = e.target.value;
-
-    if (!/^\d*\.?\d*$/.test(inputValue)) {
-      setError("Please enter a valid whole number.");
-      return;
-    }
-
-    setError("");
-    setCaloriesGoal(inputValue ? Number(inputValue) : "");
-  };
   // Save the goals to db
   const saveGoals = async () => {
     setLoading(true);
@@ -90,8 +81,12 @@ export default function MacroGoals() {
         <i className="fa-solid fa-bullseye textGradient dark:text-blue-500 mr-2"></i>
         Set Macro Goals
       </h2>
-      <div className="mx-auto p-4 bg-yellow-100 shadow-md rounded-md mb-4 flex  flex-col gap-2">
-        <div className=" flex gap-4 mb-4">
+      <div className="p-4 bg-purple-100 dark:bg-sky-100 shadow-md rounded-md mb-4 flex  flex-col gap-2">
+        {/* General Guideline for Protein & Calories */}
+        <GeneralGuideline />
+        
+        {/* Marco goals input section */}
+        <div className="flex gap-4 mb-4 mx-auto">
           <div className="">
             <label className="block mb-1 font-medium" htmlFor="protein">
               Protein (g)
@@ -100,7 +95,7 @@ export default function MacroGoals() {
               type="text"
               id="protein"
               value={proteinGoal}
-              onChange={handleProteinChange}
+              onChange={handleInputChange(setProteinGoal)}
               placeholder="Enter protein goal"
               className="w-full p-2 border border-gray-300 rounded-md"
             />
@@ -113,7 +108,7 @@ export default function MacroGoals() {
               type="text"
               id="calories"
               value={caloriesGoal}
-              onChange={handleCaloriesChange}
+              onChange={handleInputChange(setCaloriesGoal)}
               placeholder="Enter calories goal"
               className="w-full p-2 border border-gray-300 rounded-md"
             />

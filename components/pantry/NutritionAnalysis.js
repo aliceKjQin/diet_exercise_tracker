@@ -122,8 +122,8 @@ export default function NutritionResultsAnalysis() {
         {nutritionResults.length > 0 && (
           <div className="flex flex-col gap-4 mt-4">
             <div className="overflow-x-auto w-full">
-              <table className="w-full border border-stone-300 bg-yellow-50 text-left">
-                <thead className="bg-yellow-100">
+              <table className="w-full border border-stone-300 bg-yellow-100 text-left">
+                <thead className="bg-yellow-200">
                   <tr>
                     <th className="p-2">Qty</th>
                     <th className="p-2">Unit</th>

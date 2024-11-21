@@ -94,13 +94,13 @@ export default function MyPantry() {
     if (loading) return <p>Loading your pantry ...</p>;
     if (!pantry.length)
       return (
-        <p className="p-4 bg-yellow-100 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
+        <p className="p-4 bg-yellow-200 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
           Your pantry is empty.
         </p>
       );
 
     return (
-      <div className="p-4 grid grid-cols-2 sm:grid-cols-4 items-center gap-2 capitalize bg-yellow-100 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
+      <div className="p-4 grid grid-cols-2 sm:grid-cols-4 items-center gap-2 capitalize bg-yellow-200 rounded-lg ring-2 ring-purple-200 dark:ring-blue-200">
         {pantry.map((item) => (
           <div key={item} className="flex justify-between">
             <p>{item}</p>
