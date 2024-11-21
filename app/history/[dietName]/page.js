@@ -9,7 +9,6 @@ import Main from "@/components/sharedUI/Main";
 import MainProgressCharts from "@/components/progress/MainProgressCharts";
 import WeightProgressBar from "@/components/progress/WeightProgressBar";
 import Login from "@/components/core/Login";
-import { useNote } from "@/hooks/useNote";
 import ReviewNotes from "@/components/sharedUI/ReviewNotes";
 import TransformationGallery from "@/components/sharedUI/TransformationGallery";
 
@@ -21,7 +20,6 @@ export default function HistoryPageForSpecifiedDiet() {
   const dietName = decodeURIComponent(encodedDietName); // Decode back to original dietName that matched the db
   const specifiedDiet = inactiveDiets.find((diet) => diet.name === dietName);
   const { data, loading: loadingProgressData } = useProgressData(specifiedDiet);
-  const { notes, loading: loadingNotes } = useNote(user?.uid, dietName);
 
   const dietData = specifiedDiet?.details.dietData;
   const targetDays = specifiedDiet?.details.targetDays;
@@ -120,7 +118,7 @@ export default function HistoryPageForSpecifiedDiet() {
         />
 
         {/* Review Note Section */}
-        <ReviewNotes notes={notes} loadingNotes={loadingNotes} />
+        <ReviewNotes user={user} dietName={dietName} />
       </div>
     </Main>
   );

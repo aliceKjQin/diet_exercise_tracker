@@ -5,26 +5,17 @@ import { useAuth } from "@/contexts/AuthContext";
 import MainProgressCharts from "@/components/progress/MainProgressCharts";
 import Loading from "@/components/sharedUI/Loading";
 import Main from "@/components/sharedUI/Main";
-import UploadImage from "@/components/progress/UploadImage";
 import Link from "next/link";
 import WeightProgressBar from "@/components/progress/WeightProgressBar";
 import Login from "@/components/core/Login";
 import { db, storage } from "@/firebase";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
-import { useNote } from "@/hooks/useNote";
 import ReviewNotes from "@/components/sharedUI/ReviewNotes";
 import TransformationGallery from "@/components/sharedUI/TransformationGallery";
 
 export default function ProgressPage() {
   const { user, activeDiet, loading: loadingUser } = useAuth();
-  const {
-    notes,
-    deleteNote,
-    loading,
-    success,
-    error
-  } = useNote(user?.uid, activeDiet?.name);
   const [images, setImages] = useState([]);
   const [targetDays, setTargetDays] = useState(null);
   const [dietData, setDietData] = useState({});
@@ -146,7 +137,7 @@ export default function ProgressPage() {
         />
 
         {/* Review Notes Section */}
-        <ReviewNotes notes={notes} loading={loading} deleteNote={deleteNote} success={success} error={error} isActive />
+        <ReviewNotes user={user} dietName={dietName} isActive />
 
         {/* Transformation Gallery */}
         <TransformationGallery
