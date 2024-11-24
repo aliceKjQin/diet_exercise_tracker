@@ -127,14 +127,15 @@ export default function NutritionResultsAnalysis() {
           dark
           full
         />
-
-        {error && (
+        
+        {/* Render error conditionally based on if it's an array (error from validation check) or a string (error from API or predefined error) */}
+        {Array.isArray(error) ? (
           <ul className="text-red-500">
             {error.map((err, index) => (
               <li key={index}>{err}</li>
             ))}
           </ul>
-        )}
+        ) : <p className="text-red-500">{error}</p>}
 
         {/* Analysis Results */}
         {nutritionResults.length > 0 && (
