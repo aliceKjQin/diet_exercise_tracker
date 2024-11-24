@@ -5,6 +5,7 @@ import MacroProgressBar from "./MacroProgressBar";
 import { useAuth } from "@/contexts/AuthContext";
 import Button from "@/components/sharedUI/Button";
 import { validateIngredientInput } from "@/utils";
+import NutritionTableUI from "./NutritionTableUI";
 
 export default function NutritionResultsAnalysis() {
   const [ingredientList, setIngredientList] = useState(""); // Raw textarea input
@@ -40,7 +41,7 @@ export default function NutritionResultsAnalysis() {
 
   // Call Edamam API to analyze entered items
   const analyzePantry = async () => {
-    // Check if any error before submission
+    // Check if any unclear error before submission
     if (error) {
       setError(error);
       return;
@@ -81,7 +82,8 @@ export default function NutritionResultsAnalysis() {
       { calories: 0, protein: 0 }
     );
   };
-
+ 
+  // Get total of Cal & Protein when there is nutrition results return from API
   const totals =
     nutritionResults.length > 0
       ? calculateTotals()
@@ -105,6 +107,7 @@ export default function NutritionResultsAnalysis() {
       </div>
 
       <div className="flex flex-col gap-6 bg-purple-100 dark:bg-sky-100 p-6 shadow-md rounded-lg">
+        {/* Instruction text */}
         <p className="text-center">
           Enter an ingredient list, like &quot;1 cup rice, 10 oz
           chickpeas&quot;, etc.
@@ -119,7 +122,7 @@ export default function NutritionResultsAnalysis() {
           value={ingredientList}
           onChange={handleTextareaChange}
           placeholder={`1 cup rice\n10 oz chickpeas\n200 g broccoli`}
-          className="w-full h-32 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-yellow-100"
+          className="w-full h-64 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-yellow-100"
         />
         <Button
           text={loading ? "Analyzing" : "Analyze Nutrition"}
@@ -128,7 +131,7 @@ export default function NutritionResultsAnalysis() {
           full
         />
         
-        {/* Render error conditionally based on if it's an array (error from validation check) or a string (error from API or predefined error) */}
+        {/* Render error conditionally based on type: an array (error from validation check) or a string (error from API or predefined error) */}
         {Array.isArray(error) ? (
           <ul className="text-red-500">
             {error.map((err, index) => (
@@ -140,36 +143,8 @@ export default function NutritionResultsAnalysis() {
         {/* Analysis Results */}
         {nutritionResults.length > 0 && (
           <div className="flex flex-col gap-4 mt-4">
-            <div className="overflow-x-auto w-full">
-              <table className="w-full border border-stone-300 bg-yellow-100 text-left">
-                <thead className="bg-yellow-200">
-                  <tr>
-                    <th className="p-2">Qty</th>
-                    <th className="p-2">Unit</th>
-                    <th className="p-2">Food</th>
-                    <th className="p-2">Protein</th>
-                    <th className="p-2">Fat</th>
-                    <th className="p-2">Fiber</th>
-                    <th className="p-2">Carbs</th>
-                    <th className="p-2">Calories</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {nutritionResults.map((result, index) => (
-                    <tr key={index}>
-                      <td className="p-2">{result.quantity}</td>
-                      <td className="p-2">{result.unit}</td>
-                      <td className="p-2">{result.food}</td>
-                      <td className="p-2">{`${result.protein} g`}</td>
-                      <td className="p-2">{`${result.fat} g`}</td>
-                      <td className="p-2">{`${result.fiber} g`}</td>
-                      <td className="p-2">{`${result.carbs} g`}</td>
-                      <td className="p-2">{`${result.calories} kcal`}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {/* Nutrition table */}
+            <NutritionTableUI nutritionResults={nutritionResults} />
 
             {/* Macro Progress Bar */}
             <div className="mt-4 flex flex-col gap-4">
