@@ -3,14 +3,33 @@
 import { Roboto } from "next/font/google";
 import React, { useState } from "react";
 import Button from "@/components/sharedUI/Button";
+import { validateNoteInput } from "@/utils";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
 export default function NoteModal({ onSave, onClose, initialNote }) {
   const [noteInputValue, setNoteInputValue] = useState(initialNote);
+  const [error, setError] = useState("");
+
+  const handleNoteChange = (e) => {
+    const input = e.target.value;
+    setNoteInputValue(input);
+
+    const { valid, message } = validateNoteInput(input);
+    if (valid) {
+      setError("");
+    } else {
+      setError(message);
+    }
+  };
 
   const handleSubmit = () => {
-    onSave(noteInputValue); // Call onSave with the input note
+     // Check if any error before submission
+     if (error) {
+       setError(error);
+       return; // Stop submission if error exists
+     }
+    onSave(noteInputValue); // Call onSave with the valid input
   };
 
   return (
@@ -18,12 +37,13 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
       <h2 className={`${roboto.className}`}>
         ✏️ {initialNote ? "Update" : "Add"} Note{" "}
       </h2>
+      {error && <p className="text-red-500">{error}</p>}
       <textarea
         value={noteInputValue}
-        onChange={(e) => setNoteInputValue(e.target.value)}
+        onChange={handleNoteChange}
         placeholder="Type any observation on your diet, exercise today ..."
         className="bg-purple-200 dark:bg-sky-200 text-stone-700 border-2 border-purple-300 dark:border-blue-300 p-2 rounded-md  focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-blue-500"
-        rows={15}
+        rows={8}
         autoFocus
       />
       <div className="flex gap-4 mx-auto max-w-[400px]">

@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import MacroProgressBar from "./MacroProgressBar";
 import { useAuth } from "@/contexts/AuthContext";
 import Button from "@/components/sharedUI/Button";
+import { validateIngredientInput } from "@/utils";
 
 export default function NutritionResultsAnalysis() {
   const [ingredientList, setIngredientList] = useState(""); // Raw textarea input
-  const [pantryItems, setPantryItems] = useState([]); // Processed array of ingredients
+  const [pantryItems, setPantryItems] = useState([]); // Processed array of ingredients, will be sent to Edamam API
   const [nutritionResults, setNutritionResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [macroGoals, setMacroGoals] = useState({});
   const { activeDiet } = useAuth();
 
@@ -23,17 +24,28 @@ export default function NutritionResultsAnalysis() {
 
   // Handle textarea change and parse input into array
   const handleTextareaChange = (e) => {
-    const value = e.target.value;
-    setIngredientList(value);
-    const items = value
-      .split("\n")
-      .map((item) => item.trim())
-      .filter((item) => item !== "");
-    setPantryItems(items);
+    const input = e.target.value;
+    setIngredientList(input);
+
+    const { isValid, validLines, errors } = validateIngredientInput(input);
+
+    if (isValid) {
+      setPantryItems(validLines);
+      setError(""); // Clear previous error if any
+    } else {
+      setPantryItems([]); // Clear pantryItems(the array will be sent to Edamam API) on invalid input.
+      setError(errors); // Show all error lines
+    }
   };
 
   // Call Edamam API to analyze entered items
   const analyzePantry = async () => {
+    // Check if any error before submission
+    if (error) {
+      setError(error);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -106,7 +118,7 @@ export default function NutritionResultsAnalysis() {
           type="text"
           value={ingredientList}
           onChange={handleTextareaChange}
-          placeholder={`1 cup rice\n10 oz chickpeas\n200g broccoli`}
+          placeholder={`1 cup rice\n10 oz chickpeas\n200 g broccoli`}
           className="w-full h-32 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-yellow-100"
         />
         <Button
@@ -116,7 +128,13 @@ export default function NutritionResultsAnalysis() {
           full
         />
 
-        {error && <p className="text-red-500">{error}</p>}
+        {error && (
+          <ul className="text-red-500">
+            {error.map((err, index) => (
+              <li key={index}>{err}</li>
+            ))}
+          </ul>
+        )}
 
         {/* Analysis Results */}
         {nutritionResults.length > 0 && (

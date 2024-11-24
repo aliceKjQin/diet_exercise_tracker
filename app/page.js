@@ -59,6 +59,12 @@ export default function HomePage() {
 
   // Save updated input in db
   const saveNewInput = async (fieldName, fieldValue) => {
+    // Check any unclear error before submission
+    if (errorMessage) {
+      setErrorMessage(errorMessage)
+      return
+    }
+
     setLoading(true);
     try {
       const userRef = doc(db, "users", user.uid);

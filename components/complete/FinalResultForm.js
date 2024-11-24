@@ -6,6 +6,7 @@ import { db } from "@/firebase";
 import Button from "../sharedUI/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
+import { validateNoteInput } from "@/utils";
 
 export default function FinalResultForm({
   userId,
@@ -17,8 +18,8 @@ export default function FinalResultForm({
   const [selectedCons, setSelectedCons] = useState([]);
   const [customPro, setCustomPro] = useState("");
   const [customCon, setCustomCon] = useState("");
-  const [conMessage, setConMessage] = useState("");
-  const [proMessage, setProMessage] = useState("");
+  const [conErr, setConErr] = useState("");
+  const [proErr, setProErr] = useState("");
   const [summaryInputValue, setSummaryInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -64,19 +65,43 @@ export default function FinalResultForm({
     setFinalWeight(inputValue); //Keep as string to preserve decimal during editing, then use parseFloat() before saving
   };
 
+  const handleSummaryChange = (e) => {
+    const input = e.target.value;
+
+    // Always update the input value to reflect user's typing
+    setSummaryInputValue(input);
+
+    // Validate the input
+    const { valid, message } = validateNoteInput(input);
+
+    // Update the error state based on validation
+    if (valid) {
+      setError(""); // Clear error if valid
+    } else {
+      setError(message); // Show error if invalid
+    }
+  };
+
   // Handle pros and cons custom input change
-  const handleCustomInputChange = (input, setInput, setMessage) => (e) => {
+  const handleCustomInputChange = (input, setInput, setErrMessage) => (e) => {
     const words = e.target.value.trim().split(/\s+/);
     if (words.length <= maxWords) {
       setInput(e.target.value);
-      setMessage(""); // Clear the message if within limit
+      setErrMessage(""); // Clear the message if within limit
     } else {
-      setMessage(`Limit of ${maxWords} words exceeded.`);
+      setErrMessage(`Limit of ${maxWords} words exceeded.`);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if any unclear error before submission
+    if (error || proErr || conErr) {
+      setError(error);
+      return; // Stop submission 
+    }
+
     setLoading(true);
     setError("");
 
@@ -133,11 +158,7 @@ export default function FinalResultForm({
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
-          <p className="p-2 text-red-400">
-            {error} <i className="fa-regular fa-square-check  fa-lg"></i>
-          </p>
-        )}
+        
 
         {/* Final Weight Input */}
         <div className="flex flex-col items-center">
@@ -204,12 +225,12 @@ export default function FinalResultForm({
                 onChange={handleCustomInputChange(
                   customPro,
                   setCustomPro,
-                  setProMessage
+                  setProErr
                 )}
                 className="border border-gray-300 p-2  rounded mt-2"
               />
             )}
-            {proMessage && <p className="text-red-500">{proMessage}</p>}
+            {proErr && <p className="text-red-500">{proErr}</p>}
           </fieldset>
 
           {/* Cons Selection */}
@@ -244,12 +265,12 @@ export default function FinalResultForm({
                 onChange={handleCustomInputChange(
                   customCon,
                   setCustomCon,
-                  setConMessage
+                  setConErr
                 )}
                 className="border border-gray-300 p-2  rounded mt-2"
               />
             )}
-            {conMessage && <p className="text-red-500">{conMessage}</p>}
+            {conErr && <p className="text-red-500">{conErr}</p>}
           </fieldset>
         </div>
 
@@ -260,12 +281,13 @@ export default function FinalResultForm({
           </h2>
           <textarea
             value={summaryInputValue}
-            onChange={(e) => setSummaryInputValue(e.target.value)}
+            onChange={handleSummaryChange}
             placeholder="Type your summary here..."
             className="bg-indigo-100 text-stone-700 border-2 border-indigo-200 p-2 rounded-md before:focus:outline-none focus:ring-2 focus:ring-indigo-500"
             rows={3}
             autoFocus
           />
+          {error && <p className="p-2 text-red-400 text-center">{error}</p>}
         </div>
 
         <Button

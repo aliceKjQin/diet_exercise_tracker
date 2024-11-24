@@ -17,7 +17,7 @@ export default function DietPlanForm() {
     dietName: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const { weightUnit, setWeightUnit } = useWeightUnit();
   const { user, setActiveDiet } = useAuth();
   const router = useRouter();
@@ -50,7 +50,7 @@ export default function DietPlanForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError(null);
+    setError("")
 
     // Format the dietName before saving it
     const formattedDietName = dietPlan.dietName

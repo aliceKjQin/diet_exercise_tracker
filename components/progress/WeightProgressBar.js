@@ -71,6 +71,11 @@ export default function WeightProgressBar({
 
   // Save the current weight to db
   const handleSaveWeight = async () => {
+    // Check if there is any unclear error before submission
+    if (error) {
+      setError(error)
+      return
+    }
     setLoading(true);
     try {
       const userDocRef = doc(db, "users", userId);
