@@ -4,23 +4,11 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePantry } from "@/hooks/usePantry";
 import Button from "@/components/sharedUI/Button";
+import { validateAddItemInput } from "@/utils";
 
 export default function MyPantry() {
   const { user, activeDiet } = useAuth();
   const [activeDietName, setActiveDietName] = useState(null);
-
-  // Wait for activeDiet to initialize
-  useEffect(() => {
-    if (activeDiet?.name) {
-      setActiveDietName(activeDiet.name);
-    }
-  }, [activeDiet]);
-
-  const { pantry, loading, addPantryItem, removePantryItem } = usePantry(
-    user?.uid,
-    activeDietName
-  );
-
   const [newItem, setNewItem] = useState("");
   const [errMessage, setErrMessage] = useState("");
 
@@ -39,15 +27,34 @@ export default function MyPantry() {
     "apple",
   ]);
 
+  // Wait for activeDiet to initialize
+  useEffect(() => {
+    if (activeDiet?.name) {
+      setActiveDietName(activeDiet.name);
+    }
+  }, [activeDiet]);
+
+  const { pantry, loading, addPantryItem, removePantryItem } = usePantry(
+    user?.uid,
+    activeDietName
+  );
+
   const handleInputChange = (e) => {
-    const value = e.target.value;
-    setNewItem(value);
+    setNewItem(e.target.value); // Update the input value as user's typing
   };
 
-  const handleAddItem = async (itemsString) => {
-    setErrMessage("");
-    // Format itemsString
-    const items = itemsString
+  const handleAddItem = async (input) => {
+    setErrMessage(""); // Clear previous error messages
+    // Validate the input
+    const { valid, message } = validateAddItemInput(input);
+
+    if (!valid) {
+      setErrMessage(message);
+      return;
+    }
+
+    // Format input
+    const items = input
       .split(",") // Split by comma
       .map((item) => item.trim()) // Remove extra spaces
       .filter((item) => item.length > 0); // Remove empty strings
@@ -78,6 +85,7 @@ export default function MyPantry() {
 
     if (alreadyInPantry.length) {
       setErrMessage(`Already in pantry: ${alreadyInPantry.join(", ")}`);
+      setTimeout(() => setErrMessage(""), 2000);
     }
 
     if (failedItems.length) {
@@ -85,9 +93,8 @@ export default function MyPantry() {
         `Failed to add: ${failedItems.join(", ")}. Please try again.`
       );
     }
-    if (!alreadyInPantry.length && !failedItems.length) {
-      setNewItem("");
-    }
+
+    setNewItem(""); // clear input
   };
 
   const renderPantryList = () => {
