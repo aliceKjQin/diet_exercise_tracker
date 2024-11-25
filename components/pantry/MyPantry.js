@@ -156,7 +156,7 @@ export default function MyPantry() {
           value={newItem}
           onChange={handleInputChange}
           placeholder='Add pantry items, separated by commas, like "egg, apple, milk"'
-          className="border border-gray-300 rounded-md p-2 placeholder:whitespace-normal resize-none sm:h-10 h-15"
+          className="border border-gray-300 rounded-md p-2 placeholder:whitespace-normal resize-none sm:h-10 h-15 mb-4"
         />
 
         <Button text="Add" clickHandler={() => handleAddItem(newItem)} dark />

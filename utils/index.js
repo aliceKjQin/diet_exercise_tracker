@@ -8,14 +8,18 @@ export const validateIngredientInput = (input) => {
     const trimmedLine = line.trim();
 
     // Check if the line contains a number or Unicode fraction
-    const hasNumberOrFraction = /[\d\u00BC-\u00BE\u2150-\u215E]/.test(
+    const hasValidNumberOrFraction = /[\d\u00BC-\u00BE\u2150-\u215E]/.test(
       trimmedLine
     );
     const isValidFormat =
       /^[a-zA-Z0-9\s.,;()'/"\u00BC-\u00BE\u2150-\u215E-]*$/.test(trimmedLine); // \u00BC-\u00BE: Matches common fractions like ¼, ½, and ¾
 
-    if (!(hasNumberOrFraction && isValidFormat)) {
-      errors.push(`Line ${index + 1} is invalid: "${trimmedLine}"`);
+    if (!(hasValidNumberOrFraction && isValidFormat)) {
+      if (trimmedLine === "") {
+        errors.push(`Line ${index + 1} is empty: "${trimmedLine}"`);
+      } else {
+        errors.push(`Line ${index + 1} is invalid: "${trimmedLine}"`);
+      }
       return false;
     }
 
@@ -76,7 +80,7 @@ export const validateNoteInput = (input) => {
     };
   }
 
-  return { valid: true, message: null }; // Valid input
+  return { valid: true }; // Valid input
 };
 
 export const validateEmail = (email) => {
