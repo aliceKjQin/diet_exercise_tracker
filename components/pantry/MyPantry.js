@@ -11,6 +11,7 @@ export default function MyPantry() {
   const [activeDietName, setActiveDietName] = useState(null);
   const [newItem, setNewItem] = useState("");
   const [errMessage, setErrMessage] = useState("");
+  const [addingItems, setAddingItems] = useState(false);
 
   const [commonPantryItems, setCommonPantryItems] = useState([
     "egg",
@@ -45,56 +46,65 @@ export default function MyPantry() {
 
   const handleAddItem = async (input) => {
     setErrMessage(""); // Clear previous error messages
+
     // Validate the input
     const { valid, message } = validateAddItemInput(input);
-
     if (!valid) {
       setErrMessage(message);
       return;
     }
 
-    // Format input
-    const items = input
-      .split(",") // Split by comma
-      .map((item) => item.trim()) // Remove extra spaces
-      .filter((item) => item.length > 0); // Remove empty strings
+    setAddingItems(true);
 
-    if (!items.length) {
-      setErrMessage("Please enter at least one valid item.");
-      return;
-    }
+    try {
+      // Format input
+      const items = input
+        .toLowerCase()
+        .split(",") // Split by comma
+        .map((item) => item.trim()) // Remove extra spaces
+        .filter((item) => item.length > 0); // Remove empty strings
 
-    const alreadyInPantry = [];
-    const failedItems = [];
+      if (!items.length) {
+        setErrMessage("Please enter at least one valid item.");
+        return;
+      }
 
-    for (const item of items) {
-      if (pantry.includes(item)) {
-        alreadyInPantry.push(item);
-      } else {
-        const result = await addPantryItem(item);
-        if (result.success && commonPantryItems.includes(item)) {
-          setCommonPantryItems((prev) =>
-            prev.filter((commonItem) => commonItem !== item)
-          );
-        }
-        if (!result.success) {
-          failedItems.push(item);
+      const alreadyInPantry = [];
+      const failedItems = [];
+
+      for (const item of items) {
+        if (pantry.includes(item)) {
+          alreadyInPantry.push(item);
+        } else {
+          const result = await addPantryItem(item);
+          if (result.success && commonPantryItems.includes(item)) {
+            setCommonPantryItems((prev) =>
+              prev.filter((commonItem) => commonItem !== item)
+            );
+          }
+          if (!result.success) {
+            failedItems.push(item);
+          }
         }
       }
-    }
 
-    if (alreadyInPantry.length) {
-      setErrMessage(`Already in pantry: ${alreadyInPantry.join(", ")}`);
-      setTimeout(() => setErrMessage(""), 2000);
-    }
+      if (alreadyInPantry.length) {
+        setErrMessage(`Already in pantry: ${alreadyInPantry.join(", ")}`);
+        setTimeout(() => setErrMessage(""), 2000);
+      }
 
-    if (failedItems.length) {
-      setErrMessage(
-        `Failed to add: ${failedItems.join(", ")}. Please try again.`
-      );
-    }
+      if (failedItems.length) {
+        setErrMessage(
+          `Failed to add: ${failedItems.join(", ")}. Please try again.`
+        );
+      }
 
-    setNewItem(""); // clear input
+      setNewItem(""); // clear input
+    } catch (error) {
+      console.error("Failed adding items: ", error);
+    } finally {
+      setAddingItems(false);
+    }
   };
 
   const renderPantryList = () => {
@@ -158,6 +168,8 @@ export default function MyPantry() {
           placeholder='Add pantry items, separated by commas, like "egg, apple, milk"'
           className="border border-gray-300 rounded-md p-2 placeholder:whitespace-normal resize-none sm:h-10 h-15 mb-4"
         />
+
+        {addingItems && <p className="text-pink-400 text-sm text-center">Adding items ...</p>}
 
         <Button text="Add" clickHandler={() => handleAddItem(newItem)} dark />
       </div>
