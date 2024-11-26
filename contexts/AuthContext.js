@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useContext, useState, useEffect, createContext } from "react";
@@ -35,6 +36,11 @@ export function AuthProvider({ children }) {
     setUserDataObj(null);
     setUser(null);
     return signOut(auth);
+  }
+
+  // Function to send a password reset email
+  function sendPasswordReset(email) {
+    return sendPasswordResetEmail(auth, email);
   }
 
   // Function to refetch the active diet from db
@@ -92,7 +98,7 @@ export function AuthProvider({ children }) {
         if (activeDiet) {
           setActiveDiet({ name: activeDiet[0], details: activeDiet[1] });
         } else {
-          setActiveDiet(null); // Reset if no active diet
+          setActiveDiet(null); // set to null if no active diet
         }
       } catch (error) {
         console.log(error.message);
@@ -114,6 +120,7 @@ export function AuthProvider({ children }) {
     signup,
     login,
     logout,
+    sendPasswordReset
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
