@@ -99,7 +99,7 @@ export const validateEmail = (email) => {
 
   // Check the overall structure
   if (!emailRegex.test(trimmedEmail)) {
-    return { valid: false, message: "Invalid email structure." };
+    return { valid: false, message: "Invalid email format." };
   }
 
   return { valid: true };

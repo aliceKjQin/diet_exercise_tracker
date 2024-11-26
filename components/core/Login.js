@@ -31,35 +31,32 @@ export default function Login() {
       setErrorMessage(emailMessage);
       return;
     }
-    // Validate password & check confirmPassword if create an account, else check password and its length
-    if (isRegister) {
-      const { valid: passwordValid, message: passwordMessage } =
-        validatePassword(password);
-      if (!passwordValid) {
-        setErrorMessage(passwordMessage);
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        setErrorMessage("Passwords do not match.");
-        return;
-      }
-    } else if (!password || password.length < 8) {
-      setErrorMessage(
-        "Please provide valid email and password (min 8 characters)."
-      );
-      return;
-    }
 
     setAuthenticating(true);
     setErrorMessage(""); // Clear previous error message if any
     try {
       if (isRegister) {
         console.log("Signing up a new user");
+        // Validate password in create account view
+        const { valid: passwordValid, message: passwordMessage } =
+          validatePassword(password);
+        if (!passwordValid) {
+          setErrorMessage(passwordMessage);
+          return;
+        }
+        if (password !== confirmPassword) {
+          setErrorMessage("Passwords do not match.");
+          return;
+        }
         await signup(email, password);
         router.push("/");
       } else {
         console.log("Logging in existing user");
+        // Basic validation for Sign In to ensure no empty password
+        if (!password) {
+          setErrorMessage("Please enter your password.");
+          return;
+        }
         await login(email, password);
         router.push("/");
       }
