@@ -40,7 +40,7 @@ export default function Dashboard() {
   const month = now.getMonth();
   const year = now.getFullYear();
 
-  // Fetch updated dietData, to show face emojis in calendar; Check last logged Date for popup
+  // Fetch dietData (show face emojis, note in calendar)
   useEffect(() => {
     if (activeDiet) {
       setActiveDietData(activeDiet.details?.dietData);

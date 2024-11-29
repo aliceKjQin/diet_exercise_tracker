@@ -98,11 +98,11 @@ export default function MissedReasonsChart({
 
   return (
     <div className="flex flex-col sm:flex-row justify-center mx-auto items-center">
-      <div className="w-full">
+      <div className="flex-1">
         <Doughnut data={dietChartData} options={dietChartOptions} />
       </div>
 
-      <div className="w-full">
+      <div className="flex-1">
         <Doughnut data={exerciseChartData} options={exerciseChartOptions} />
       </div>
     </div>
