@@ -18,7 +18,7 @@ export default function ReviewNotes({
       } = useNote(user?.uid, dietName);
 
   return (
-    <div className="w-full p-4 bg-indigo-400 text-stone-800">
+    <div className="w-full p-4 bg-indigo-400 text-stone-800 rounded-lg">
       <h2 className="font-bold text-lg text-white">
         <i className="fa-regular fa-note-sticky mr-2"></i>Review Notes
       </h2>
