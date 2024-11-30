@@ -44,7 +44,7 @@ export default function ReviewNotes({
                   className="p-3 bg-yellow-200 shadow-sm rounded-lg flex flex-col"
                 >
                   <div className="flex justify-between items-center">
-                    <p className="text-sm font-semibold">{note.date}</p>
+                    <p className="text-sm font-semibold">{note.displayedDate}</p>
                     {isActive && (
                       <button onClick={() => deleteNote(note.date)}>
                         <i className="fa-solid fa-trash-can text-stone-400 hover:text-red-300"></i>

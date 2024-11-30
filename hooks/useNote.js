@@ -28,6 +28,7 @@ export const useNote = (userId, dietName) => {
           Object.entries(days).forEach(([day, data]) => {
             if (data.note) {
               extractedNotes.push({
+                displayedDate: `${year}-${Number(month)+1}-${day}`, // month is 0-11, thus needs to + 1 
                 date: `${year}-${month}-${day}`,
                 note: data.note,
               });
