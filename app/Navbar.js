@@ -3,9 +3,9 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Roboto } from "next/font/google";
 import Link from "next/link";
-import ThemeToggle from "@/components/core/ThemeToggle";
+import ThemeToggle from "@/app/ThemeToggle";
 import { useRouter } from "next/navigation";
-import Loading from "../sharedUI/Loading";
+import Loading from "../components/shared/Loading";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 

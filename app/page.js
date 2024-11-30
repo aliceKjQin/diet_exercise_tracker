@@ -6,12 +6,12 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import UpdateInputButton from "@/components/sharedUI/UpdateInputButton";
-import Loading from "@/components/sharedUI/Loading";
-import DietPlanForm from "@/components/home/DietPlanForm";
-import Main from "@/components/sharedUI/Main";
-import Instruction from "@/components/home/Instruction";
-import RemoveDiet from "@/components/home/RemoveDiet";
+import UpdateInputButton from "@/components/shared/UpdateInputButton";
+import Loading from "@/components/shared/Loading";
+import DietPlanForm from "@/app/DietPlanForm";
+import Main from "@/components/shared/Main";
+import Instruction from "@/app/Instruction";
+import RemoveDiet from "@/app/RemoveDiet";
 
 export default function HomePage() {
   const [showInstruction, setShowInstruction] = useState(false);
@@ -45,24 +45,23 @@ export default function HomePage() {
 
   // Handle input change (higher-order function: returns another function)
   const handleInputChange = (setter) => (e) => {
-      const inputValue = e.target.value;
-      // Allow only whole numbers and empty string; *** Ensure input type is "text" not "number", as it won't trigger regex check
-      if (!/^\d*$/.test(inputValue)) {
-        setErrorMessage("Please enter a valid whole number.");
-        return;
-      }
+    const inputValue = e.target.value;
+    // Allow only whole numbers and empty string; *** Ensure input type is "text" not "number", as it won't trigger regex check
+    if (!/^\d*$/.test(inputValue)) {
+      setErrorMessage("Please enter a valid whole number.");
+      return;
+    }
 
-      setErrorMessage("");
-      setter(inputValue ? Number(inputValue) : ""); // Empty string allow user for deletion
-    };
-
+    setErrorMessage("");
+    setter(inputValue ? Number(inputValue) : ""); // Empty string allow user for deletion
+  };
 
   // Save updated input in db
   const saveNewInput = async (fieldName, fieldValue) => {
     // Check any unclear error before submission
     if (errorMessage) {
-      setErrorMessage(errorMessage)
-      return
+      setErrorMessage(errorMessage);
+      return;
     }
 
     setLoading(true);

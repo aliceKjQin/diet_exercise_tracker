@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MacroProgressBar from "./MacroProgressBar";
+import MacroProgressBar from "@/app/pantry/MacroProgressBar";
 import { useAuth } from "@/contexts/AuthContext";
-import Button from "@/components/sharedUI/Button";
-import { validateIngredientInput } from "@/utils";
-import NutritionTableUI from "./NutritionTableUI";
+import Button from "@/components/shared/Button";
+import { validateIngredientInput } from "./validateIngredientInput";
+import NutritionTableUI from "@/app/pantry/NutritionTableUI";
 
 export default function NutritionResultsAnalysis() {
   const [ingredientList, setIngredientList] = useState(""); // Raw textarea input
@@ -82,7 +82,7 @@ export default function NutritionResultsAnalysis() {
       { calories: 0, protein: 0 }
     );
   };
- 
+
   // Get total of Cal & Protein when there is nutrition results return from API
   const totals =
     nutritionResults.length > 0
@@ -130,7 +130,7 @@ export default function NutritionResultsAnalysis() {
           dark
           full
         />
-        
+
         {/* Render error conditionally based on type: an array (error from validation check) or a string (error from API or predefined error) */}
         {Array.isArray(error) ? (
           <ul className="text-red-500">
@@ -138,7 +138,9 @@ export default function NutritionResultsAnalysis() {
               <li key={index}>{err}</li>
             ))}
           </ul>
-        ) : <p className="text-red-500">{error}</p>}
+        ) : (
+          <p className="text-red-500">{error}</p>
+        )}
 
         {/* Analysis Results */}
         {nutritionResults.length > 0 && (

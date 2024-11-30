@@ -4,17 +4,16 @@ import { Roboto } from "next/font/google";
 import React, { useEffect, useState } from "react";
 import Calendar from "./Calendar";
 import { useAuth } from "@/contexts/AuthContext";
-import Loading from "@/components/sharedUI/Loading";
-import Login from "@/components/core/Login";
+import Loading from "@/components/shared/Loading";
+import Login from "@/app/login/Login";
 import { db } from "@/firebase";
-import NoteModal from "@/components/dashboard/NoteModal";
-import Button from "@/components/sharedUI/Button";
+import NoteModal from "@/app/dashboard/NoteModal";
+import Button from "@/components/shared/Button";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
-import ReasonModal from "@/components/dashboard/ReasonModal";
+import ReasonModal from "@/app/dashboard/ReasonModal";
 import TooltipNwarning from "./TooltipNwarning";
 import DashboardPopup from "./DashboardPopup";
-
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -301,8 +300,12 @@ export default function Dashboard() {
 
         <Calendar completeData={activeDietData} onNoteClick={onNoteClick} />
 
-        <DashboardPopup day={day} month={month} year={year}  dietName={dietName}/>
-
+        <DashboardPopup
+          day={day}
+          month={month}
+          year={year}
+          dietName={dietName}
+        />
       </div>
     </>
   );

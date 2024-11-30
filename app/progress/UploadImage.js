@@ -5,7 +5,7 @@ import { storage, db } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
-import Loading from "@/components/sharedUI/Loading";
+import Loading from "@/components/shared/Loading";
 
 export default function UploadImage({ dietName, onNewImageUpload }) {
   const [image, setImage] = useState(null);

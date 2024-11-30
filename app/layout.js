@@ -2,7 +2,7 @@ import { Open_Sans, Roboto } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
-import Navbar from "@/components/core/Navbar";
+import Navbar from "@/app/Navbar";
 import { WeightUnitProvider } from "@/contexts/WeightUnitContext";
 import Script from "next/script";
 

@@ -2,8 +2,8 @@
 
 import { Roboto } from "next/font/google";
 import React, { useState } from "react";
-import Button from "@/components/sharedUI/Button";
-import { validateNoteInput } from "@/utils";
+import Button from "@/components/shared/Button";
+import { validateNoteInput } from "@/utils/validateNoteInput";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -24,11 +24,11 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
   };
 
   const handleSubmit = () => {
-     // Check if any error before submission
-     if (error) {
-       setError(error);
-       return; // Stop submission if error exists
-     }
+    // Check if any error before submission
+    if (error) {
+      setError(error);
+      return; // Stop submission if error exists
+    }
     onSave(noteInputValue); // Call onSave with the valid input
   };
 

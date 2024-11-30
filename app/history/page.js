@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { useInactiveDiet } from "@/hooks/useInactiveDiet";
-import { useDeleteDiet } from "@/hooks/useDeleteDiet";
+import { useInactiveDiet } from "@/app/history/useInactiveDiet";
+import { useDeleteDiet } from "@/app/history/useDeleteDiet";
 import { useAuth } from "@/contexts/AuthContext";
-import Main from "@/components/sharedUI/Main";
-import Button from "@/components/sharedUI/Button";
-import Loading from "@/components/sharedUI/Loading";
+import Main from "@/components/shared/Main";
+import Button from "@/components/shared/Button";
+import Loading from "@/components/shared/Loading";
 import Link from "next/link";
-import ConfirmModal from "@/components/sharedUI/ConfirmModal";
+import ConfirmModal from "@/components/shared/ConfirmModal";
 
 export default function HistoryPage() {
   const [selectedDiet, setSelectedDiet] = useState(null);

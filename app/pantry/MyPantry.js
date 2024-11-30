@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { usePantry } from "@/hooks/usePantry";
-import Button from "@/components/sharedUI/Button";
-import { validateAddItemInput } from "@/utils";
+import { usePantry } from "@/app/pantry/usePantry";
+import Button from "@/components/shared/Button";
+import { validateAddItemInput } from "./validateAddItemInput";
 
 export default function MyPantry() {
   const { user, activeDiet } = useAuth();
@@ -169,7 +169,9 @@ export default function MyPantry() {
           className="border border-gray-300 rounded-md p-2 placeholder:whitespace-normal resize-none sm:h-10 h-15 mb-4"
         />
 
-        {addingItems && <p className="text-pink-400 text-sm text-center">Adding items ...</p>}
+        {addingItems && (
+          <p className="text-pink-400 text-sm text-center">Adding items ...</p>
+        )}
 
         <Button text="Add" clickHandler={() => handleAddItem(newItem)} dark />
       </div>

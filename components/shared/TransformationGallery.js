@@ -1,5 +1,5 @@
 import React from "react";
-import UploadImage from "../progress/UploadImage";
+import UploadImage from "../../app/progress/UploadImage";
 import Loading from "./Loading";
 
 export default function TransformationGallery({

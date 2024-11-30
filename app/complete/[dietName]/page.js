@@ -1,7 +1,7 @@
 "use client";
 
-import FinalResultForm from "@/components/complete/FinalResultForm";
-import Main from "@/components/sharedUI/Main";
+import FinalResultForm from "./FinalResultForm";
+import Main from "@/components/shared/Main";
 import { useAuth } from "@/contexts/AuthContext";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";

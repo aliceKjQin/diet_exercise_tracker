@@ -1,11 +1,11 @@
 "use client";
 
 import { Roboto } from "next/font/google";
-import Button from "@/components/sharedUI/Button";
+import Button from "@/components/shared/Button";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { validateEmail, validatePassword } from "@/utils";
+import { validateEmail, validatePassword } from "@/app/login/validateEmailNpassword";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 

@@ -5,9 +5,9 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import Loading from "../sharedUI/Loading";
+import Loading from "@/components/shared/Loading";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
-import Button from "../sharedUI/Button";
+import Button from "@/components/shared/Button";
 
 export default function DietPlanForm() {
   const [dietPlan, setDietPlan] = useState({
@@ -50,7 +50,7 @@ export default function DietPlanForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError("")
+    setError("");
 
     // Format the dietName before saving it
     const formattedDietName = dietPlan.dietName

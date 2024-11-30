@@ -1,5 +1,5 @@
-import Login from "@/components/core/Login";
-import Main from "@/components/sharedUI/Main";
+import Login from "@/app/login/Login";
+import Main from "@/components/shared/Main";
 import React from "react";
 
 export default function LoginPage() {

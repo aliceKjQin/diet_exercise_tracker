@@ -2,15 +2,15 @@
 
 import { useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { useInactiveDiet } from "@/hooks/useInactiveDiet";
-import useProgressData from "@/hooks/useProgressData";
-import Loading from "@/components/sharedUI/Loading";
-import Main from "@/components/sharedUI/Main";
-import MainProgressCharts from "@/components/progress/MainProgressCharts";
-import WeightProgressBar from "@/components/progress/WeightProgressBar";
-import Login from "@/components/core/Login";
-import ReviewNotes from "@/components/sharedUI/ReviewNotes";
-import TransformationGallery from "@/components/sharedUI/TransformationGallery";
+import { useInactiveDiet } from "@/app/history/useInactiveDiet";
+import useProgressData from "@/app/progress/useProgressData";
+import Loading from "@/components/shared/Loading";
+import Main from "@/components/shared/Main";
+import MainProgressCharts from "@/app/progress/MainProgressCharts";
+import WeightProgressBar from "@/app/progress/WeightProgressBar";
+import Login from "@/app/login/Login";
+import ReviewNotes from "@/components/shared/ReviewNotes";
+import TransformationGallery from "@/components/shared/TransformationGallery";
 
 export default function HistoryPageForSpecifiedDiet() {
   const { user, loading: loadingUser } = useAuth();

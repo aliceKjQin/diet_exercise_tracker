@@ -1,11 +1,11 @@
 "use client";
 
-import useProgressData from "@/hooks/useProgressData";
+import useProgressData from "@/app/progress/useProgressData";
 import React, { useMemo, useState } from "react";
 import MissedReasonsChart from "./MissedReasonsChart";
 import MissedDaysChart from "./MissedDaysChart";
 import MissedActivityChart from "./MissedActivityChart";
-import CompletePopup from "./CompletePopup";
+import CompletePopup from "../../app/progress/CompletePopup";
 
 export default function MainProgressCharts({
   diet,

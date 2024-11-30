@@ -1,5 +1,5 @@
-import Dashboard from "@/components/dashboard/Dashboard";
-import Main from "@/components/sharedUI/Main";
+import Dashboard from "../Dashboard";
+import Main from "@/components/shared/Main";
 
 export const metadata = {
   title: "Dashboard ",

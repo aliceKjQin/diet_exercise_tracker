@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import MainProgressCharts from "@/components/progress/MainProgressCharts";
-import Loading from "@/components/sharedUI/Loading";
-import Main from "@/components/sharedUI/Main";
+import MainProgressCharts from "../MainProgressCharts";
+import Loading from "@/components/shared/Loading";
+import Main from "@/components/shared/Main";
 import Link from "next/link";
-import WeightProgressBar from "@/components/progress/WeightProgressBar";
-import Login from "@/components/core/Login";
+import WeightProgressBar from "../WeightProgressBar";
+import Login from "@/app/login/Login";
 import { db, storage } from "@/firebase";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
-import ReviewNotes from "@/components/sharedUI/ReviewNotes";
-import TransformationGallery from "@/components/sharedUI/TransformationGallery";
+import ReviewNotes from "@/components/shared/ReviewNotes";
+import TransformationGallery from "@/components/shared/TransformationGallery";
 
 export default function ProgressPage() {
   const { user, activeDiet, loading: loadingUser } = useAuth();

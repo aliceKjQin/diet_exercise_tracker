@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import Button from "@/components/sharedUI/Button";
+import Button from "@/components/shared/Button";
 import Link from "next/link";
-import Loading from "@/components/sharedUI/Loading";
-import GeneralGuideline from "./GeneralGuideline";
+import Loading from "@/components/shared/Loading";
+import GeneralGuideline from "@/app/pantry/GeneralGuideline";
 
 export default function MacroGoals() {
   const [proteinGoal, setProteinGoal] = useState("");
@@ -25,7 +25,6 @@ export default function MacroGoals() {
       setCaloriesGoal(activeDiet.details?.macroGoals?.calories || "");
     }
   }, [activeDiet]);
-
 
   // Handle input changes
   const handleInputChange = (setter) => (e) => {
@@ -84,7 +83,7 @@ export default function MacroGoals() {
       <div className="p-4 bg-purple-100 dark:bg-sky-100 shadow-md rounded-md mb-4 flex  flex-col gap-2">
         {/* General Guideline for Protein & Calories */}
         <GeneralGuideline />
-        
+
         {/* Marco goals input section */}
         <div className="flex gap-4 mb-4 mx-auto">
           <div className="">

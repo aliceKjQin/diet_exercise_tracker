@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import Button from "../sharedUI/Button";
+import Button from "@/components/shared/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
-import { validateNoteInput } from "@/utils";
+import { validateNoteInput } from "@/utils/validateNoteInput";
 
 export default function FinalResultForm({
   userId,
@@ -99,7 +99,7 @@ export default function FinalResultForm({
     // Check if any unclear error before submission
     if (error || proErr || conErr) {
       setError(error);
-      return; // Stop submission 
+      return; // Stop submission
     }
 
     setLoading(true);
@@ -158,8 +158,6 @@ export default function FinalResultForm({
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        
-
         {/* Final Weight Input */}
         <div className="flex flex-col items-center">
           <label htmlFor="finalWeight" className="block font-semibold mb-2">

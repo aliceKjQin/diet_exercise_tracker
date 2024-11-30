@@ -5,8 +5,8 @@ import { db } from "@/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
 import { useAuth } from "@/contexts/AuthContext";
-import Loading from "../sharedUI/Loading";
-import UpdateInputButton from "../sharedUI/UpdateInputButton";
+import Loading from "@/components/shared/Loading";
+import UpdateInputButton from "@/components/shared/UpdateInputButton";
 
 export default function WeightProgressBar({
   startingWeight,
@@ -17,7 +17,7 @@ export default function WeightProgressBar({
   finalWeight,
 }) {
   // ***  decouple the displayed currentWeight (used for the progress bar) from the input currentWeight, to ensure the progress bar updates only after the user clicks "Update" and the value is successfully saved
-  const [currentWeight, setCurrentWeight] = useState("")// state for progressBar
+  const [currentWeight, setCurrentWeight] = useState(""); // state for progressBar
   const [inputWeight, setInputWeight] = useState(""); // state for input field
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -73,8 +73,8 @@ export default function WeightProgressBar({
   const handleSaveWeight = async () => {
     // Check if there is any unclear error before submission
     if (error) {
-      setError(error)
-      return
+      setError(error);
+      return;
     }
     setLoading(true);
     try {
