@@ -123,13 +123,13 @@ export default function HomePage() {
                   key={index}
                   src={src}
                   alt={`Preview ${index + 1}`}
-                  className="flex-none w-[90%] md:w-96 rounded-lg mx-auto object-cover border-4 border-lime-200"
+                  className="flex-none w-[86%] md:w-96 rounded-3xl mx-auto object-cover border-4 border-lime-200"
                 />
               ))}
             </div>
             <button
               onClick={handleClosePreview}
-              className="bg-pink-400 text-white font-bold px-4 py-2 rounded-lg w-full mt-1"
+              className="bg-pink-400 text-white font-bold px-4 py-2 rounded-lg w-full"
             >
               Close
             </button>
