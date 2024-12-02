@@ -31,20 +31,20 @@ export default function HomePage() {
   const { weightUnit } = useWeightUnit();
 
   useEffect(() => {
-    if (!user || !activeDiet) return;
+    // Show preview if user is unauthorized
+    if (!user) {
+      setShowPreview(true);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!activeDiet) return;
     if (activeDiet) {
       setTargetDays(activeDiet.details?.targetDays || "");
       setTargetWeight(activeDiet.details?.targetWeight || "");
       setDietName(activeDiet.name);
     }
-  }, [activeDiet, user]);
-
-  useEffect(() => {
-    // Show preview if user is not logged in
-    if (!user) {
-      setShowPreview(true);
-    }
-  }, [user]);
+  }, [activeDiet]);
 
   // Handle show instruction for new users
   const handleShowInstruction = () => {

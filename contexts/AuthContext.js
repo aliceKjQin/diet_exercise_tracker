@@ -66,6 +66,8 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       console.error("Failed to refetch updated active diet!", error.message)
+    } finally {
+      setLoading(false)
     }
   }
 
