@@ -128,9 +128,9 @@ export default function HomePage() {
                   <Image
                     src={src}
                     alt={`Preview ${index + 1}`}
-                    width={300} // base width for small screens
-                    height={500} // base height for small screens
-                    // layout="responsive"
+                    width={300} // base width for larger screens
+                    height={500} // base height for larger screens
+                    layout="responsive"
                     className="rounded-3xl object-cover border-4 border-lime-200"
                     placeholder="blur"
                     blurDataURL="/images/blur_placeholder.png" // A small blurred version of the image
