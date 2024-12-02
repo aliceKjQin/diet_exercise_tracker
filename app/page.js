@@ -124,24 +124,19 @@ export default function HomePage() {
                   key={index}
                   className="relative w-[86%] md:w-96 flex-none mx-auto"
                 >
+                  {/* improve preview modal images loading experience with next/image to avoid the inconsistency where the modal grows suddenly when images load. Use image placeholder as lazy loading which helps ensure the images are displayed smoothly, with a placeholder showing until the actual image is fully loaded */}
                   <Image
                     src={src}
                     alt={`Preview ${index + 1}`}
-                    width={300} // base width for larger screens
-                    height={500} // base height for larger screens
-                    layout="responsive"
+                    width={300} // base width for small screens
+                    height={500} // base height for small screens
+                    // layout="responsive"
                     className="rounded-3xl object-cover border-4 border-lime-200"
                     placeholder="blur"
                     blurDataURL="/images/blur_placeholder.png" // A small blurred version of the image
                     priority={index === 0} // Optional: prioritizes the first image for faster load
                   />
                 </div>
-                // <img
-                //   key={index}
-                //   src={src}
-                //   alt={`Preview ${index + 1}`}
-                //   className="flex-none w-[86%] md:w-96 rounded-3xl mx-auto object-cover border-4 border-lime-200"
-                // />
               ))}
             </div>
             <button
