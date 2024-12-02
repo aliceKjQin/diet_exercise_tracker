@@ -24,7 +24,7 @@ export default function Navbar() {
               href="/"
               className={`flex-shrink-0 flex items-center font-bold ${roboto.className}`}
             >
-              D & E
+              Home
             </Link>
             {user && (
               <Link

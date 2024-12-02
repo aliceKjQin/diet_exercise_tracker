@@ -117,15 +117,15 @@ export default function Login() {
       <input
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full max-w-[400px] mx-auto px-3 duration-200 hover:border-indigo-400 focus:border-indigo-400 py-2 sm:py-3 border border-solid border-indigo-300 rounded-full outline-none text-black"
+        className="w-full max-w-[400px] px-3 py-2 sm:py-3 border border-solid  focus:border-indigo-400 focus:outline focus:outline-indigo-200 rounded-full text-black"
         placeholder="Email"
       />
       {/* Password input field */}
-      <div className="relative w-full max-w-[400px] mx-auto">
+      <div className="relative w-full max-w-[400px]">
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-3 duration-200 hover:border-indigo-400 focus:border-indigo-400 py-2 sm:py-3 border border-solid border-indigo-300 rounded-full outline-none text-black"
+          className="w-full px-3 py-2 sm:py-3 border border-solid  focus:border-indigo-400 focus:outline focus:outline-indigo-200 rounded-full text-black"
           placeholder="Password"
           type={showPassword ? "text" : "password"}
         />
@@ -149,11 +149,11 @@ export default function Login() {
 
       {/* Confirm Password input (visible only in register mode) */}
       {isRegister && (
-        <div className="relative w-full max-w-[400px] mx-auto">
+        <div className="relative w-full max-w-[400px]">
           <input
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-3 duration-200 hover:border-indigo-400 focus:border-indigo-400 py-2 sm:py-3 border border-solid border-indigo-300 rounded-full outline-none text-black"
+            className="w-full px-3 py-2 sm:py-3 border border-solid  focus:border-indigo-400 focus:outline focus:outline-indigo-200 rounded-full text-black"
             placeholder="Confirm Password"
             type={showConfirmPassword ? "text" : "password"}
           />
@@ -177,7 +177,7 @@ export default function Login() {
       )}
 
       {/* Submit button */}
-      <div className="max-w-[400px] w-full mx-auto">
+      <div className="max-w-[400px] w-full">
         <Button
           clickHandler={handleSubmit}
           text={isRegister ? "Create account" : "Sign in"}
