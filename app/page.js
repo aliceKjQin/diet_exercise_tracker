@@ -12,7 +12,6 @@ import DietPlanForm from "@/app/DietPlanForm";
 import Main from "@/components/shared/Main";
 import Instruction from "@/app/Instruction";
 import RemoveDiet from "@/app/RemoveDiet";
-import Button from "@/components/shared/Button";
 
 export default function HomePage() {
   const [showInstruction, setShowInstruction] = useState(false);
@@ -99,43 +98,44 @@ export default function HomePage() {
 
   return (
     <Main>
-         {/* Modal for unauthorized users */}
-         {showPreview && (
-  <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-    <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg mx-4">
-      <h2 className="text-lg sm:text-xl font-bold mb-4 text-center">Explore Diet & Exercise Tracker</h2>
-      <p className="mb-4 text-center">
-        Swipe through the images to explore features of the app!
-      </p>
-      {/* Horizontal scroll container */}
-      <div className="flex overflow-x-auto gap-4 pb-4">
-        {[
-          "images/demo_dashboard.png",
-          "images/demo_progress.png",
-          "images/demo_chart.png",
-          "images/demo_notes.png",
-          "images/demo_pantry.png",
-          "images/demo_recipe.png",
-          "images/demo_nutrition.png",
-        ].map((src, index) => (
-          <img
-            key={index}
-            src={src}
-            alt={`Preview ${index + 1}`}
-            className="flex-none w-[90%] md:w-96 rounded-lg mx-auto object-cover border-4 border-lime-200"
-          />
-        ))}
-      </div>
-      <button
-        onClick={handleClosePreview}
-        className="bg-pink-400 text-white font-bold px-4 py-2 rounded-lg w-full mt-1"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
-
+      {/* Modal for unauthorized users */}
+      {showPreview && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg mx-4">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 text-center">
+              Explore Diet & Exercise Tracker
+            </h2>
+            <p className="mb-4 text-center">
+              Swipe through the images to explore features of the app!
+            </p>
+            {/* Horizontal scroll container */}
+            <div className="flex overflow-x-auto gap-4 pb-4">
+              {[
+                "images/demo_dashboard.png",
+                "images/demo_progress.png",
+                "images/demo_chart.png",
+                "images/demo_notes.png",
+                "images/demo_pantry.png",
+                "images/demo_recipe.png",
+                "images/demo_nutrition.png",
+              ].map((src, index) => (
+                <img
+                  key={index}
+                  src={src}
+                  alt={`Preview ${index + 1}`}
+                  className="flex-none w-[90%] md:w-96 rounded-lg mx-auto object-cover border-4 border-lime-200"
+                />
+              ))}
+            </div>
+            <button
+              onClick={handleClosePreview}
+              className="bg-pink-400 text-white font-bold px-4 py-2 rounded-lg w-full mt-1"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* conditionally render diet plan form */}
       {activeDiet ? (
