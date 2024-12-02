@@ -31,7 +31,7 @@ export default function HomePage() {
   const { weightUnit } = useWeightUnit();
 
   useEffect(() => {
-    // Show preview if user is unauthorized
+    // Show preview if user is unauthorized and no activeDiet
     if (!user && !activeDiet) {
       setShowPreview(true);
     }
@@ -223,7 +223,7 @@ export default function HomePage() {
 
           <Link
             href={`/dashboard/${dietName}`}
-            className="bg-emerald-400 hover:bg-emerald-500 text-white font-bold text-lg text-center py-2 px-4 rounded-full mt-2"
+            className="bg-emerald-400 hover:bg-green-400 text-white font-bold text-lg text-center py-2 px-4 rounded-full mt-2"
           >
             View Dashboard
           </Link>
