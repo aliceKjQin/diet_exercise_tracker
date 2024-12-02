@@ -12,6 +12,7 @@ import DietPlanForm from "@/app/DietPlanForm";
 import Main from "@/components/shared/Main";
 import Instruction from "@/app/Instruction";
 import RemoveDiet from "@/app/RemoveDiet";
+import Image from "next/image";
 
 export default function HomePage() {
   const [showInstruction, setShowInstruction] = useState(false);
@@ -100,7 +101,7 @@ export default function HomePage() {
     <Main>
       {/* Modal for unauthorized users */}
       {showPreview && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center">
           <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg mx-4">
             <h2 className="text-lg sm:text-xl font-bold mb-4 text-center">
               Explore Diet & Exercise Tracker
@@ -111,20 +112,36 @@ export default function HomePage() {
             {/* Horizontal scroll container */}
             <div className="flex overflow-x-auto gap-4 pb-4">
               {[
-                "images/demo_dashboard.png",
-                "images/demo_progress.png",
-                "images/demo_chart.png",
-                "images/demo_notes.png",
-                "images/demo_pantry.png",
-                "images/demo_recipe.png",
-                "images/demo_nutrition.png",
+                "/images/demo_dashboard.png",
+                "/images/demo_progress.png",
+                "/images/demo_chart.png",
+                "/images/demo_notes.png",
+                "/images/demo_pantry.png",
+                "/images/demo_recipe.png",
+                "/images/demo_nutrition.png",
               ].map((src, index) => (
-                <img
+                <div
                   key={index}
-                  src={src}
-                  alt={`Preview ${index + 1}`}
-                  className="flex-none w-[86%] md:w-96 rounded-3xl mx-auto object-cover border-4 border-lime-200"
-                />
+                  className="relative w-[86%] md:w-96 flex-none mx-auto"
+                >
+                  <Image
+                    src={src}
+                    alt={`Preview ${index + 1}`}
+                    width={300} // base width for larger screens
+                    height={500} // base height for larger screens
+                    layout="responsive"
+                    className="rounded-3xl object-cover border-4 border-lime-200"
+                    placeholder="blur"
+                    blurDataURL="/images/blur_placeholder.png" // A small blurred version of the image
+                    priority={index === 0} // Optional: prioritizes the first image for faster load
+                  />
+                </div>
+                // <img
+                //   key={index}
+                //   src={src}
+                //   alt={`Preview ${index + 1}`}
+                //   className="flex-none w-[86%] md:w-96 rounded-3xl mx-auto object-cover border-4 border-lime-200"
+                // />
               ))}
             </div>
             <button
