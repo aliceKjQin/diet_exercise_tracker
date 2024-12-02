@@ -49,7 +49,7 @@ export default function Login() {
           return;
         }
         await signup(email, password);
-        router.push("/dashboard");
+        router.push("/");
       } else {
         console.log("Logging in existing user");
         // Basic validation for Sign In to ensure no empty password
@@ -58,7 +58,7 @@ export default function Login() {
           return;
         }
         await login(email, password);
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (err) {
       console.log("Error Message: " + err.message, "Error Code: " + err.code);

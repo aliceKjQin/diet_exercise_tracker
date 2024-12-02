@@ -32,10 +32,10 @@ export default function HomePage() {
 
   useEffect(() => {
     // Show preview if user is unauthorized
-    if (!user) {
+    if (!user && !activeDiet) {
       setShowPreview(true);
     }
-  }, [user]);
+  }, [user, activeDiet]);
 
   useEffect(() => {
     if (!activeDiet) return;
