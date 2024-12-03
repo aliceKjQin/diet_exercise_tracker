@@ -71,7 +71,7 @@ export default function Calendar(props) {
   const numRows = Math.floor(daysToDisplay / 7) + (daysToDisplay % 7 ? 1 : 0);
   return (
     //  backward and forward bar
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 mt-2 sm:mt-4">
       <div className="grid grid-cols-5 gap-4">
         <button
           className="mr-auto text-purple-400 dark:text-blue-400 text-lg sm:text-xl duration-200 hover:opacity-60"
@@ -102,7 +102,7 @@ export default function Calendar(props) {
         </button>
       </div>
       {/* display day of week row (Sun-Sat) */}
-      <div className="sm:py-6 md:py-10 grid grid-cols-7">
+      <div className="sm:py-2 grid grid-cols-7">
         {dayList.map((dayOfWeek, dayOfWeekIndex) => (
           <span
             key={dayOfWeekIndex}
@@ -113,7 +113,7 @@ export default function Calendar(props) {
         ))}
       </div>
       {/* calendar */}
-      <div className="flex flex-col overflow-hidden gap-1 py-4 ">
+      <div className="flex flex-col overflow-hidden gap-1">
         {[...Array(numRows).keys()].map((row, rowIndex) => {
           return (
             <div key={rowIndex} className="grid grid-cols-7">

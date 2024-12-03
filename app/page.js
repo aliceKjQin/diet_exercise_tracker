@@ -32,11 +32,11 @@ export default function HomePage() {
   const { weightUnit } = useWeightUnit();
 
   useEffect(() => {
-    // Show preview if user is unauthorized and no activeDiet
-    if (!user && !activeDiet) {
+    // Show preview if user is unauthorized
+    if (!user) {
       setShowPreview(true);
     }
-  }, [user, activeDiet]);
+  }, [user]);
 
   useEffect(() => {
     if (!activeDiet) return;

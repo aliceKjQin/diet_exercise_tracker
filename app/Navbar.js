@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Roboto } from "next/font/google";
 import Link from "next/link";
 import ThemeToggle from "@/app/ThemeToggle";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Loading from "../components/shared/Loading";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
@@ -12,6 +12,7 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 export default function Navbar() {
   const { user, logout, activeDiet, loading: loadingUser } = useAuth();
   const router = useRouter();
+  const currentPath = usePathname(); // Get the current path
 
   if (loadingUser) return <Loading />;
 
@@ -47,15 +48,18 @@ export default function Navbar() {
                     Dashboard
                   </Link>
                 )}
-                <button
-                  onClick={() => {
-                    logout();
-                    router.push("/login");
-                  }}
-                  className="font-bold"
-                >
-                  Logout
-                </button>
+                {/* Hide Logout button on the homepage */}
+                {currentPath !== "/" && (
+                  <button
+                    onClick={() => {
+                      logout();
+                      router.push("/login");
+                    }}
+                    className="font-bold"
+                  >
+                    Logout
+                  </button>
+                )}
               </>
             ) : (
               <Link href="/login" className="font-bold">
