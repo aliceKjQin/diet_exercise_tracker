@@ -124,11 +124,11 @@ export default function WeightProgressBar({
                 id="currentWeight"
                 value={inputWeight}
                 onChange={handleInputWeightChange}
-                className="flex-1 p-2 border border-solid text-stone-700 border-pink-300 rounded-full outline-none"
+                className="flex-1 p-2 text-stone-800 rounded-full outline-none"
               />
               <UpdateInputButton
                 onClick={handleSaveWeight}
-                className="bg-pink-400 hover:bg-pink-300"
+                className="bg-pink-400 hover:bg-pink-600"
               />
             </div>
           </div>

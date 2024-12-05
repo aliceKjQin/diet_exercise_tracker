@@ -118,7 +118,7 @@ export default function HistoryPage() {
             {/* Create diet plan button */}
             {!activeDiet && (
               <Link href={"/"} className="mt-4">
-                <Button text="Create New Diet Plan" full />
+                <Button text="Create New Diet Plan" full dark />
               </Link>
             )}
           </div>
@@ -129,7 +129,7 @@ export default function HistoryPage() {
             You don&apos;t have any complete diet record.
           </p>
           <Link href={"/"}>
-            <Button text="Create Your Diet Plan" />
+            <Button text="Create Your Diet Plan" full dark/>
           </Link>
         </div>
       )}

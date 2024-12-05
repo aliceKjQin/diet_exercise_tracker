@@ -129,7 +129,7 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
 
       <button
         type="submit"
-        className="w-full p-2 bg-pink-400 hover:bg-pink-300 rounded-full font-bold"
+        className="w-full p-2 bg-pink-400 hover:bg-pink-200 hover:text-stone-700 rounded-full font-bold"
       >
         Upload Image
       </button>

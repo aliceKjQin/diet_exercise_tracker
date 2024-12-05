@@ -13,6 +13,7 @@ import Main from "@/components/shared/Main";
 import Instruction from "@/app/Instruction";
 import RemoveDiet from "@/app/RemoveDiet";
 import Image from "next/image";
+import Button from "@/components/shared/Button";
 
 export default function HomePage() {
   const [showInstruction, setShowInstruction] = useState(false);
@@ -139,12 +140,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <button
-              onClick={handleClosePreview}
-              className="bg-pink-400 text-white font-bold px-4 py-2 rounded-lg w-full"
-            >
-              Close
-            </button>
+            <Button text="Close" clickHandler={handleClosePreview} full dark />
           </div>
         </div>
       )}
@@ -180,7 +176,7 @@ export default function HomePage() {
           </p>
 
           {/* Update Field for duration (targetDays) and targetWeight */}
-          <div className="mx-auto">
+          <div className="mx-auto mb-4">
             <div className="flex flex-col gap-2 mb-4">
               <label className="block mb-1 " htmlFor="targetDays">
                 Duration (days)
@@ -191,12 +187,12 @@ export default function HomePage() {
                   id="targetDays"
                   value={targetDays}
                   onChange={handleInputChange(setTargetDays)} // call handleInputChange(outer function) immediately and it returns the inner arrow function (e) => { ... } which will execute when onChange event fires
-                  className="p-2 border border-solid border-indigo-300 rounded-full outline-none"
+                  className="p-2 rounded-full outline-none"
                 />
 
                 <UpdateInputButton
                   onClick={() => saveNewInput("targetDays", targetDays)}
-                  className="bg-indigo-400 hover:bg-indigo-300"
+                  className="bg-white hover:bg-indigo-500 hover:text-white border-2 border-solid border-indigo-400"
                 />
               </div>
             </div>
@@ -210,11 +206,11 @@ export default function HomePage() {
                   id="targetWeight"
                   value={targetWeight}
                   onChange={handleInputChange(setTargetWeight)}
-                  className="p-2 border border-solid border-indigo-300 rounded-full outline-none"
+                  className="p-2 rounded-full outline-none"
                 />
                 <UpdateInputButton
                   onClick={() => saveNewInput("targetWeight", targetWeight)}
-                  className="bg-indigo-400 hover:bg-indigo-300"
+                  className="bg-white hover:bg-indigo-500 hover:text-white border-2 border-solid border-indigo-400"
                 />
               </div>
             </div>
@@ -235,9 +231,7 @@ export default function HomePage() {
 
           <Link
             href={`/dashboard/${dietName}`}
-            className="bg-emerald-400 hover:bg-green-400 text-white font-bold text-lg text-center py-2 px-4 rounded-full mt-2"
-          >
-            View Dashboard
+          ><Button text="View Dashboard" dark full/>
           </Link>
 
           {/* Remove active diet section */}

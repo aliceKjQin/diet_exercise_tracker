@@ -7,7 +7,7 @@ export default function Instruction() {
 
       <p>
         <strong>Dashboard:</strong> Log exercise and diet, and add optional
-        notes to record daily observations.
+        notes to record any observations, go to recipes or a work out plan you want to try ...
       </p>
       <p>
         <strong>Pantry:</strong> Analyze nutrition of items in your pantry or a
