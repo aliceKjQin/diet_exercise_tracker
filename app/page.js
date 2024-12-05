@@ -123,7 +123,7 @@ export default function HomePage() {
               ].map((src, index) => (
                 <div
                   key={index}
-                  className="relative w-[70%] md:w-96 flex-none mx-auto"
+                  className="relative w-[70%] sm:w-1/2 flex-none mx-auto"
                 >
                   {/* improve preview modal images loading experience with next/image to avoid the inconsistency where the modal grows suddenly when images load. Use image placeholder as lazy loading which helps ensure the images are displayed smoothly, with a placeholder showing until the actual image is fully loaded */}
                   <Image
