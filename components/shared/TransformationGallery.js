@@ -28,6 +28,7 @@ export default function TransformationGallery({
                 {isActive && <button
                   onClick={() => deleteImage(image)}
                   disabled={image.deleting}
+                  aria-label="delete-image-button"
                 >
                   <i className="fa-solid fa-trash-can text-indigo-300 hover:text-red-400"></i>
                 </button>}

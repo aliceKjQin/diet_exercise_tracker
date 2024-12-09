@@ -36,7 +36,6 @@ export default function Login() {
     setErrorMessage(""); // Clear previous error message if any
     try {
       if (isRegister) {
-        console.log("Signing up a new user");
         // Validate password in create account view
         const { valid: passwordValid, message: passwordMessage } =
           validatePassword(password);
@@ -51,7 +50,6 @@ export default function Login() {
         await signup(email, password);
         router.push("/");
       } else {
-        console.log("Logging in existing user");
         // Basic validation for Sign In to ensure no empty password
         if (!password) {
           setErrorMessage("Please enter your password.");

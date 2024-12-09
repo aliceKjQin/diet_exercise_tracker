@@ -18,7 +18,7 @@ export const useNote = (userId, dietName) => {
     try {
       const userRef = doc(db, "users", userId);
       const userSnap = await getDoc(userRef);
-
+      
       const dietData = userSnap.data()?.diets?.[dietName]?.dietData || {};
 
       // Extract notes from dietData

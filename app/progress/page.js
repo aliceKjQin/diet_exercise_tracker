@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import MainProgressCharts from "../MainProgressCharts";
+import MainProgressCharts from "./MainProgressCharts";
 import Loading from "@/components/shared/Loading";
 import Main from "@/components/shared/Main";
 import Link from "next/link";
-import WeightProgressBar from "../WeightProgressBar";
+import WeightProgressBar from "./WeightProgressBar";
 import Login from "@/app/login/Login";
 import { db, storage } from "@/firebase";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";

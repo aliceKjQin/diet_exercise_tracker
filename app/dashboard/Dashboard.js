@@ -23,6 +23,7 @@ export default function Dashboard() {
     userDataObj,
     setUserDataObj,
     activeDiet,
+    setActiveDiet,
     refetchActiveDiet,
     loading: loadingUser,
   } = useAuth();
@@ -47,41 +48,27 @@ export default function Dashboard() {
     }
   }, [activeDiet]);
 
-  const currentDayData = activeDietData?.[year]?.[month]?.[day];
+  const currentDayData = activeDietData?.[year]?.[month]?.[day] || {}; 
 
   const handleSetData = async (updatedValues) => {
     try {
-      const newDietData = { ...activeDietData };
+      const newActiveDietData = { ...activeDietData };
 
       // Initialize the nested structure if it doesn't exist
-      if (!newDietData[year]) {
-        newDietData[year] = {};
+      if (!newActiveDietData[year]) {
+        newActiveDietData[year] = {};
       }
-      if (!newDietData[year][month]) {
-        newDietData[year][month] = {};
+      if (!newActiveDietData[year]?.[month]) {
+        newActiveDietData[year][month] = {};
       }
 
-      const existingDayData = newDietData[year][month][day] || {};
-      newDietData[year][month][day] = {
+      const existingDayData = newActiveDietData[year]?.[month]?.[day] || {};
+      newActiveDietData[year][month][day] = {
         ...existingDayData,
         ...updatedValues,
       };
       // Update local state
-      setActiveDietData(newDietData);
-
-      // update global state: userDataObj with the new diet data
-      const updatedDietPlan = {
-        ...userDataObj.diets[dietName],
-        dietData: newDietData,
-      };
-
-      setUserDataObj({
-        ...userDataObj,
-        diets: {
-          ...userDataObj.diets,
-          [dietName]: updatedDietPlan,
-        },
-      });
+      setActiveDietData(newActiveDietData);
 
       const docRef = doc(db, "users", user.uid);
       await setDoc(
@@ -89,43 +76,37 @@ export default function Dashboard() {
         {
           diets: {
             [dietName]: {
-              dietData: newDietData,
+              dietData: newActiveDietData,
             },
           },
         },
         { merge: true }
       );
-      await refetchActiveDiet(); // refetch activeDiet after saving to update the global activeDiet context
+      // await refetchActiveDiet(); // refetch activeDiet after saving to update the global activeDiet context
     } catch (err) {
       console.error(`Failed to update data: ${err.message}`);
     }
   };
 
-  // handle toggle and handle set exercise and diet
+  // handle toggle boolean for exercise and diet
   const handleToggle = (type) => {
     const currentValue = currentDayData?.[type];
-    const missedReasonExists = currentDayData?.[`${type}MissedReason`];
+
+    console.log("Type: ", type)
+    console.log("CurrentDayData: ", currentDayData)
+    console.log("currentValue:", currentValue); // Debugging the current value
 
     if (currentValue === undefined) {
-      handleSetData({ [type]: true }); // Log as completed without a modal
-    }
-    // Case 2: If it's already logged as completed (true), toggle it off directly
-    else if (currentValue === true) {
-      handleSetData({ [type]: false }); // Toggle it off (i.e., marking as missed)
+      console.log("Logging: New entry as true");
+      handleSetData({ [type]: true });
+    } else if (currentValue === true) {
+      console.log("Logging: Toggling to false");
+      handleSetData({ [type]: false });
       setReasonType(type);
       setShowReasonModal(true);
-    }
-    // Case 3: If it's logged as missed (false), open the modal for a reason OR toggle it back to true
-    else if (currentValue === false) {
-      // handle toggling back to true directly if clicked again
-      if (missedReasonExists) {
-        // Toggle back to true when clicking on a missed entry
-        handleSetData({ [type]: true, [`${type}MissedReason`]: null }); // Remove the missed reason
-      } else {
-        // If there's no missed reason, open the modal
-        setReasonType(type);
-        setShowReasonModal(true);
-      }
+    } else if (currentValue === false) {
+      console.log("Logging: Toggling back to true");
+      handleSetData({ [type]: true, [`${type}MissedReason`]: null });
     }
   };
 
@@ -205,8 +186,8 @@ export default function Dashboard() {
 
   if (loadingUser) return <Loading />;
 
-  if (!user) {
-    return <Login />; // show login when users logged out
+  if (!user ) {
+    return <Login />; // show login when users log out
   }
 
   return (
@@ -223,7 +204,7 @@ export default function Dashboard() {
           ></Button>
         </Link>
 
-        <Link href={`/progress/${activeDiet?.name}`}>
+        <Link href={`/progress`}>
           <Button
             text={
               <>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { storage, db } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
@@ -68,6 +68,7 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
         url: downloadUrl,
         date, // User-provided date
       };
+
       await updateDoc(userRef, {
         [`diets.${dietName}.images`]: arrayUnion(newImage),
       });
@@ -92,10 +93,11 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
     <form onSubmit={handleSubmit} className="space-y-4 mr-4">
       {/*  file field */}
       <div>
-        <label className="block font-semibold mb-1" htmlFor="date">
+        <label className="block font-semibold mb-1" htmlFor="file">
           Select an image
         </label>
         <input
+          id="file"
           type="file"
           onChange={handleImageUpload}
           className="block p-2 rounded-md w-full border-outline-none ring-2 ring-lime-200"
@@ -107,8 +109,8 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
           Select a date
         </label>
         <input
-          type="date"
           id="date"
+          type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
           className="block p-2 rounded-md bg-indigo-400 w-full border-
@@ -118,7 +120,7 @@ export default function UploadImage({ dietName, onNewImageUpload }) {
 
       {error && (
         <p className="text-red-200 text-center text-wrap">
-          {error} <i class="fa-regular fa-circle-xmark fa-lg"></i>
+          {error} <i className="fa-regular fa-circle-xmark fa-lg"></i>
         </p>
       )}
       {success && (

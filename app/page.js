@@ -36,17 +36,14 @@ export default function HomePage() {
     // Show preview if user is unauthorized
     if (!user) {
       setShowPreview(true);
+    } else {
+      if (activeDiet) {
+        setTargetDays(activeDiet.details?.targetDays || "");
+        setTargetWeight(activeDiet.details?.targetWeight || "");
+        setDietName(activeDiet.name);
+      }
     }
-  }, [user]);
-
-  useEffect(() => {
-    if (!activeDiet) return;
-    if (activeDiet) {
-      setTargetDays(activeDiet.details?.targetDays || "");
-      setTargetWeight(activeDiet.details?.targetWeight || "");
-      setDietName(activeDiet.name);
-    }
-  }, [activeDiet]);
+  }, [activeDiet, user]);
 
   // Handle show instruction for new users
   const handleShowInstruction = () => {
@@ -131,7 +128,6 @@ export default function HomePage() {
                     alt={`Preview ${index + 1}`}
                     width={300} // base width for larger screens
                     height={500} // base height for larger screens
-                    layout="responsive"
                     className="rounded-3xl object-cover border-4 border-lime-200"
                     placeholder="blur"
                     blurDataURL="/images/blur_placeholder.png" // A small blurred version of the image
@@ -219,7 +215,8 @@ export default function HomePage() {
           {loading && <Loading />}
           {errorMessage && (
             <p className="p-2 mt-4 text-red-500 text-center">
-              {errorMessage} <i class="fa-regular fa-circle-xmark fa-lg"></i>
+              {errorMessage}{" "}
+              <i className="fa-regular fa-circle-xmark fa-lg"></i>
             </p>
           )}
           {successMessage && (
@@ -229,9 +226,8 @@ export default function HomePage() {
             </p>
           )}
 
-          <Link
-            href={`/dashboard/${dietName}`}
-          ><Button text="View Dashboard" dark full/>
+          <Link href={`/dashboard/${dietName}`}>
+            <Button text="View Dashboard" dark full />
           </Link>
 
           {/* Remove active diet section */}

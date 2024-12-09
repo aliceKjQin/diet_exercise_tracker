@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { db } from "@/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Loading from "@/components/shared/Loading";
@@ -14,7 +14,6 @@ export default function WeightProgressBar({
   userId,
   inactiveDiet,
   isActive,
-  finalWeight,
 }) {
   // ***  decouple the displayed currentWeight (used for the progress bar) from the input currentWeight, to ensure the progress bar updates only after the user clicks "Update" and the value is successfully saved
   const [currentWeight, setCurrentWeight] = useState(""); // state for progressBar
