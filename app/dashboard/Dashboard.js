@@ -20,11 +20,7 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 export default function Dashboard() {
   const {
     user,
-    userDataObj,
-    setUserDataObj,
     activeDiet,
-    setActiveDiet,
-    refetchActiveDiet,
     loading: loadingUser,
   } = useAuth();
   const [showNoteModal, setShowNoteModal] = useState(false);
@@ -40,7 +36,7 @@ export default function Dashboard() {
   const month = now.getMonth();
   const year = now.getFullYear();
 
-  // Fetch dietData (show face emojis, note in calendar)
+  // Fetch dietData (display face, note icon in calendar if available)
   useEffect(() => {
     if (activeDiet) {
       setDietData(activeDiet.details?.dietData);
@@ -70,6 +66,7 @@ export default function Dashboard() {
       // Update local state
       setDietData(newDietData);
 
+      // Update db
       const docRef = doc(db, "users", user.uid);
       await setDoc(
         docRef,
@@ -82,23 +79,18 @@ export default function Dashboard() {
         },
         { merge: true }
       );
-      // await refetchActiveDiet(); // refetch activeDiet after saving to update the global activeDiet context
     } catch (err) {
       console.error(`Failed to update data: ${err.message}`);
     }
   };
 
-  // handle toggle boolean for exercise and diet
+  // Handle toggle boolean for exercise and diet
   const handleToggle = (type) => {
     const currentValue = currentDayData?.[type];
 
-    console.log("Type: ", type);
-    console.log("CurrentDayData: ", currentDayData);
-    console.log("currentValue:", currentValue); // Debugging the current value
-
     if (currentValue === undefined) {
       console.log("Logging: New entry as true");
-      handleSetData({ [type]: true });
+      handleSetData({ [type]: true }); 
     } else if (currentValue === true) {
       console.log("Logging: Toggling to false");
       handleSetData({ [type]: false });
@@ -111,13 +103,13 @@ export default function Dashboard() {
   };
 
   const handleReasonSave = (reason) => {
-    const type = reasonType; // The type stored in the state when user logged as false
+    const type = reasonType; // Type is diet or exercise
     handleSetData({ [type]: false, [`${type}MissedReason`]: reason }); // Save the reason to db
-    setShowReasonModal(false); // close the modal
+    setShowReasonModal(false); // Close the modal
   };
 
   const handleReasonCancel = () => {
-    // Reset to true since the user canceled
+    // Reset diet/exercise to true when users click Cancel in ReasonModal
     handleSetData({ [reasonType]: true }); // Reset the activity to true
     setShowReasonModal(false); // Close the modal
   };
@@ -128,7 +120,7 @@ export default function Dashboard() {
 
   const hasNote = currentDayData?.note;
 
-  // Render button for note
+  // Function to render button for note
   const renderNoteButton = (emoji, hasNote, onClick) => (
     <button
       onClick={onClick}
@@ -144,7 +136,7 @@ export default function Dashboard() {
     </button>
   );
 
-  // renderButton for Exercise and Diet
+  // Function to render button for diet and exercise
   const renderButton = (emoji, label, currentValue, onClick, color) => {
     return (
       <button
@@ -176,7 +168,7 @@ export default function Dashboard() {
     );
   };
 
-  // the note here is the selected day's note passed from calendar
+  // The note here is the selected day's note passed from calendar
   const onNoteClick = (note) => {
     setSelectedDayNote(note);
     setIsNoteVisible(true);
@@ -250,7 +242,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Note modal to add optional note */}
+        {/* Display note modal to add note */}
         {showNoteModal && (
           <NoteModal
             onSave={(note) => {
@@ -262,7 +254,7 @@ export default function Dashboard() {
           />
         )}
 
-        {/* display the note when user clicks the note emoji from calendar */}
+        {/* Display the selected note when user clicks the note icon in calendar */}
         {selectedDayNote && isNoteVisible && (
           <div className="relative flex flex-col bg-purple-200 dark:bg-sky-200 text-stone-600 p-4 gap-4 rounded-lg">
             <p>{selectedDayNote}</p>
@@ -272,7 +264,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* display reasonModal when user logged exercise or diet as false */}
+        {/* Display reasonModal when user logged exercise or diet as false */}
         {showReasonModal && (
           <ReasonModal
             type={reasonType}
@@ -283,6 +275,7 @@ export default function Dashboard() {
 
         <Calendar dietData={dietData} onNoteClick={onNoteClick} />
 
+        {/* Display a popup when users visit the dashboard page first time during the day to remind users to log diet and exercise */}
         <DashboardPopup
           day={day}
           month={month}

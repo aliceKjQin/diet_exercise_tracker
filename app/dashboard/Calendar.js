@@ -36,7 +36,7 @@ export default function Calendar(props) {
 
   function handleIncrementAndDecrementMonth(val) {
     // val +1 -1
-    // if we hit the bounds of the months, then we can just adjust the year that is displayed instead
+    // if hit the bounds of the months, then adjust the year that is displayed instead
     if (numericMonth + val < 0) {
       // set month value = 11 which is Dec and decrement the year
       setSelectedMonth(monthsArr[monthsArr.length - 1]);
@@ -70,7 +70,7 @@ export default function Calendar(props) {
   const daysToDisplay = firstDayOfMonth + daysInMonth;
   const numRows = Math.floor(daysToDisplay / 7) + (daysToDisplay % 7 ? 1 : 0);
   return (
-    //  backward and forward bar
+    // Month, year backward and forward section
     <div className="flex flex-col gap-2 mt-2 sm:mt-4">
       <div className="grid grid-cols-5 gap-4">
         <button
@@ -101,7 +101,7 @@ export default function Calendar(props) {
           <i className="fa-solid fa-circle-chevron-right"></i>
         </button>
       </div>
-      {/* display day of week row (Sun-Sat) */}
+      {/* Sun-Sat head row */}
       <div className="sm:py-2 grid grid-cols-7">
         {dayList.map((dayOfWeek, dayOfWeekIndex) => (
           <span
@@ -112,8 +112,8 @@ export default function Calendar(props) {
           </span>
         ))}
       </div>
-      {/* calendar */}
-      <div className="flex flex-col overflow-hidden gap-1">
+      {/* Calendar Grid */}
+      <div className="flex flex-col overflow-hidden gap-1" aria-label="calendar-grid">
         {[...Array(numRows).keys()].map((row, rowIndex) => {
           return (
             <div key={rowIndex} className="grid grid-cols-7">
