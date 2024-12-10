@@ -30,7 +30,7 @@ export default function Dashboard() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedDayNote, setSelectedDayNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false);
-  const [activeDietData, setActiveDietData] = useState({});
+  const [dietData, setDietData] = useState({});
   const [dietName, setDietName] = useState("");
   const [showReasonModal, setShowReasonModal] = useState(false);
   const [reasonType, setReasonType] = useState("");
@@ -43,32 +43,32 @@ export default function Dashboard() {
   // Fetch dietData (show face emojis, note in calendar)
   useEffect(() => {
     if (activeDiet) {
-      setActiveDietData(activeDiet.details?.dietData);
+      setDietData(activeDiet.details?.dietData);
       setDietName(activeDiet.name);
     }
   }, [activeDiet]);
 
-  const currentDayData = activeDietData?.[year]?.[month]?.[day] || {}; 
+  const currentDayData = dietData?.[year]?.[month]?.[day] || {};
 
   const handleSetData = async (updatedValues) => {
     try {
-      const newActiveDietData = { ...activeDietData };
+      const newDietData = { ...dietData };
 
       // Initialize the nested structure if it doesn't exist
-      if (!newActiveDietData[year]) {
-        newActiveDietData[year] = {};
+      if (!newDietData[year]) {
+        newDietData[year] = {};
       }
-      if (!newActiveDietData[year]?.[month]) {
-        newActiveDietData[year][month] = {};
+      if (!newDietData[year]?.[month]) {
+        newDietData[year][month] = {};
       }
 
-      const existingDayData = newActiveDietData[year]?.[month]?.[day] || {};
-      newActiveDietData[year][month][day] = {
+      const existingDayData = newDietData[year]?.[month]?.[day] || {};
+      newDietData[year][month][day] = {
         ...existingDayData,
         ...updatedValues,
       };
       // Update local state
-      setActiveDietData(newActiveDietData);
+      setDietData(newDietData);
 
       const docRef = doc(db, "users", user.uid);
       await setDoc(
@@ -76,7 +76,7 @@ export default function Dashboard() {
         {
           diets: {
             [dietName]: {
-              dietData: newActiveDietData,
+              dietData: newDietData,
             },
           },
         },
@@ -92,8 +92,8 @@ export default function Dashboard() {
   const handleToggle = (type) => {
     const currentValue = currentDayData?.[type];
 
-    console.log("Type: ", type)
-    console.log("CurrentDayData: ", currentDayData)
+    console.log("Type: ", type);
+    console.log("CurrentDayData: ", currentDayData);
     console.log("currentValue:", currentValue); // Debugging the current value
 
     if (currentValue === undefined) {
@@ -132,6 +132,7 @@ export default function Dashboard() {
   const renderNoteButton = (emoji, hasNote, onClick) => (
     <button
       onClick={onClick}
+      aria-label="note-button"
       className={`p-4 px-1 rounded-2xl purpleShadow duration:200 bg-stone-100 text-center flex flex-col gap-2 flex-1 items-center`}
     >
       <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
@@ -149,6 +150,7 @@ export default function Dashboard() {
       <button
         onClick={onClick}
         className={`p-4 px-5 rounded-2xl purpleShadow duration:200 bg-${color} text-center flex flex-col gap-2 flex-1 items-center`}
+        aria-label={label === "Diet" ? "diet-button" : "exercise-button"}
       >
         {currentValue === undefined ? (
           <>
@@ -186,7 +188,7 @@ export default function Dashboard() {
 
   if (loadingUser) return <Loading />;
 
-  if (!user ) {
+  if (!user) {
     return <Login />; // show login when users log out
   }
 
@@ -279,7 +281,7 @@ export default function Dashboard() {
           />
         )}
 
-        <Calendar completeData={activeDietData} onNoteClick={onNoteClick} />
+        <Calendar dietData={dietData} onNoteClick={onNoteClick} />
 
         <DashboardPopup
           day={day}

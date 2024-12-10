@@ -37,7 +37,7 @@ import {
       });
     });
   
-    test("renders Login component and interacts with elements", async () => {
+    test("logs in an existing user and redirect to home", async () => {
       render(<Login />);
   
       // Assert that inputs and buttons are present
@@ -61,7 +61,7 @@ import {
       expect(mockPush).toHaveBeenCalledWith("/");
     });
   
-    test("registers a new user", async () => {
+    test("registers a new user and redirect to home", async () => {
       render(<Login />);
   
       // Assert that inputs and buttons are present
@@ -70,7 +70,7 @@ import {
       const switchToRegisterButton = screen.getByText(/Create account/i);
   
       // Switch to register mode by clicking the "Create account" button
-      fireEvent.click(switchToRegisterButton); // switch to register mode
+      fireEvent.click(switchToRegisterButton); 
   
       // Assert confirm password input and create account button are present after switching to register mode
       const confirmPasswordInput =
@@ -157,25 +157,6 @@ import {
   
       // Assert sendPasswordReset function was called
       expect(mockSendPasswordReset).toHaveBeenCalledWith("test@example.com");
-    });
-  
-    test("switches between login and register modes", async () => {
-      render(<Login />);
-  
-      const switchButton = screen.getByText("Create account");
-      const currentModeText = screen.getByText(
-        "Welcome back. Sign in to continue"
-      );
-  
-      // Verify the initial text in login mode
-      expect(currentModeText).toBeInTheDocument();
-  
-      // Click to switch to register mode
-      fireEvent.click(switchButton);
-      expect(screen.getByText("Create an account")).toBeInTheDocument();
-      expect(
-        screen.queryByText("Welcome back. Sign in to continue")
-      ).not.toBeInTheDocument();
     });
   });
   

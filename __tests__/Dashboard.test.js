@@ -18,17 +18,7 @@ jest.mock("firebase/firestore", () => ({
   doc: jest.fn(),
   setDoc: jest.fn(),
 }));
-jest.mock("@/app/dashboard/Calendar", () =>
-  jest.fn(() => <div>Mocked Calendar</div>)
-);
-jest.mock("@/app/dashboard/NoteModal", () =>
-  jest.fn(({ onSave }) => (
-    <div>
-      Mocked NoteModal
-      <button onClick={() => onSave("Test Note")}>Save Note</button>
-    </div>
-  ))
-);
+
 jest.mock("@/app/dashboard/ReasonModal", () =>
   jest.fn(({ onSave }) => (
     <div>
@@ -46,7 +36,6 @@ describe("Dashboard Component", () => {
     // Mock the `setDoc` function to resolve successfully
     setDoc.mockResolvedValueOnce();
   });
-
 
   test("renders loading spinner when user data is loading", () => {
     useAuth.mockReturnValue({
@@ -82,12 +71,18 @@ describe("Dashboard Component", () => {
 
     render(<Dashboard />);
     expect(screen.getByText(/today's activities/i)).toBeInTheDocument();
-    expect(screen.getByText("Diet")).toBeInTheDocument();
-    expect(screen.getByText("Exercise")).toBeInTheDocument();
-    expect(screen.getByText("Add Note")).toBeInTheDocument();
+    expect(screen.getByLabelText("diet-button")).toBeInTheDocument();
+    expect(screen.getByLabelText("exercise-button")).toBeInTheDocument();
+    expect(screen.getByLabelText("note-button")).toBeInTheDocument();
   });
 
   test("opens the NoteModal and saves a note", async () => {
+    // Mock the current date
+    const now = new Date();
+    const year = now.getFullYear().toString();
+    const month = now.getMonth().toString(); // Zero-indexed
+    const day = now.getDate().toString();
+
     useAuth.mockReturnValue({
       user: { uid: "123" },
       activeDiet: {
@@ -100,42 +95,54 @@ describe("Dashboard Component", () => {
     });
 
     render(<Dashboard />);
-    const noteButton = screen.getByText(/add note/i);
+    // Expect "note-icon" to not be in the document initially
+    expect(screen.queryByLabelText("note-icon")).not.toBeInTheDocument();
+
+    const noteButton = screen.getByLabelText("note-button");
 
     fireEvent.click(noteButton);
-    expect(await screen.findByText(/mocked notemodal/i)).toBeInTheDocument();
+    expect(await screen.findByText("Add Note")).toBeInTheDocument(); // note modal opened
 
-    const saveButton = screen.getByText(/save note/i);
+    const noteInput = screen.getByLabelText("note-input");
+    fireEvent.change(noteInput, { target: { value: "test note" } });
+
+    const saveButton = screen.getByText(/save/i);
     fireEvent.click(saveButton);
 
-    await waitFor(() =>
-      expect(setDoc).toHaveBeenCalledWith(
-        "mockedDocRef",
-        expect.objectContaining({
-          diets: expect.objectContaining({
-            "Test Diet": expect.objectContaining({
-              dietData: expect.any(Object),
+    expect(setDoc).toHaveBeenCalledWith(
+      "mockedDocRef",
+      expect.objectContaining({
+        diets: expect.objectContaining({
+          "Test Diet": expect.objectContaining({
+            dietData: expect.objectContaining({
+              [year]: { [month]: { [day]: { note: "test note" } } },
             }),
           }),
         }),
-        { merge: true }
-      )
+      }),
+      { merge: true }
     );
+    expect(screen.getByLabelText("note-icon")).toBeInTheDocument(); // note icon should display in calendar cell after the note is saved
   });
 
-  test("renders the Calendar component with correct props", () => {
+  test("renders the Calendar component with prop dietData from activeDiet to show matching face and note icon", () => {
     useAuth.mockReturnValue({
       user: { uid: "123" },
       activeDiet: {
         name: "Test Diet",
         details: {
-          dietData: {},
+          dietData: {
+            2024: {
+              11: { 8: { diet: true, exercise: true, note: "test notes" } }, // should render a smiley face since both diet and exercise are completed
+            },
+          },
         },
       },
       loading: false,
     });
 
     render(<Dashboard />);
-    expect(screen.getByText(/mocked calendar/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("green-smiley-face")).toBeInTheDocument();
+    expect(screen.getByLabelText("note-icon")).toBeInTheDocument();
   });
 });

@@ -9,7 +9,6 @@ import "@testing-library/jest-dom";
 import WeightProgressBar from "@/app/progress/WeightProgressBar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWeightUnit } from "@/contexts/WeightUnitContext";
-import { db } from "@/firebase";
 import { updateDoc } from "firebase/firestore";
 
 jest.mock("@/contexts/AuthContext");

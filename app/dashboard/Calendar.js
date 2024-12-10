@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Roboto } from "next/font/google";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
@@ -23,7 +23,7 @@ const months = {
 const dayList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Calendar(props) {
-  const { completeData, onNoteClick } = props;
+  const { dietData, onNoteClick } = props;
 
   const now = new Date();
   const currentMonth = now.getMonth(); // numerical number for the month from 0 - 11
@@ -32,7 +32,7 @@ export default function Calendar(props) {
   const numericMonth = monthsArr.indexOf(selectedMonth);
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
-  const data = completeData?.[selectedYear]?.[numericMonth];
+  const data = dietData?.[selectedYear]?.[numericMonth];
 
   function handleIncrementAndDecrementMonth(val) {
     // val +1 -1
@@ -147,7 +147,7 @@ export default function Calendar(props) {
                 return (
                   <div
                     key={dayOfWeekIndex}
-                    style={{minHeight: "60px"}}
+                    style={{ minHeight: "60px" }}
                     className={`text-xs sm:text-sm border border-solid p-1 sm:p-2 flex items-center gap-1 justify-between rounded-lg ${
                       isToday && isCurrentMonth && isCurrentYear
                         ? "border-yellow-400 border-dashed border-2"
@@ -162,32 +162,39 @@ export default function Calendar(props) {
                     {/* Div for emojis */}
                     <div className="flex flex-col sm:flex-row items-center text-xl sm:text-2xl md:text-3xl sm:gap-2">
                       {/* display a smiley face if both diet and exercise are true */}
-                      {data?.[dayIndex]?.diet && data?.[dayIndex]?.exercise ? (
-                        <p><i className="fa-solid fa-face-smile text-green-300"></i></p>
-                      ) : (
-                        ""
+                      {data?.[dayIndex]?.diet && data?.[dayIndex]?.exercise && (
+                        <i
+                          className="fa-solid fa-face-smile text-green-300"
+                          aria-label="green-smiley-face"
+                        ></i>
                       )}
                       {/* display a sad face if both diet and exercise are false */}
                       {data?.[dayIndex]?.diet === false &&
-                      data[dayIndex]?.exercise === false ? (
-                        <p><i className="fa-solid fa-face-frown text-red-300"></i></p>
-                      ) : (
-                        ""
-                      )}
+                        data[dayIndex]?.exercise === false && (
+                          <i
+                            className="fa-solid fa-face-frown text-red-300"
+                            aria-label="red-sad-face"
+                          ></i>
+                        )}
                       {/* display a meh face when only one of the two (diet or exercise) is true */}
                       {(data?.[dayIndex]?.diet &&
-                        !data?.[dayIndex]?.exercise) || 
+                        !data?.[dayIndex]?.exercise) ||
                       (!data?.[dayIndex]?.diet &&
-                        data?.[dayIndex]?.exercise)  ? (
-                        <p><i className="fa-solid fa-face-meh text-yellow-300"></i></p>
+                        data?.[dayIndex]?.exercise) ? (
+                        <i
+                          className="fa-solid fa-face-meh text-yellow-300"
+                          aria-label="yellow-meh-face"
+                        ></i>
                       ) : (
                         ""
                       )}
-                      {/* display a note emoji if note is true, when clicks the note emoji, it sends the selected day note back to parent, Dashboard */}
-                      {data?.[dayIndex]?.note ? (
-                        <p onClick={() => onNoteClick(data[dayIndex].note)} className="cursor-pointer" ><i className="fa-solid fa-pen-to-square text-white"></i></p>
-                      ) : (
-                        ""
+                      {/* display a note icon if note is true, when clicks the note icon, it sends the selected day note back to parent, Dashboard */}
+                      {data?.[dayIndex]?.note && (
+                        <i
+                          className="fa-solid fa-pen-to-square text-white cursor-pointer"
+                          aria-label="note-icon"
+                          onClick={() => onNoteClick(data[dayIndex].note)}
+                        ></i>
                       )}
                     </div>
                   </div>
