@@ -43,34 +43,6 @@ export function AuthProvider({ children }) {
     return sendPasswordResetEmail(auth, email);
   }
 
-  // Function to refetch the active diet from db
-  const refetchActiveDiet = async () => {
-    if (!user || !user.uid) return;
-
-    try {
-      const userRef = doc(db, "users", user.uid)
-      const docSnap = await getDoc(userRef)
-
-      if (docSnap.exists()) {
-        const userData = docSnap.data()
-        
-        const diets = userData.diets || {}
-        const activeDietEntry = Object.entries(diets).find(([, dietDetails]) => dietDetails.isActive)
-
-        if(activeDietEntry) {
-          setActiveDiet({name: activeDietEntry[0], details: activeDietEntry[1]})
-        } else {
-          console.log("No active diet found.")
-          setActiveDiet(null)
-        }
-      }
-    } catch (error) {
-      console.error("Failed to refetch updated active diet!", error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   // get userDataObj and activeDiet when page reload
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -113,11 +85,8 @@ export function AuthProvider({ children }) {
 
   const value = {
     user,
-    userDataObj,
-    setUserDataObj,
     activeDiet,
     setActiveDiet,
-    refetchActiveDiet,
     loading,
     signup,
     login,

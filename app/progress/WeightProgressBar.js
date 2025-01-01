@@ -22,7 +22,7 @@ export default function WeightProgressBar({
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const { weightUnit } = useWeightUnit();
-  const { activeDiet, refetchActiveDiet } = useAuth();
+  const { activeDiet, setActiveDiet } = useAuth();
 
   // fetch currentWeight of activeDiet for progress page view
   useEffect(() => {
@@ -81,7 +81,16 @@ export default function WeightProgressBar({
       await updateDoc(userDocRef, {
         [`diets.${activeDiet.name}.currentWeight`]: parseFloat(inputWeight),
       });
-      await refetchActiveDiet();
+
+      // Update global state
+      setActiveDiet((prev) => ({
+        ...prev,
+        details: {
+          ...prev.details,
+          currentWeight: parseFloat(inputWeight),
+        },
+      }));
+
       setCurrentWeight(inputWeight); // Update currentWeight for progressBar
       setSuccessMessage("Weight updated successfully!");
       setTimeout(() => {

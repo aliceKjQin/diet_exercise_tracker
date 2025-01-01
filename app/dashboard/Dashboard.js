@@ -18,11 +18,7 @@ import DashboardPopup from "./DashboardPopup";
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
 export default function Dashboard() {
-  const {
-    user,
-    activeDiet,
-    loading: loadingUser,
-  } = useAuth();
+  const { user, activeDiet, loading: loadingUser, setActiveDiet } = useAuth();
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedDayNote, setSelectedDayNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false);
@@ -79,6 +75,15 @@ export default function Dashboard() {
         },
         { merge: true }
       );
+
+      // Update global state
+      setActiveDiet((prev) => ({
+        ...prev,
+        details: {
+          ...prev.details,
+          dietData: newDietData,
+        },
+      }));
     } catch (err) {
       console.error(`Failed to update data: ${err.message}`);
     }
@@ -90,7 +95,7 @@ export default function Dashboard() {
 
     if (currentValue === undefined) {
       console.log("Logging: New entry as true");
-      handleSetData({ [type]: true }); 
+      handleSetData({ [type]: true });
     } else if (currentValue === true) {
       console.log("Logging: Toggling to false");
       handleSetData({ [type]: false });

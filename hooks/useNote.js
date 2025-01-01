@@ -10,7 +10,7 @@ export const useNote = (userId, dietName) => {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-  const { refetchActiveDiet } = useAuth();
+  const { setActiveDiet } = useAuth();
 
   const fetchNotes = async () => {
     if (!userId || !dietName) return;
@@ -18,7 +18,7 @@ export const useNote = (userId, dietName) => {
     try {
       const userRef = doc(db, "users", userId);
       const userSnap = await getDoc(userRef);
-      
+
       const dietData = userSnap.data()?.diets?.[dietName]?.dietData || {};
 
       // Extract notes from dietData
@@ -28,7 +28,7 @@ export const useNote = (userId, dietName) => {
           Object.entries(days).forEach(([day, data]) => {
             if (data.note) {
               extractedNotes.push({
-                displayedDate: `${year}-${Number(month)+1}-${day}`, // month is 0-11, thus needs to + 1 
+                displayedDate: `${year}-${Number(month) + 1}-${day}`, // month is 0-11, thus needs to + 1
                 date: `${year}-${month}-${day}`,
                 note: data.note,
               });
@@ -70,17 +70,37 @@ export const useNote = (userId, dietName) => {
             updatedDayData,
         });
 
+        // Update global state
+        setActiveDiet((prev) => {
+          // Create a copy of the current dietData from the previous state
+          const newDietData = { ...prev.details.dietData };
+          // Check if the specific date exists in the dietData and remove the note
+          if (
+            newDietData[year] &&
+            newDietData[year][month] &&
+            newDietData[year][month][day]
+          ) {
+            delete newDietData[year][month][day].note;
+          }
+        
+          return {
+            ...prev,// Copy the previous state
+            details: {
+              ...prev.details, // Copy the previous details
+              dietData: newDietData, // Update the dietData with the modified version
+            },
+          };
+        });
+
         // Refresh notes after deletion to display the updated notes array in ProgressPage
         fetchNotes();
-
-        refetchActiveDiet(); // refetch activeDietDiet to reflect the updated data, which is remove note icon of the specified day in calendar of Dashboard
 
         setSuccess("Deleted note.");
         setTimeout(() => setSuccess(""), 2000);
       }
     } catch (error) {
       console.error("Error deleting note:", error);
-      setError("Failed to delete note, please try again.")
+      setError("Failed to delete note, please try again.");
     } finally {
       setLoading(false);
     }

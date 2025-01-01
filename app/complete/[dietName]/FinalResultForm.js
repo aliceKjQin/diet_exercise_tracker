@@ -24,7 +24,7 @@ export default function FinalResultForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [rating, setRating] = useState("");
-  const { setActiveDiet, activeDiet, userDataObj, setUserDataObj } = useAuth();
+  const { setActiveDiet, activeDiet } = useAuth();
   const { weightUnit } = useWeightUnit();
   const maxWords = 6;
 

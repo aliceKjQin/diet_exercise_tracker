@@ -12,12 +12,11 @@ import GeneralGuideline from "@/app/pantry/GeneralGuideline";
 export default function MacroGoals() {
   const [proteinGoal, setProteinGoal] = useState("");
   const [caloriesGoal, setCaloriesGoal] = useState("");
-  const [savedGoals, setSaveGoals] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { activeDiet, refetchActiveDiet, user } = useAuth();
+  const { activeDiet, setActiveDiet, user } = useAuth();
 
   useEffect(() => {
     if (activeDiet) {
@@ -51,7 +50,17 @@ export default function MacroGoals() {
         },
       });
 
-      await refetchActiveDiet();
+      // Update global state
+      setActiveDiet((prev) => ({
+        ...prev,
+        details: {
+          ...prev.details,
+          macroGoals: {
+            protein: proteinGoal,
+            calories: caloriesGoal,
+          },
+        },
+      }));
 
       setSuccess("Macro goals saved!");
       setTimeout(() => {
