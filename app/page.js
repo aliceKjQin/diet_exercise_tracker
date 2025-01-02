@@ -27,7 +27,7 @@ export default function HomePage() {
   const {
     user,
     activeDiet,
-    refetchActiveDiet,
+    setActiveDiet,
     loading: loadingUser,
   } = useAuth();
   const { weightUnit } = useWeightUnit();
@@ -78,8 +78,15 @@ export default function HomePage() {
         [`diets.${activeDiet.name}.${fieldName}`]: fieldValue,
       });
 
-      // After saving, refetch the active diet
-      await refetchActiveDiet(); // This will update the activeDiet in the context
+      // Update global state
+      setActiveDiet((prev) => ({
+        ...prev,
+        details: {
+          ...prev.details,
+          [fieldName]: fieldValue,
+        },
+      }));
+
       setSuccessMessage(`Saved new ${fieldName}!`);
       // Clear the success message after 2 seconds
       setTimeout(() => setSuccessMessage(""), 2000);
